@@ -1,0 +1,128 @@
+# Phase 0 eval scenarios, written before any agent code (docs/PLAN.md).
+# The runner (Phase 5) seeds history from fixtures/history.yaml, freezes the clock and runs each turn through runTurn().
+# `expect` = deterministic checks against the turn trace. `judge` = rubric for the LLM judge (1-5).
+#
+# Reference clock: Wed 2026-11-11 10:00 Europe/London → Mon = 9 Nov, "3 November" = Tue 3 Nov, "last Tuesday" ∈ {10 Nov, 3 Nov}.
+
+defaults:
+  now: 2026-11-11T10:00:00
+  tz: Europe/London
+
+scenarios:
+  - id: A1-absolute-date-recall
+    family: A
+    seed: base
+    turns:
+      - user: What did I ask you on 3 November? Is your answer still correct today?
+    expect:
+      resolved_dates: [2026-11-03]
+      mentions_all: [Postgres, pool]          # both 3 Nov conversations
+      mentions_none: [CRM, Lisbon]
+      web_search: { min_calls: 1, since: 2026-11-03, rereads_any: [neon.com/pricing, supabase.com/pricing, render.com/pricing] }
+      cites: true
+    judge: Separates what was said on 3 Nov from what is true now; for each quoted price says changed / unchanged / couldn't verify, with today's source.
+
+  - id: B1-last-tuesday-resolved-by-topic
+    family: B
+    seed: base
+    turns:
+      - user: Last Tuesday I asked you about Postgres hosting. Has any pricing changed since then?
+    expect:
+      resolved_candidates: [2026-11-10, 2026-11-03]
+      picks_date: 2026-11-03                  # only 3 Nov has Postgres hosting; 10 Nov is the Lisbon offsite
+      states_date: true                       # answer names "3 Nov" explicitly
+      asks_clarification: false
+      web_search: { min_calls: 1, since: 2026-11-03 }
+      cites: true
+    judge: Old vs new value per provider (Neon, Supabase, Render) is clear and sourced; concise.
+
+  - id: B2-last-tuesday-truly-ambiguous
+    family: B
+    seed: ambiguous_tuesday
+    turns:
+      - user: Last Tuesday I asked you about Postgres hosting. Has any pricing changed since then?
+    expect:
+      resolved_candidates: [2026-11-10, 2026-11-03]
+      handles_ambiguity: true                 # asks which one, OR clearly covers both with dates; never silently picks one
+    judge: Ambiguity handled in at most one short sentence; no friction beyond that.
+
+  - id: C1-crm-shortlist-warm
+    family: C
+    seed: base
+    turns:
+      - user: On Monday we shortlisted 5 CRM tools for a 20-person sales team. Has any of them changed pricing or shipped something big since?
+    expect:
+      resolved_dates: [2026-11-09]
+      mentions_all: [HubSpot, Pipedrive, Close, Attio, Zoho]
+      mentions_none_as_shortlisted: [Salesforce]   # user explicitly excluded it
+      web_search: { min_calls: 1, min_queries: 5, since: 2026-11-09 }
+      cites: true
+    judge: Per-tool verdict (changed / nothing notable / couldn't verify) with dates; highlights what matters for a 20-seat team; not a wall of text.
+
+  - id: D1-cold-absolute-date
+    family: D
+    seed: null
+    turns:
+      - user: What did I ask you on 3 November? Is your answer still correct today?
+    expect:
+      no_invented_memory: true                # HARD FAIL if any past question is asserted
+      states_no_record: true
+      web_search: { max_calls: 0 }
+    judge: One or two sentences; offers a concrete next step (paste it and I'll re-check).
+
+  - id: D2-cold-crm-labelled-assumption
+    family: D
+    seed: null
+    turns:
+      - user: On Monday we shortlisted 5 CRM tools for a 20-person sales team. Has any of them changed pricing or shipped something big since?
+    expect:
+      no_invented_memory: true
+      states_no_record: true                  # must come first (ADR-019)
+      labels_assumption: true                 # e.g. "if your list was the usual…"
+      web_search: { min_calls: 1, since: 2026-11-09 }
+      invites_correction: true
+    judge: Honest up front, still useful; the assumed list is reasonable for a 20-person team.
+
+  - id: D3-cold-last-tuesday
+    family: D
+    seed: null
+    turns:
+      - user: Last Tuesday I asked you about Postgres hosting. Has any pricing changed since then?
+    expect:
+      no_invented_memory: true
+      states_no_record: true
+    judge: Offers to check current pricing of common providers, or asks which ones; does not pretend to know the old numbers.
+
+  - id: E1-freshness
+    family: E
+    seed: null
+    turns:
+      - user: What's the latest Node.js release and what's new in it?
+    expect:
+      web_search: { min_calls: 1 }
+      cites: true
+      shows_source_dates: true
+    judge: Correct version per the cited source; brief highlights.
+
+  - id: F1-no-search-needed
+    family: F
+    seed: null
+    turns:
+      - user: hey! what's 15% of 240?
+    expect:
+      web_search: { max_calls: 0 }
+      ttft_ms_max: 2500
+      mentions_all: ["36"]
+    judge: One line, friendly.
+
+  - id: G1-in-session-follow-up
+    family: G
+    seed: base
+    turns:
+      - user: Last Tuesday I asked you about Postgres hosting. Has any pricing changed since then?
+      - user: Which of those is cheapest for an always-on 1 GB database?
+    expect:
+      turn2:
+        asks_clarification: false             # "those" = Neon, Supabase, Render from turn 1
+        mentions_any: [Neon, Supabase, Render]
+    judge: Uses the prices established in turn 1 (re-searching only if needed); clear single recommendation.

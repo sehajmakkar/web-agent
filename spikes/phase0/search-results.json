@@ -1,0 +1,1090 @@
+{
+  "rows": [
+    {
+      "q": "Neon serverless Postgres pricing plans",
+      "kind": "pricing",
+      "config": "tavily-basic",
+      "ms": 1934,
+      "n": 5,
+      "primaryTop3": false,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 1213,
+      "top": [
+        "https://selfhost.dev/blog/neon-pricing-cost-of-serverless-postgres",
+        "https://makerkit.dev/pricing-calculator/neon",
+        "https://www.vantage.sh/blog/neon-vs-aws-aurora-serverless-postgres-cost-scale-to-zero"
+      ]
+    },
+    {
+      "q": "Neon serverless Postgres pricing plans",
+      "kind": "pricing",
+      "config": "tavily-advanced",
+      "ms": 2568,
+      "n": 5,
+      "primaryTop3": false,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 1662,
+      "top": [
+        "https://www.buildmvpfast.com/tools/api-pricing-estimator/neon",
+        "https://selfhost.dev/blog/neon-pricing-cost-of-serverless-postgres",
+        "https://www.vantage.sh/blog/neon-vs-aws-aurora-serverless-postgres-cost-scale-to-zero"
+      ]
+    },
+    {
+      "q": "Neon serverless Postgres pricing plans",
+      "kind": "pricing",
+      "config": "exa-auto",
+      "ms": 7262,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 2,
+      "newest": "2026-10-30",
+      "sinceViolations": null,
+      "avgChars": 3000,
+      "top": [
+        "https://neon.com/pricing",
+        "https://neon.com/docs/introduction/plans",
+        "https://neon.com/blog/new-usage-based-pricing"
+      ]
+    },
+    {
+      "q": "Neon serverless Postgres pricing plans",
+      "kind": "pricing",
+      "config": "exa-fast",
+      "ms": 954,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 2,
+      "newest": "2026-10-30",
+      "sinceViolations": null,
+      "avgChars": 3000,
+      "top": [
+        "https://neon.com/pricing",
+        "https://neon.com/docs/introduction/plans",
+        "https://neon.com/blog/new-usage-based-pricing"
+      ]
+    },
+    {
+      "q": "Supabase pricing Pro plan",
+      "kind": "pricing",
+      "config": "tavily-basic",
+      "ms": 2063,
+      "n": 5,
+      "primaryTop3": false,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 1296,
+      "top": [
+        "https://www.metacto.com/blogs/the-true-cost-of-supabase-a-comprehensive-guide-to-pricing-integration-and-maintenance",
+        "https://schematichq.com/blog/supabase-pricing",
+        "https://uibakery.io/blog/supabase-pricing"
+      ]
+    },
+    {
+      "q": "Supabase pricing Pro plan",
+      "kind": "pricing",
+      "config": "tavily-advanced",
+      "ms": 2699,
+      "n": 5,
+      "primaryTop3": false,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 2026,
+      "top": [
+        "https://uibakery.io/blog/supabase-pricing",
+        "https://www.jetadmin.io/blog/supabase-pricing-2026-guide-to-plans-limits-and-real-world-costs",
+        "https://www.metacto.com/blogs/the-true-cost-of-supabase-a-comprehensive-guide-to-pricing-integration-and-maintenance"
+      ]
+    },
+    {
+      "q": "Supabase pricing Pro plan",
+      "kind": "pricing",
+      "config": "exa-auto",
+      "ms": 2188,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 2586,
+      "top": [
+        "https://supabase.com/pricing",
+        "https://supabase.com/kb/faqs/platform/database-only-cost",
+        "https://supabase.com/docs/guides/platform/your-monthly-invoice"
+      ]
+    },
+    {
+      "q": "Supabase pricing Pro plan",
+      "kind": "pricing",
+      "config": "exa-fast",
+      "ms": 629,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 1,
+      "newest": "2026-10-26",
+      "sinceViolations": null,
+      "avgChars": 2586,
+      "top": [
+        "https://supabase.com/pricing",
+        "https://supabase.com/kb/faqs/platform/database-only-cost",
+        "https://github.com/supabase/supabase/blob/b6c0c606/packages/shared-data/plans.ts"
+      ]
+    },
+    {
+      "q": "Render managed Postgres pricing",
+      "kind": "pricing",
+      "config": "tavily-basic",
+      "ms": 1438,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 1295,
+      "top": [
+        "https://tutorsbot.com/blog/render-pricing-2026-plans-cost",
+        "https://render.com/articles/managed-postgresql-pricing-2026",
+        "https://checkthat.ai/brands/render/pricing"
+      ]
+    },
+    {
+      "q": "Render managed Postgres pricing",
+      "kind": "pricing",
+      "config": "tavily-advanced",
+      "ms": 3455,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 1913,
+      "top": [
+        "https://checkthat.ai/brands/render/pricing",
+        "https://render.com/articles/managed-postgresql-pricing-2026",
+        "https://www.srvrlss.io/provider/render"
+      ]
+    },
+    {
+      "q": "Render managed Postgres pricing",
+      "kind": "pricing",
+      "config": "exa-auto",
+      "ms": 3953,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 1,
+      "newest": "2026-10-13",
+      "sinceViolations": null,
+      "avgChars": 3000,
+      "top": [
+        "https://render.com/pricing",
+        "https://render.com/articles/managed-postgresql-pricing-2026",
+        "https://ownkube.io/compare/render-pricing-explained"
+      ]
+    },
+    {
+      "q": "Render managed Postgres pricing",
+      "kind": "pricing",
+      "config": "exa-fast",
+      "ms": 736,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 1,
+      "newest": "2026-09-11",
+      "sinceViolations": null,
+      "avgChars": 2613,
+      "top": [
+        "https://render.com/pricing",
+        "https://wheretodeploy.com/managed-postgres",
+        "https://render.com/docs/postgresql-legacy-instance-types"
+      ]
+    },
+    {
+      "q": "HubSpot Sales Hub pricing per seat",
+      "kind": "pricing",
+      "config": "tavily-basic",
+      "ms": 1917,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 1150,
+      "top": [
+        "https://cargas.com/software/hubspot/pricing",
+        "https://legal.hubspot.com/hubspot-product-and-services-catalog",
+        "https://www.whatisbest.com/sales-enablement/sales-enablement-platform-pricing-what-do-seismic-highspot-and-mindtickle-actually-cost"
+      ]
+    },
+    {
+      "q": "HubSpot Sales Hub pricing per seat",
+      "kind": "pricing",
+      "config": "tavily-advanced",
+      "ms": 2540,
+      "n": 5,
+      "primaryTop3": false,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 1786,
+      "top": [
+        "https://www.featurebase.app/blog/hubspot-pricing",
+        "https://www.revspire.io/compare/hubspot-pricing",
+        "http://oreateai.com/blog/navigating-hubspot-sales-hub-pricing-for-2025-what-to-expect-per-seat/4c95365b5e0be27bc2c254454d3ec39c"
+      ]
+    },
+    {
+      "q": "HubSpot Sales Hub pricing per seat",
+      "kind": "pricing",
+      "config": "exa-auto",
+      "ms": 2288,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 2,
+      "newest": "2026-11-04",
+      "sinceViolations": null,
+      "avgChars": 3000,
+      "top": [
+        "https://blog.hubspot.com/sales/hubspot-sales-hub-pricing",
+        "https://legal.hubspot.com/hubspot-product-and-services-catalog",
+        "https://www.hubspot.com/products/sales"
+      ]
+    },
+    {
+      "q": "HubSpot Sales Hub pricing per seat",
+      "kind": "pricing",
+      "config": "exa-fast",
+      "ms": 577,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 3,
+      "newest": "2026-11-04",
+      "sinceViolations": null,
+      "avgChars": 3000,
+      "top": [
+        "https://blog.hubspot.com/sales/hubspot-sales-hub-pricing",
+        "https://legal.hubspot.com/hubspot-product-and-services-catalog",
+        "https://www.g2.com/products/hubspot-sales-hub/pricing"
+      ]
+    },
+    {
+      "q": "Pipedrive pricing plans",
+      "kind": "pricing",
+      "config": "tavily-basic",
+      "ms": 1536,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 1279,
+      "top": [
+        "https://capsulecrm.com/blog/pipedrive-crm-pricing",
+        "https://www.forbes.com/advisor/business/software/pipedrive-pricing",
+        "https://support.pipedrive.com/en/article/new-pipedrive-plans"
+      ]
+    },
+    {
+      "q": "Pipedrive pricing plans",
+      "kind": "pricing",
+      "config": "tavily-advanced",
+      "ms": 3197,
+      "n": 5,
+      "primaryTop3": false,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 1479,
+      "top": [
+        "https://www.larksuite.com/en_us/blog/pipedrive-pricing",
+        "https://axisconsulting.io/pipedrive-pricing-plans",
+        "https://www.method.me/blog/how-much-does-pipedrive-cost"
+      ]
+    },
+    {
+      "q": "Pipedrive pricing plans",
+      "kind": "pricing",
+      "config": "exa-auto",
+      "ms": 1653,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 2,
+      "newest": "2026-02-03",
+      "sinceViolations": null,
+      "avgChars": 2440,
+      "top": [
+        "https://www.pipedrive.com/en/pricing",
+        "https://support.pipedrive.com/en/article/how-does-pricing-work-in-pipedrive",
+        "https://www.forbes.com/advisor/business/software/pipedrive-pricing/"
+      ]
+    },
+    {
+      "q": "Pipedrive pricing plans",
+      "kind": "pricing",
+      "config": "exa-fast",
+      "ms": 641,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 1,
+      "newest": "2026-02-03",
+      "sinceViolations": null,
+      "avgChars": 2600,
+      "top": [
+        "https://www.pipedrive.com/en/pricing",
+        "https://support.pipedrive.com/en/article/how-does-pricing-work-in-pipedrive",
+        "https://support.pipedrive.com/en/article/new-pipedrive-plans"
+      ]
+    },
+    {
+      "q": "Close CRM pricing",
+      "kind": "pricing",
+      "config": "tavily-basic",
+      "ms": 1744,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 1234,
+      "top": [
+        "https://zeeg.me/en/blog/post/close-crm-pricing",
+        "https://close.com/pricing",
+        "https://close.com"
+      ]
+    },
+    {
+      "q": "Close CRM pricing",
+      "kind": "pricing",
+      "config": "tavily-advanced",
+      "ms": 2788,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 2037,
+      "top": [
+        "https://marketbetter.ai/blog/close-crm-pricing-2026",
+        "https://www.layer3labs.io/guides/close-crm-pricing",
+        "https://close.com/pricing"
+      ]
+    },
+    {
+      "q": "Close CRM pricing",
+      "kind": "pricing",
+      "config": "exa-auto",
+      "ms": 2708,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 2,
+      "newest": "2026-11-03",
+      "sinceViolations": null,
+      "avgChars": 2767,
+      "top": [
+        "https://help.close.com/account-management/plans-and-billing",
+        "https://cleanform.io/blog/close-crm-pricing/",
+        "https://www.g2.com/products/close/pricing"
+      ]
+    },
+    {
+      "q": "Close CRM pricing",
+      "kind": "pricing",
+      "config": "exa-fast",
+      "ms": 1027,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 1,
+      "newest": "2026-11-03",
+      "sinceViolations": null,
+      "avgChars": 2767,
+      "top": [
+        "https://help.close.com/account-management/plans-and-billing",
+        "https://www.g2.com/products/close/pricing",
+        "https://cleanform.io/blog/close-crm-pricing/"
+      ]
+    },
+    {
+      "q": "Neon Postgres changelog",
+      "kind": "since",
+      "config": "tavily-basic",
+      "ms": 2334,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": 0,
+      "avgChars": 1066,
+      "top": [
+        "https://changelogs.us/neon",
+        "https://neon.com/blog/category/changelog",
+        "https://neon.com/docs/manage/updates"
+      ]
+    },
+    {
+      "q": "Neon Postgres changelog",
+      "kind": "since",
+      "config": "tavily-advanced",
+      "ms": 2997,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": 0,
+      "avgChars": 845,
+      "top": [
+        "https://changelogs.us/neon",
+        "https://neon.com/docs/changelog/2026-10-30",
+        "https://neon.com/blog/category/changelog"
+      ]
+    },
+    {
+      "q": "Neon Postgres changelog",
+      "kind": "since",
+      "config": "exa-auto",
+      "ms": 3776,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 5,
+      "newest": "2026-11-10",
+      "sinceViolations": 0,
+      "avgChars": 2708,
+      "top": [
+        "https://neon.com/docs/changelog/2026-11-06",
+        "https://neon.com/blog/whats-new-with-the-neon-backend",
+        "https://neon.com/docs/changelog/2026-10-16"
+      ]
+    },
+    {
+      "q": "Neon Postgres changelog",
+      "kind": "since",
+      "config": "exa-fast",
+      "ms": 725,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 5,
+      "newest": "2026-11-10",
+      "sinceViolations": 0,
+      "avgChars": 2705,
+      "top": [
+        "https://neon.com/docs/changelog/2026-11-06",
+        "https://neon.com/blog/whats-new-with-the-neon-backend",
+        "https://neon.com/docs/changelog/2026-10-16"
+      ]
+    },
+    {
+      "q": "Supabase new features announcement",
+      "kind": "since",
+      "config": "tavily-basic",
+      "ms": 1643,
+      "n": 5,
+      "primaryTop3": false,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": 0,
+      "avgChars": 1170,
+      "top": [
+        "https://createwith.com/tool/supabase",
+        "https://vibeappscanner.com/blog/supabase-october-30-ai-generated-table-access",
+        "https://www.linkedin.com/posts/ecorpinformationtechnologies_at-supabase-select-2026-on-2-october-supabase-activity-7520338085981794304-W31o"
+      ]
+    },
+    {
+      "q": "Supabase new features announcement",
+      "kind": "since",
+      "config": "tavily-advanced",
+      "ms": 2617,
+      "n": 5,
+      "primaryTop3": false,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": 0,
+      "avgChars": 2073,
+      "top": [
+        "https://www.linkedin.com/posts/ecorpinformationtechnologies_at-supabase-select-2026-on-2-october-supabase-activity-7520338085981794304-W31o",
+        "https://createwith.com/tool/supabase",
+        "https://catdoes.com/blog/what-is-supabase"
+      ]
+    },
+    {
+      "q": "Supabase new features announcement",
+      "kind": "since",
+      "config": "exa-auto",
+      "ms": 3197,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 5,
+      "newest": "2026-11-10",
+      "sinceViolations": 0,
+      "avgChars": 2243,
+      "top": [
+        "https://www.laplaceatlas.com/stories/supabase-announces-local-runtime-declarative-schemas-and-compute-at-sele-86c913c6",
+        "https://www.techtwitter.com/articles/supabase-update-november-2026-2118705279491780710",
+        "https://supabase.com/blog/categories/developers"
+      ]
+    },
+    {
+      "q": "Supabase new features announcement",
+      "kind": "since",
+      "config": "exa-fast",
+      "ms": 604,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 5,
+      "newest": "2026-11-10",
+      "sinceViolations": 0,
+      "avgChars": 1709,
+      "top": [
+        "https://www.laplaceatlas.com/stories/supabase-announces-local-runtime-declarative-schemas-and-compute-at-sele-86c913c6",
+        "https://supabase.com/blog",
+        "https://news.yushang.ai/en/2026/11/supabase-joins-expo-s-eas-cli-with-isolated-b697b6"
+      ]
+    },
+    {
+      "q": "HubSpot pricing change",
+      "kind": "since",
+      "config": "tavily-basic",
+      "ms": 1830,
+      "n": 5,
+      "primaryTop3": false,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": 0,
+      "avgChars": 1155,
+      "top": [
+        "https://suitestack.se/en/insights/hubspot-pricing-2026-new-model",
+        "https://project36.io/hubspot-new-pricing-october-2026",
+        "https://www.linkedin.com/posts/thorsteinnordby_hubspot-just-made-the-biggest-pricing-change-activity-7516062887443009536-757O"
+      ]
+    },
+    {
+      "q": "HubSpot pricing change",
+      "kind": "since",
+      "config": "tavily-advanced",
+      "ms": 4211,
+      "n": 5,
+      "primaryTop3": false,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": 0,
+      "avgChars": 1811,
+      "top": [
+        "https://project36.io/hubspot-new-pricing-october-2026",
+        "https://www.linkedin.com/posts/thorsteinnordby_hubspot-just-made-the-biggest-pricing-change-activity-7516062887443009536-757O",
+        "https://suitestack.se/en/insights/hubspot-pricing-2026-new-model"
+      ]
+    },
+    {
+      "q": "HubSpot pricing change",
+      "kind": "since",
+      "config": "exa-auto",
+      "ms": 5104,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 5,
+      "newest": "2026-11-08",
+      "sinceViolations": 0,
+      "avgChars": 3000,
+      "top": [
+        "https://www.hubspot.com/company-news/flexible-pricing",
+        "https://ppc.land/hubspot-forecasts-q4-revenue-below-q3-as-growth-slows-to-12-from-17/",
+        "https://www.hejlsvigconsulting.com/articles/hubspot-ny-prismodel-emea/"
+      ]
+    },
+    {
+      "q": "HubSpot pricing change",
+      "kind": "since",
+      "config": "exa-fast",
+      "ms": 673,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 5,
+      "newest": "2026-11-10",
+      "sinceViolations": 0,
+      "avgChars": 2938,
+      "top": [
+        "https://www.hubspot.com/company-news/flexible-pricing",
+        "https://didset.com/news/hubspot-ai-credit-spending-limits",
+        "https://www.amirmousavi.com/articles/hubspot-credits-and-seats-what-changed"
+      ]
+    },
+    {
+      "q": "Salesforce Sales Cloud announcement",
+      "kind": "since",
+      "config": "tavily-basic",
+      "ms": 1570,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": 0,
+      "avgChars": 1053,
+      "top": [
+        "https://www.salesforce.com/blog/category/sales-cloud",
+        "https://forcefolks.com/salesforce-price-increase-history",
+        "https://twopirconsulting.com/blog/salesforce-media-cloud-your-ultimate-media-sales-solution"
+      ]
+    },
+    {
+      "q": "Salesforce Sales Cloud announcement",
+      "kind": "since",
+      "config": "tavily-advanced",
+      "ms": 2321,
+      "n": 5,
+      "primaryTop3": false,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": 0,
+      "avgChars": 1638,
+      "top": [
+        "https://valintry360.com/blogs/salesforce-dreamforce-2026-complete-guide",
+        "https://www.forward.eu/insights/blogs/the-ultimate-guide-to-sales-cloud-boost-your-sales-process",
+        "https://www.mastek.com/us/services/salesforce/sales-cloud"
+      ]
+    },
+    {
+      "q": "Salesforce Sales Cloud announcement",
+      "kind": "since",
+      "config": "exa-auto",
+      "ms": 2631,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 5,
+      "newest": "2026-11-11",
+      "sinceViolations": 0,
+      "avgChars": 2246,
+      "top": [
+        "https://www.salesforce.com/news/stories/how-ai-agents-improve-crm-data-accuracy/",
+        "https://help.salesforce.com/s/articleView?id=005460096&language=en_US&type=1",
+        "https://www.linkedin.com/posts/salesforcesalescloud_the-best-sellers-have-already-figured-out-activity-7521594456437940224-kAK2"
+      ]
+    },
+    {
+      "q": "Salesforce Sales Cloud announcement",
+      "kind": "since",
+      "config": "exa-fast",
+      "ms": 952,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 5,
+      "newest": "2026-11-10",
+      "sinceViolations": 0,
+      "avgChars": 1816,
+      "top": [
+        "https://www.salesforce.com/news/stories/how-ai-agents-improve-crm-data-accuracy/",
+        "https://help.salesforce.com/s/articleView?id=005460096&language=en_US&type=1",
+        "https://www.linkedin.com/posts/salesforcesalescloud_the-best-sellers-have-already-figured-out-activity-7521594456437940224-kAK2"
+      ]
+    },
+    {
+      "q": "Pipedrive new feature launch",
+      "kind": "since",
+      "config": "tavily-basic",
+      "ms": 1968,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": 0,
+      "avgChars": 1211,
+      "top": [
+        "https://www.linkedin.com/posts/nweill_i-spent-the-last-two-days-in-orlando-with-activity-7513946363294855169-1JMe",
+        "https://www.pipedrive.com/en/newsroom/pipedrive-expands-in-asia-by-launching-localized-product-in-taiwan",
+        "https://www.pipedrive.com/en/blog/sales-pipeline-automation"
+      ]
+    },
+    {
+      "q": "Pipedrive new feature launch",
+      "kind": "since",
+      "config": "tavily-advanced",
+      "ms": 3510,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": 0,
+      "avgChars": 1703,
+      "top": [
+        "https://www.pipedrive.com/en/newsroom/pipedrive-expands-in-asia-by-launching-localized-product-in-taiwan",
+        "https://www.linkedin.com/posts/weekcrm_pipedrives-nova-meeting-intelligence-tool-activity-7513597125037940736-17dh",
+        "https://www.supered.io/supered-for-pipedrive"
+      ]
+    },
+    {
+      "q": "Pipedrive new feature launch",
+      "kind": "since",
+      "config": "exa-auto",
+      "ms": 4232,
+      "n": 5,
+      "primaryTop3": false,
+      "dated": 5,
+      "newest": "2026-11-03",
+      "sinceViolations": 0,
+      "avgChars": 2610,
+      "top": [
+        "https://www.weekcrm.com/news/2026-10-07-pipedrive-adds-crm-field-suggestions-to-nova-meeting-notes",
+        "https://www.cloudcomputing-insider.de/pipedrive-launcht-ki-tool-nova-a-d8cc6c117afc697388012ba7b74958cc/",
+        "https://pipehand.com/guides/pipedrive-ai-nova"
+      ]
+    },
+    {
+      "q": "Pipedrive new feature launch",
+      "kind": "since",
+      "config": "exa-fast",
+      "ms": 1028,
+      "n": 5,
+      "primaryTop3": false,
+      "dated": 5,
+      "newest": "2026-11-03",
+      "sinceViolations": 0,
+      "avgChars": 2348,
+      "top": [
+        "https://www.weekcrm.com/news/2026-10-07-pipedrive-adds-crm-field-suggestions-to-nova-meeting-notes",
+        "https://www.linkedin.com/posts/pipedrive_notes-that-write-themselves-leads-that-activity-7511381072086212608-I55R",
+        "https://pipehand.com/guides/pipedrive-ai-nova"
+      ]
+    },
+    {
+      "q": "latest Node.js release",
+      "kind": "fresh",
+      "config": "tavily-basic",
+      "ms": 1853,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 1136,
+      "top": [
+        "https://www.herodevs.com/blog-posts/node-js-end-of-life-dates-you-should-be-aware-of",
+        "https://nodejs.org/en/blog/release",
+        "https://blog.logrocket.com/node-js-24-new"
+      ]
+    },
+    {
+      "q": "latest Node.js release",
+      "kind": "fresh",
+      "config": "tavily-advanced",
+      "ms": 2961,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 1088,
+      "top": [
+        "https://blog.risingstack.com/update-node-js-latest-version",
+        "https://www.herodevs.com/blog-posts/node-js-end-of-life-dates-you-should-be-aware-of",
+        "https://nodejs.org/en/blog/release"
+      ]
+    },
+    {
+      "q": "latest Node.js release",
+      "kind": "fresh",
+      "config": "exa-auto",
+      "ms": 3255,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 1871,
+      "top": [
+        "https://nodejs.org/en/blog/release/v26.13.0",
+        "https://nodejs.org/en/blog/release",
+        "https://nodejs.org/en"
+      ]
+    },
+    {
+      "q": "latest Node.js release",
+      "kind": "fresh",
+      "config": "exa-fast",
+      "ms": 705,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 2045,
+      "top": [
+        "https://nodejs.org/en/blog/release/v26.13.0",
+        "https://nodejs.org/en/download/current/",
+        "https://nodejs.org/en/blog/release"
+      ]
+    },
+    {
+      "q": "AI news this week",
+      "kind": "fresh",
+      "config": "tavily-basic",
+      "ms": 2207,
+      "n": 5,
+      "primaryTop3": null,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 1187,
+      "top": [
+        "https://www.indiatoday.in/technology/this-week-in-ai",
+        "https://aiweekly.co",
+        "https://www.artificialintelligence-news.com"
+      ]
+    },
+    {
+      "q": "AI news this week",
+      "kind": "fresh",
+      "config": "tavily-advanced",
+      "ms": 3357,
+      "n": 5,
+      "primaryTop3": null,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 1861,
+      "top": [
+        "https://www.youtube.com/watch?v=vpUk5OetUNk&vl=en-US",
+        "https://www.artificialintelligence-news.com",
+        "https://aiweekly.co"
+      ]
+    },
+    {
+      "q": "AI news this week",
+      "kind": "fresh",
+      "config": "exa-auto",
+      "ms": 3200,
+      "n": 5,
+      "primaryTop3": null,
+      "dated": 4,
+      "newest": "2026-11-11",
+      "sinceViolations": null,
+      "avgChars": 3000,
+      "top": [
+        "https://www.axios.com/2026/11/11/anthropic-ipo-ai-nvidia-midterms",
+        "https://aiweekly.co/ai-news-today",
+        "https://www.theneurondaily.com/p/3-ai-labs-shipped-for-you"
+      ]
+    },
+    {
+      "q": "AI news this week",
+      "kind": "fresh",
+      "config": "exa-fast",
+      "ms": 695,
+      "n": 5,
+      "primaryTop3": null,
+      "dated": 4,
+      "newest": "2026-11-11",
+      "sinceViolations": null,
+      "avgChars": 3000,
+      "top": [
+        "https://www.axios.com/2026/11/11/anthropic-ipo-ai-nvidia-midterms",
+        "https://www.thedayafterai.com/weekly",
+        "https://geopoliticspulse.com/2026/11/11/ai-weekly-briefing-2026-11-11/"
+      ]
+    },
+    {
+      "q": "PostgreSQL latest major version release",
+      "kind": "fact",
+      "config": "tavily-basic",
+      "ms": 2105,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 1068,
+      "top": [
+        "https://www.instaclustr.com/education/postgresql/postgres-versions-supported-releases-eol-dates-upgrades",
+        "https://pgpedia.info/postgresql-versions/index.html",
+        "https://www.postgresql.org/about/news/postgresql-18-released-3142"
+      ]
+    },
+    {
+      "q": "PostgreSQL latest major version release",
+      "kind": "fact",
+      "config": "tavily-advanced",
+      "ms": 2622,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 2000,
+      "top": [
+        "https://www.instaclustr.com/education/postgresql/postgres-versions-supported-releases-eol-dates-upgrades",
+        "https://pgpedia.info/postgresql-versions/index.html",
+        "https://www.postgresql.org/about/news/postgresql-18-released-3142"
+      ]
+    },
+    {
+      "q": "PostgreSQL latest major version release",
+      "kind": "fact",
+      "config": "exa-auto",
+      "ms": 2347,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 1,
+      "newest": "2025-09-25",
+      "sinceViolations": null,
+      "avgChars": 2569,
+      "top": [
+        "https://www.postgresql.org/support/versioning/",
+        "https://www.postgresql.org/",
+        "https://www.postgresql.org/about/news/postgresql-18-released-3142/"
+      ]
+    },
+    {
+      "q": "PostgreSQL latest major version release",
+      "kind": "fact",
+      "config": "exa-fast",
+      "ms": 643,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 1,
+      "newest": "2025-09-25",
+      "sinceViolations": null,
+      "avgChars": 2569,
+      "top": [
+        "https://www.postgresql.org/support/versioning/",
+        "https://www.postgresql.org/",
+        "https://www.postgresql.org/docs/current/release-18-6.html"
+      ]
+    },
+    {
+      "q": "Zoho CRM pricing for 20 users",
+      "kind": "pricing",
+      "config": "tavily-basic",
+      "ms": 2147,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 1184,
+      "top": [
+        "https://www.method.me/blog/zoho-crm-cost",
+        "https://www.zoho.com/en-us/crm/zohocrm-pricing.html",
+        "https://www.zoho.com/crm/zohocrm-pricing-calculator.html"
+      ]
+    },
+    {
+      "q": "Zoho CRM pricing for 20 users",
+      "kind": "pricing",
+      "config": "tavily-advanced",
+      "ms": 3376,
+      "n": 5,
+      "primaryTop3": false,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 1808,
+      "top": [
+        "https://www.larksuite.com/en_us/blog/zoho-crm-pricing",
+        "https://saleshive.com/vendors/zoho-crm",
+        "https://www.spotsaas.com/blog/zoho-crm-pricing"
+      ]
+    },
+    {
+      "q": "Zoho CRM pricing for 20 users",
+      "kind": "pricing",
+      "config": "exa-auto",
+      "ms": 2626,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 1,
+      "newest": "2026-05-28",
+      "sinceViolations": null,
+      "avgChars": 2800,
+      "top": [
+        "https://www.zoho.com/en-us/crm/zohocrm-pricing.html",
+        "https://www.zoho.com/crm/zohocrm-pricing-calculator.html",
+        "https://www.sparrowcrm.com/blogs/zoho-crm-pricing"
+      ]
+    },
+    {
+      "q": "Zoho CRM pricing for 20 users",
+      "kind": "pricing",
+      "config": "exa-fast",
+      "ms": 670,
+      "n": 5,
+      "primaryTop3": true,
+      "dated": 0,
+      "newest": null,
+      "sinceViolations": null,
+      "avgChars": 2800,
+      "top": [
+        "https://www.zoho.com/en-us/crm/zohocrm-pricing.html",
+        "https://www.zoho.com/crm/zohocrm-pricing-calculator.html",
+        "https://saaspricecheck.com/zoho-crm/pricing/"
+      ]
+    }
+  ],
+  "extract": [
+    {
+      "url": "https://neon.com/pricing",
+      "tavily": {
+        "ms": 725,
+        "chars": 25423
+      },
+      "exa": {
+        "ms": 555,
+        "chars": 14755
+      }
+    },
+    {
+      "url": "https://supabase.com/pricing",
+      "tavily": {
+        "ms": 304,
+        "chars": 19097
+      },
+      "exa": {
+        "ms": 464,
+        "chars": 14560
+      }
+    }
+  ],
+  "summary": {
+    "tavily-basic": {
+      "ok": 15,
+      "errors": 0,
+      "p50ms": 1917,
+      "p90ms": 2207,
+      "primaryTop3": "10/14",
+      "datedShare": "0/75",
+      "sinceViolations": 0,
+      "avgChars": 1180
+    },
+    "tavily-advanced": {
+      "ok": 15,
+      "errors": 0,
+      "p50ms": 2961,
+      "p90ms": 3510,
+      "primaryTop3": "6/14",
+      "datedShare": "0/75",
+      "sinceViolations": 0,
+      "avgChars": 1715
+    },
+    "exa-auto": {
+      "ok": 15,
+      "errors": 0,
+      "p50ms": 3197,
+      "p90ms": 5104,
+      "primaryTop3": "13/14",
+      "datedShare": "40/75",
+      "sinceViolations": 0,
+      "avgChars": 2656
+    },
+    "exa-fast": {
+      "ok": 15,
+      "errors": 0,
+      "p50ms": 695,
+      "p90ms": 1027,
+      "primaryTop3": "13/14",
+      "datedShare": "39/75",
+      "sinceViolations": 0,
+      "avgChars": 2566
+    }
+  }
+}

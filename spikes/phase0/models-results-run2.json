@@ -1,0 +1,433 @@
+{
+  "gemini-3.7-flash": {
+    "hello": [
+      {
+        "error": "TimeoutError: The operation was aborted due to timeout"
+      }
+    ],
+    "tools": [
+      {
+        "error": "503 {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n",
+        "thinkingParam": "thinkingBudget"
+      }
+    ],
+    "dates": [
+      {
+        "error": "TimeoutError: The operation was aborted due to timeout"
+      }
+    ],
+    "extract": [
+      {
+        "error": "TimeoutError: The operation was aborted due to timeout"
+      }
+    ]
+  },
+  "gemini-3.5-flash": {
+    "hello": [
+      {
+        "ttft": 4277,
+        "total": 4344,
+        "text": "OK",
+        "calls": [],
+        "usage": {
+          "promptTokenCount": 6,
+          "candidatesTokenCount": 1,
+          "totalTokenCount": 7,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "thinkingParam": "thinkingLevel"
+      },
+      {
+        "ttft": 1666,
+        "total": 1676,
+        "text": "OK",
+        "calls": [],
+        "usage": {
+          "promptTokenCount": 6,
+          "candidatesTokenCount": 1,
+          "totalTokenCount": 7,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "thinkingParam": "thinkingLevel"
+      }
+    ],
+    "tools": [
+      {
+        "ttft": 3106,
+        "total": 3114,
+        "text": "",
+        "calls": [
+          {
+            "name": "web_search",
+            "args": {
+              "queries": [
+                "Neon Postgres pricing changes November 2026",
+                "Supabase pricing changes November 2026",
+                "Render managed Postgres pricing changes November 2026",
+                "Postgres pricing update Neon Supabase Render November 2026"
+              ]
+            },
+            "id": "call_2814710746889734286"
+          }
+        ],
+        "usage": {
+          "promptTokenCount": 147,
+          "candidatesTokenCount": 69,
+          "totalTokenCount": 344,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 147
+            }
+          ],
+          "thoughtsTokenCount": 128,
+          "serviceTier": "standard"
+        },
+        "thinkingParam": "thinkingLevel"
+      },
+      {
+        "ttft": 2530,
+        "total": 2545,
+        "text": "",
+        "calls": [
+          {
+            "name": "web_search",
+            "args": {
+              "queries": [
+                "Neon postgres pricing changes November 2026",
+                "Supabase pricing changes November 2026",
+                "Render managed postgres pricing changes November 2026",
+                "Neon Supabase Render postgres pricing changes 2026"
+              ]
+            },
+            "id": "call_4327178112050221815"
+          }
+        ],
+        "usage": {
+          "promptTokenCount": 147,
+          "candidatesTokenCount": 67,
+          "totalTokenCount": 325,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 147
+            }
+          ],
+          "thoughtsTokenCount": 111,
+          "serviceTier": "standard"
+        },
+        "thinkingParam": "thinkingLevel"
+      }
+    ],
+    "dates": [
+      {
+        "ttft": 3752,
+        "total": 4355,
+        "text": "Here are the dates based on Wednesday, 11 November 2026:\n\n(a) **'on Monday'**: **Monday, 16 November 2026** *(Ambiguity: usually refers to the upcoming Monday, but can sometimes mean the most recent past Monday, 9 November 2026)*.\n(b) **'last Tuesday'**: **Tuesday, 3 November 2026** *(Ambiguity: typically refers to the Tuesday of the previous calendar week, though some speakers may use it to mean yesterday, 10 November 2026)*.\n(c) **'3 November' weekday**: **Tuesday** *(3 November 2026; no ambiguity)*.",
+        "calls": [],
+        "usage": {
+          "promptTokenCount": 52,
+          "candidatesTokenCount": 157,
+          "totalTokenCount": 775,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 52
+            }
+          ],
+          "thoughtsTokenCount": 566,
+          "serviceTier": "standard"
+        },
+        "thinkingParam": "thinkingLevel"
+      },
+      {
+        "ttft": 5108,
+        "total": 5684,
+        "text": "(a) **Monday 16 November 2026** *(Ambiguity: Depending on context/tense, it could refer to the upcoming Monday on 16 Nov or the recent Monday on 9 Nov).*\n(b) **Tuesday 10 November 2026** *(Ambiguity: Usually refers to yesterday, 10 Nov, but some dialects use it to mean the Tuesday of the previous calendar week, 3 Nov).*\n(c) **Tuesday** (specifically Tuesday 3 November 2026, with no ambiguity).",
+        "calls": [],
+        "usage": {
+          "promptTokenCount": 52,
+          "candidatesTokenCount": 118,
+          "totalTokenCount": 877,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 52
+            }
+          ],
+          "thoughtsTokenCount": 707,
+          "serviceTier": "standard"
+        },
+        "thinkingParam": "thinkingLevel"
+      }
+    ],
+    "extract": [
+      {
+        "ttft": 1820,
+        "total": 2240,
+        "text": "{\n  \"claims\": [\n    {\n      \"entity\": \"Neon Launch plan\",\n      \"attribute\": \"price\",\n      \"value\": \"$19/month\",\n      \"source\": 1\n    },\n    {\n      \"entity\": \"Supabase Pro\",\n      \"attribute\": \"price\",\n      \"value\": \"$25/month plus usage\",\n      \"source\": 2\n    }\n  ]\n}",
+        "calls": [],
+        "usage": {
+          "promptTokenCount": 37,
+          "candidatesTokenCount": 98,
+          "totalTokenCount": 135,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 37
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "thinkingParam": "thinkingBudget"
+      },
+      {
+        "ttft": 1630,
+        "total": 1983,
+        "text": "{\n  \"claims\": [\n    {\n      \"entity\": \"Neon Launch plan\",\n      \"attribute\": \"price\",\n      \"value\": \"$19/month\",\n      \"source\": 1\n    },\n    {\n      \"entity\": \"Supabase Pro\",\n      \"attribute\": \"price\",\n      \"value\": \"$25/month plus usage\",\n      \"source\": 2\n    }\n  ]\n}",
+        "calls": [],
+        "usage": {
+          "promptTokenCount": 37,
+          "candidatesTokenCount": 98,
+          "totalTokenCount": 135,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 37
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "thinkingParam": "thinkingLevel"
+      }
+    ]
+  },
+  "gemini-3.1-flash-lite": {
+    "hello": [
+      {
+        "ttft": 1502,
+        "total": 1507,
+        "text": "OK",
+        "calls": [],
+        "usage": {
+          "promptTokenCount": 6,
+          "candidatesTokenCount": 1,
+          "totalTokenCount": 7,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "thinkingParam": "thinkingLevel"
+      },
+      {
+        "ttft": 6653,
+        "total": 6654,
+        "text": "OK",
+        "calls": [],
+        "usage": {
+          "promptTokenCount": 6,
+          "candidatesTokenCount": 1,
+          "totalTokenCount": 7,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 6
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "thinkingParam": "thinkingLevel"
+      }
+    ],
+    "tools": [
+      {
+        "ttft": 4337,
+        "total": 4337,
+        "text": "",
+        "calls": [
+          {
+            "name": "web_search",
+            "args": {
+              "queries": [
+                "Neon Postgres pricing updates November 2026",
+                "Supabase pricing updates November 2026",
+                "Render managed Postgres pricing updates November 2026"
+              ]
+            },
+            "id": "call_2042433406848390952"
+          }
+        ],
+        "usage": {
+          "promptTokenCount": 147,
+          "candidatesTokenCount": 52,
+          "totalTokenCount": 348,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 147
+            }
+          ],
+          "thoughtsTokenCount": 149,
+          "serviceTier": "standard"
+        },
+        "thinkingParam": "thinkingLevel"
+      },
+      {
+        "ttft": 2258,
+        "total": 2258,
+        "text": "",
+        "calls": [
+          {
+            "name": "web_search",
+            "args": {
+              "queries": [
+                "Neon Postgres pricing changes November 2026",
+                "Supabase pricing changes November 2026",
+                "Render managed Postgres pricing changes November 2026"
+              ]
+            },
+            "id": "call_14675884937568138224"
+          }
+        ],
+        "usage": {
+          "promptTokenCount": 147,
+          "candidatesTokenCount": 52,
+          "totalTokenCount": 336,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 147
+            }
+          ],
+          "thoughtsTokenCount": 137,
+          "serviceTier": "standard"
+        },
+        "thinkingParam": "thinkingLevel"
+      }
+    ],
+    "dates": [
+      {
+        "ttft": 1637,
+        "total": 1995,
+        "text": "Here are the dates for the requested expressions:\n\n(a) 'on Monday': 16 November 2026 (the upcoming Monday) or 9 November 2026 (the most recent Monday); context usually implies the future, but \"on Monday\" can be ambiguous.\n(b) 'last Tuesday': 10 November 2026 (yesterday).\n(c) '3 November' weekday: Tuesday (3 November 2026).",
+        "calls": [],
+        "usage": {
+          "promptTokenCount": 52,
+          "candidatesTokenCount": 102,
+          "totalTokenCount": 291,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 52
+            }
+          ],
+          "thoughtsTokenCount": 137,
+          "serviceTier": "standard"
+        },
+        "thinkingParam": "thinkingLevel"
+      },
+      {
+        "ttft": 1395,
+        "total": 1717,
+        "text": "(a) 'On Monday' could refer to the upcoming Monday, 16 November 2026, or the most recent past Monday, 9 November 2026.\n(b) 'Last Tuesday' refers to 10 November 2026, assuming the standard usage of \"last\" meaning the most recent occurrence.\n(c) 3 November 2026 was a Tuesday (this is unambiguous as the date has already passed).",
+        "calls": [],
+        "usage": {
+          "promptTokenCount": 52,
+          "candidatesTokenCount": 100,
+          "totalTokenCount": 312,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 52
+            }
+          ],
+          "thoughtsTokenCount": 160,
+          "serviceTier": "standard"
+        },
+        "thinkingParam": "thinkingLevel"
+      }
+    ],
+    "extract": [
+      {
+        "ttft": 8188,
+        "total": 8376,
+        "text": "{\n  \"claims\": [\n    {\n      \"entity\": \"Neon Launch plan\",\n      \"attribute\": \"price\",\n      \"value\": \"$19/month\",\n      \"source\": 1\n    },\n    {\n      \"entity\": \"Supabase Pro\",\n      \"attribute\": \"price\",\n      \"value\": \"$25/month plus usage\",\n      \"source\": 2\n    }\n  ]\n}",
+        "calls": [],
+        "usage": {
+          "promptTokenCount": 37,
+          "candidatesTokenCount": 98,
+          "totalTokenCount": 135,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 37
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "thinkingParam": "thinkingLevel"
+      },
+      {
+        "ttft": 1814,
+        "total": 1981,
+        "text": "{\n  \"claims\": [\n    {\n      \"entity\": \"Neon Launch plan\",\n      \"attribute\": \"price\",\n      \"value\": \"$19/month\",\n      \"source\": 1\n    },\n    {\n      \"entity\": \"Supabase Pro\",\n      \"attribute\": \"price\",\n      \"value\": \"$25/month plus usage\",\n      \"source\": 2\n    }\n  ]\n}",
+        "calls": [],
+        "usage": {
+          "promptTokenCount": 37,
+          "candidatesTokenCount": 98,
+          "totalTokenCount": 135,
+          "promptTokensDetails": [
+            {
+              "modality": "TEXT",
+              "tokenCount": 37
+            }
+          ],
+          "serviceTier": "standard"
+        },
+        "thinkingParam": "thinkingLevel"
+      }
+    ]
+  },
+  "gemini-3.8-flash": {
+    "hello": [
+      {
+        "error": "503 {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n",
+        "thinkingParam": "thinkingBudget"
+      }
+    ],
+    "tools": [
+      {
+        "error": "503 {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n",
+        "thinkingParam": "thinkingBudget"
+      }
+    ],
+    "dates": [
+      {
+        "error": "503 {\n  \"error\": {\n    \"code\": 503,\n    \"message\": \"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\",\n    \"status\": \"UNAVAILABLE\"\n  }\n}\n",
+        "thinkingParam": "thinkingBudget"
+      }
+    ],
+    "extract": [
+      {
+        "error": "429 {\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.google.com/do",
+        "thinkingParam": "thinkingBudget"
+      }
+    ]
+  }
+}

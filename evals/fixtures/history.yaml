@@ -1,0 +1,100 @@
+# Seed history for evals and `npm run seed:demo`.
+# All values are FIXTURE DATA, "observed" on the dates below. They are NOT claims about real prices today.
+# Some prices may differ from the live pages on purpose, so re-verification has something to detect.
+# Reference "now" for scenarios: Wed 2026-11-11 10:00 Europe/London.
+
+seeds:
+  base:
+    - id: conv-2026-11-03-postgres
+      started_at: 2026-11-03T14:20:00+00:00 # Tue 3 Nov
+      tz: Europe/London
+      title: Managed Postgres hosting for a small SaaS
+      topics: [postgres, database hosting, neon, supabase, render, pricing]
+      messages:
+        - role: user
+          at: 2026-11-03T14:20:00+00:00
+          content: What are the cheapest managed Postgres hosting options for a small SaaS? Compare Neon, Supabase and Render.
+        - role: assistant
+          at: 2026-11-03T14:20:20+00:00
+          content: |
+            For a small SaaS, all three have a usable entry tier:
+            - **Neon**: Launch plan from $19/mo, serverless with scale-to-zero [1]
+            - **Supabase**: Pro plan $25/mo per project, includes auth and storage [2]
+            - **Render**: Basic-256mb Postgres at $6/mo, no free tier after 30 days [3]
+            Cheapest always-on: Render. Best if you also need auth/storage: Supabase.
+          sources:
+            - { n: 1, url: "https://neon.com/pricing", title: "Neon pricing" }
+            - { n: 2, url: "https://supabase.com/pricing", title: "Supabase pricing" }
+            - { n: 3, url: "https://render.com/pricing", title: "Render pricing" }
+          claims:
+            - { entity: Neon, attribute: Launch plan price, value: "$19/mo", source: 1 }
+            - { entity: Supabase, attribute: Pro plan price, value: "$25/mo per project", source: 2 }
+            - { entity: Render, attribute: Basic-256mb Postgres price, value: "$6/mo", source: 3 }
+
+    - id: conv-2026-11-03-pooler
+      started_at: 2026-11-03T16:05:00+00:00 # second question the same day
+      tz: Europe/London
+      title: Postgres connection pooling
+      topics: [postgres, connection pooling, pgbouncer]
+      messages:
+        - role: user
+          at: 2026-11-03T16:05:00+00:00
+          content: Do I need a connection pooler like PgBouncer if I'm on serverless functions?
+        - role: assistant
+          at: 2026-11-03T16:05:15+00:00
+          content: |
+            Yes. Serverless functions open many short-lived connections. Use the provider's built-in pooler
+            (Neon and Supabase both ship one) or PgBouncer in transaction mode.
+
+    - id: conv-2026-11-09-crm
+      started_at: 2026-11-09T11:00:00+00:00 # Mon 9 Nov
+      tz: Europe/London
+      title: CRM shortlist for a 20-person sales team
+      topics: [crm, sales tools, hubspot, pipedrive, close, attio, zoho, salesforce]
+      messages:
+        - role: user
+          at: 2026-11-09T11:00:00+00:00
+          content: We're a 20-person B2B sales team. Help me shortlist CRMs.
+        - role: assistant
+          at: 2026-11-09T11:00:30+00:00
+          content: |
+            Strong candidates for 20 seats: HubSpot Sales Hub, Salesforce Sales Cloud, Pipedrive, Close, Attio, Zoho CRM, Freshsales.
+        - role: user
+          at: 2026-11-09T11:04:00+00:00
+          # Deliberately NOT the "obvious" five: Attio is in and Salesforce is out. A guessed list fails this test.
+          content: Let's shortlist HubSpot, Pipedrive, Close, Attio and Zoho. Salesforce is too heavy for us.
+        - role: assistant
+          at: 2026-11-09T11:04:10+00:00
+          content: Noted. Shortlist is HubSpot, Pipedrive, Close, Attio, Zoho CRM.
+      notes:
+        - { kind: shortlist, payload: { subject: CRM, items: [HubSpot, Pipedrive, Close, Attio, Zoho CRM], context: "20-person B2B sales team" } }
+
+    - id: conv-2026-11-10-offsite
+      started_at: 2026-11-10T09:30:00+00:00 # Tue 10 Nov: the other "last Tuesday", unrelated topic
+      tz: Europe/London
+      title: Team offsite ideas in Lisbon
+      topics: [travel, offsite, lisbon]
+      messages:
+        - role: user
+          at: 2026-11-10T09:30:00+00:00
+          content: Give me ideas for a 2-day team offsite in Lisbon.
+        - role: assistant
+          at: 2026-11-10T09:30:20+00:00
+          content: A day in Alfama and Belém, a surf lesson in Carcavelos, and a workshop day at a Sintra villa.
+
+  # base + a Postgres-hosting conversation on Tue 10 Nov too, so "last Tuesday … Postgres hosting" is truly ambiguous.
+  ambiguous_tuesday:
+    extends: base
+    add:
+      - id: conv-2026-11-10-postgres
+        started_at: 2026-11-10T15:00:00+00:00
+        tz: Europe/London
+        title: Postgres hosting in the EU
+        topics: [postgres, database hosting, eu, region]
+        messages:
+          - role: user
+            at: 2026-11-10T15:00:00+00:00
+            content: Which managed Postgres hosts have EU regions and what do they cost?
+          - role: assistant
+            at: 2026-11-10T15:00:25+00:00
+            content: Neon (Frankfurt), Supabase (Frankfurt, London) and Render (Frankfurt) all have EU regions at the same prices as the US.
