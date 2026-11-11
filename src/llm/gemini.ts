@@ -98,6 +98,7 @@ export class GeminiClient implements ModelClient {
         toolConfig: hasTools
           ? { functionCallingConfig: { mode: request.toolMode === "none" ? FunctionCallingConfigMode.NONE : FunctionCallingConfigMode.AUTO } }
           : undefined,
+        ...(request.jsonSchema && !hasTools ? { responseMimeType: "application/json", responseJsonSchema: request.jsonSchema } : {}),
         thinkingConfig: { thinkingLevel: LEVELS[this.opts.thinkingLevel ?? "low"] },
         abortSignal: signal,
         // We own retries/fallback (see stream()); one attempt per model.

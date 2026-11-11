@@ -21,11 +21,11 @@ The reviewers' database is empty. "What did I ask you on 3 November?" must not g
 content that isn't in the provided memory. Offer a next step instead: "paste it and I'll check it".
 **Eval:** cold versions of all three examples. Any invented recall is an automatic fail.
 
-### C3 · Recovering what the *user* decided, not just what I said. `verified for seeded notes (live C1); extraction of new notes is Phase 4`
+### C3 · Recovering what the *user* decided, not just what I said. `verified (Phase 3 seeded + Phase 4 live extraction of a real shortlist + preference)`
 "The 5 we shortlisted": the shortlist may have come out of a back-and-forth, with names spread across several messages.
 **Approach:** extraction produces `notes{kind:"shortlist", items:[...]}`. If none exists, the model reads the window's messages through the injected digest or `recall`.
 
-### C4 · Topic matching across paraphrase. `open`
+### C4 · Topic matching across paraphrase. `mitigated (Phase 4: extracted topics incl. synonyms/vendors, e.g. "database hosting"; embeddings still next-week)`
 "Postgres hosting" vs "managed database" vs "Neon vs Supabase".
 **Approach:** FTS5 on raw text plus small-model `topics` tags written at extraction time (synonyms and vendor names). Embeddings are the plan for another week.
 
@@ -33,7 +33,7 @@ content that isn't in the provided memory. Offer a next step instead: "paste it 
 "3 November" means the user's 3 November.
 **Approach:** store UTC plus the tz the conversation used, and resolve in the user's current tz. The browser sends the tz.
 
-### C6 · Async extraction race. `open`
+### C6 · Async extraction race. `resolved (Phase 4: ExtractionQueue.idle(1500ms) barrier before memory planning; unit-tested)`
 A follow-up arrives before claims are extracted.
 **Approach:** raw messages and sources are saved synchronously. Retrieval waits up to ~1s for in-flight extraction, then degrades to raw text.
 
@@ -94,6 +94,14 @@ In testing, a running `npm run dev` held 8787/5173. The demo's server crashed wi
 ### C23 · Small-model comparison limits. `open`
 Phase 3 live: Flash-Lite (1) treated "$25/mo per project" → "per organization" as no change despite an explicit rule, and (2) reported an event from 4 Nov / 8 Nov as "since 9 Nov" because the *article* was published on 9 Nov.
 **Options:** the Phase 5 model sweep (`gemini-3.5-flash`, a higher thinking level on change turns only); a per-item verification pass for checklist items; extracting event dates from the excerpt instead of trusting `publishedAt`. This is honest about where the architecture ends and model quality begins.
+
+### C24 · Extraction doubles model calls on a free tier. `mitigated`
+Each answer costs one more (cheap) Flash-Lite request, which matters when keys are rate-limited.
+**Approach:** extraction is skipped for empty answers and can be turned off (`EXTRACT_ENABLED=false`). A quota error is logged as `[extract] QUOTA`, and the chat itself is unaffected. Batching several exchanges per call is the next step if needed.
+
+### C25 · The ledger is only as good as the sources the answer cited. `open`
+Phase 4 live: Render's price was recorded against a third-party blog because that's what the answer cited. The ledger records provenance faithfully, so the weakness is visible rather than hidden, and the next re-check re-reads that same page.
+**Options:** prefer primary domains when several sources support the same claim. Have prefetch also try the vendor's own pricing URL when a claim's source is third-party.
 
 ### C18 · Building on a non-preferred model [C-0]. `open`
 Only a Gemini key is available. Risks: different tool-calling quirks, different instruction-following on the "never invent memory" rule, and model IDs we can't assume.

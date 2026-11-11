@@ -15,7 +15,7 @@ export interface TurnMetrics {
   /** What memory planning decided this turn (dates, recall, window): the eval runner checks these. */
   memory: Pick<MemoryTrace, "dates" | "recalled" | "since" | "sinceReason" | "memoryIntent" | "changeIntent">;
   /** Every web_search call as executed (after the code-owned window was applied). */
-  searches: { queries: string[]; urls: string[]; since?: string }[];
+  searches: { queries: string[]; urls: string[]; since?: string; prefetch?: boolean }[];
 }
 
 /** Everything the UI / CLI / eval runner can observe about a turn. */

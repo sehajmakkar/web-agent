@@ -18,8 +18,12 @@ export interface MemoryPlan {
   memoryBlock: string;
   /** Code-owned lower bound for web_search this turn. */
   since?: string;
+  /** ADR-027: pages recorded/cited back then that the loop re-reads BEFORE the model runs (change questions only). */
+  verifyUrls: string[];
   trace: MemoryTrace;
 }
+
+const MAX_VERIFY_URLS = 5;
 
 export interface MemoryTrace {
   memoryIntent: boolean;
@@ -206,8 +210,24 @@ export function planMemory(
   }
   if (since) contextLines.push(`search_window: changes on/after ${formatDay(since)} (applied automatically to every web_search this turn)`);
 
+  // ADR-027: on change questions, the code knows exactly which pages to re-check: claim sources first, then other cited pages.
+  const verifyUrls: string[] = [];
+  if (store && changeIntent) {
+    const seen = new Set<string>();
+    const push = (url?: string) => {
+      if (!url || verifyUrls.length >= MAX_VERIFY_URLS) return;
+      const key = url.replace(/^https?:\/\/(www\.)?/, "").replace(/[/#?]+$/, "").toLowerCase();
+      if (seen.has(key)) return;
+      seen.add(key);
+      verifyUrls.push(url);
+    };
+    const kept = [...recalled.values()].slice(0, MAX_RECALLED);
+    for (const { conv } of kept) for (const c of store.evidence(conv.id).claims) push(c.url);
+    for (const { conv } of kept) for (const m of messagesOf(conv.id)) for (const s of m.sources) if (s.cited) push(s.url);
+  }
+
   const memoryBlock = renderMemory(store, { coverage, trace, recalled: [...recalled.values()].slice(0, MAX_RECALLED), messagesOf, input, exclude });
-  return { temporal, contextLines, memoryBlock, since, trace };
+  return { temporal, contextLines, memoryBlock, since, verifyUrls, trace };
 }
 
 function renderMemory(
@@ -287,7 +307,7 @@ function renderMemory(
       for (const c of ev.claims) {
         days.add(formatDay(c.observedAt.slice(0, 10)));
         claimItems++;
-        items.push(`${items.length + 1}. ${c.entity}, ${c.attribute}: recorded "${c.value}" on ${formatDay(c.observedAt.slice(0, 10))}${c.url ? ` (re-read ${c.url})` : ""}`);
+        items.push(`${items.length + 1}. ${c.entity}, ${c.attribute}: recorded "${c.value}" on ${formatDay(c.observedAt.slice(0, 10))}${c.url ? ` (source then: ${c.url})` : ""}`);
       }
       for (const n of ev.notes) {
         const p = n.payload as { items?: unknown[]; subject?: string };

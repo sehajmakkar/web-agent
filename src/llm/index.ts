@@ -16,4 +16,19 @@ export function createChatModel(config: Config): ModelClient {
   }
 }
 
+/** Small, cheap model for background bookkeeping (evidence extraction). Minimal thinking: it's a structured copy job. */
+export function createExtractModel(config: Config): ModelClient {
+  switch (config.LLM_PROVIDER) {
+    case "gemini":
+      if (!config.GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is required for LLM_PROVIDER=gemini");
+      return new GeminiClient({
+        apiKey: config.GEMINI_API_KEY,
+        model: config.GEMINI_EXTRACT_MODEL,
+        fallbackModels: config.GEMINI_FALLBACK_MODELS,
+        thinkingLevel: "minimal",
+        timeoutMs: 30_000,
+      });
+  }
+}
+
 export * from "./types.js";

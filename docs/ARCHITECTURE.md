@@ -63,7 +63,8 @@ User: *"Last Tuesday I asked you about Postgres hosting. Has any pricing changed
    - Text from a step that ends in a tool call is a draft: discarded with a `reset` event (ADR-024).
    - Guard rails: at most N loop iterations and a wall-clock budget. When a budget runs out, the model answers with what it has and says what it couldn't check.
 6. **Persist (sync).** Save the assistant message, the sources (url, title, fetched_at, content hash, excerpt) and the validated citations. Citation numbers that don't exist are stripped.
-7. **Extract (async).** A small model with structured output produces the title, topics, claims `{entity, attribute, value, source_id, quote}`, and notes `{kind: decision|preference|shortlist, items}`. This runs off the critical path. The next turn's retrieval waits for pending extraction for at most ~1s, then falls back to raw messages.
+7. *As built (Phase 4):* on change questions, the loop first re-reads the pages recorded then (`verifyUrls`) and attaches them as `<prefetched_pages>` (ADR-027), so the model usually answers in one step. Extraction rules: ADR-028. Inspect what's remembered: `GET /api/conversations/:id/evidence`.
+   **Extract (async).** A small model with structured output produces the title, topics, claims `{entity, attribute, value, source_id, quote}`, and notes `{kind: decision|preference|shortlist, items}`. This runs off the critical path. The next turn's retrieval waits for pending extraction for at most ~1s, then falls back to raw messages.
 
 The answer the user sees: "On **Tue 3 Nov** you asked about Postgres hosting. Here's what changed since:"
 followed by a table (*Then (3 Nov)* | *Now* | *Changed?* | *Source*) and a clear split between

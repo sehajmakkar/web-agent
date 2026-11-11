@@ -7,7 +7,8 @@ import type { AgentEvent } from "../agent/types.js";
 import { openDb } from "../db/client.js";
 import { clock, isValidTimeZone } from "../lib/clock.js";
 import { getConfig } from "../lib/config.js";
-import { createChatModel } from "../llm/index.js";
+import { createChatModel, createExtractModel } from "../llm/index.js";
+import { ExtractionQueue, extractEvidence } from "../memory/extract.js";
 import { Store } from "../memory/store.js";
 import { createSearch } from "../search/index.js";
 import type { Source } from "../tools/sources.js";
@@ -18,6 +19,10 @@ const config = getConfig();
 const model = createChatModel(config);
 const search = createSearch(config);
 const store = new Store(openDb(config.DB_PATH));
+const extractModel = createExtractModel(config);
+const extraction = new ExtractionQueue((job) => extractEvidence(store, extractModel, job));
+/** C6: how long a new turn waits for in-flight extraction before planning memory without it. */
+const EXTRACTION_WAIT_MS = 1_500;
 
 const ChatBody = z.object({
   conversationId: z.string().uuid().or(z.string().regex(/^conv-[\w-]+$/)).optional(),
@@ -40,6 +45,13 @@ app.get("/api/health", (c) =>
 );
 
 app.get("/api/conversations", (c) => c.json({ conversations: store.listConversations() }));
+
+/** What the agent remembers about a conversation: claims, notes, topics (debugging and the UI's memory panel). */
+app.get("/api/conversations/:id/evidence", (c) => {
+  const conversation = store.getConversation(c.req.param("id"));
+  if (!conversation) return c.json({ error: "Not found" }, 404);
+  return c.json({ title: conversation.title, topics: conversation.topics, ...store.evidence(conversation.id), pendingExtractions: extraction.size });
+});
 
 app.get("/api/conversations/:id", (c) => {
   const conversation = store.getConversation(c.req.param("id"));
@@ -76,6 +88,12 @@ app.post("/api/chat", async (c) => {
 
     send("conversation", { type: "conversation", conversation: store.getConversation(conversation.id) });
 
+    if (extraction.size) {
+      send("status", { type: "status", text: "Updating memory…" });
+      const ok = await extraction.idle(EXTRACTION_WAIT_MS);
+      if (!ok) console.log(`[extract] still running after ${EXTRACTION_WAIT_MS}ms; planning memory without it`);
+    }
+
     const emit = (event: AgentEvent) => {
       if (event.type === "done") {
         const cited = new Set(event.cited);
@@ -86,6 +104,15 @@ app.post("/api/chat", async (c) => {
           meta: { metrics: event.metrics },
           sources: event.sources.map((source) => ({ source, cited: cited.has(source.n) })),
         });
+        if (config.EXTRACT_ENABLED && event.text.trim()) {
+          extraction.enqueue({
+            conversationId: conversation.id,
+            assistantMessageId: saved.id,
+            question: message,
+            answer: event.text,
+            cited: event.sources.filter((s) => cited.has(s.n)),
+          });
+        }
         log(message, event);
         send("done", { ...event, sources: event.sources.map(forWire), messageId: saved.id });
         send("conversation", { type: "conversation", conversation: store.getConversation(conversation.id) });

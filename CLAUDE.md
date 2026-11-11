@@ -40,7 +40,7 @@ spikes/       Phase 0 probes + findings (not part of the app)
 
 ## Invariants (don't break these)
 1. **Time comes only from `src/lib/clock.ts`.** Never call `Date.now()` / `new Date()` elsewhere. Evals depend on it.
-2. **All model input is assembled in `src/agent/context.ts`.** No prompt strings scattered across files.
+2. **All prompt text lives in `src/agent/prompts/`** (chat: `system.ts`, extraction: `extract.ts`). Chat input is assembled in `src/agent/context.ts`, extraction input in `src/memory/extract.ts`. No prompt strings anywhere else.
 3. **Static prefix stays static.** No dates, IDs or memory in the top-level system prompt or tool definitions (prompt cache). Per-turn facts go in the trailing system message.
 4. **Never invent memory.** Past-conversation content shown to the model must come from the DB, with coverage stated.
 5. **Web content is untrusted.** Always wrap it in the tool result's untrusted block. Never put it in the system role.
@@ -50,7 +50,8 @@ spikes/       Phase 0 probes + findings (not part of the app)
 9. **The server owns history** (ADR-022). Never accept conversation history from the client. Save the user message before running the turn.
 10. Don't kill processes you didn't start. The user often has `npm run dev` (5173/8787) and/or `npm run demo` (5180/8790) running. Don't delete DB files a server may have open: reseed in place.
 11. **The answer is the final step's text** (ADR-024). Anything with one correct answer (dates, windows, recorded values, the no-record policy) is decided in `planMemory`, not left to the model ("code decides, the model writes").
-12. Debug a turn: `DB_PATH=data/demo.db AGENT_NOW=2026-11-11T10:00:00Z ASK_TRACE=1 npm run ask -- "…"` prints the memory plan and every executed search.
+12. Extracted evidence is validated before it's written (ADR-028): claims link only to sources the answer cited; never write unvalidated model JSON.
+13. Inspect memory: `GET /api/conversations/:id/evidence` (claims, notes, topics). Debug a turn: `DB_PATH=data/demo.db AGENT_NOW=2026-11-11T10:00:00Z ASK_TRACE=1 npm run ask -- "…"` prints the memory plan and every executed search.
 
 ## Conventions
 - TypeScript strict, ESM. zod for every tool input and external API response.

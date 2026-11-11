@@ -24,6 +24,8 @@ const EnvSchema = z
     AGENT_TZ: opt(z.string().default(Intl.DateTimeFormat().resolvedOptions().timeZone)),
     PORT: opt(z.coerce.number().int().default(8787)),
     DB_PATH: opt(z.string().default("data/agent.db")),
+    // Background evidence extraction after each answer (1 extra cheap model call per answer).
+    EXTRACT_ENABLED: opt(z.enum(["true", "false"]).default("true")).transform((v) => v === "true"),
   })
   .refine((e) => e.EXA_API_KEY || e.TAVILY_API_KEY, {
     message: "Set at least one of EXA_API_KEY or TAVILY_API_KEY",

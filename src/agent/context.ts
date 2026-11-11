@@ -22,15 +22,21 @@ export interface TurnContextInput {
   extra?: string[];
   /** The rendered <memory> block (coverage, index, recalled conversations). */
   memory?: string;
+  /** ADR-027: live re-reads of previously cited pages, fetched by code before the model ran. */
+  prefetched?: string;
 }
 
-export function buildTurnContext({ now, tz, extra = [], memory }: TurnContextInput): string {
+export function buildTurnContext({ now, tz, extra = [], memory, prefetched }: TurnContextInput): string {
   const lines = [
     `now: ${describeDateTime(now, tz)} (${tz})`,
     `today: ${localDate(now, tz)}`,
     ...extra,
   ];
-  return `<turn_context>\n${lines.join("\n")}\n</turn_context>${memory ? `\n${memory}` : ""}`;
+  return [
+    `<turn_context>\n${lines.join("\n")}\n</turn_context>`,
+    memory,
+    prefetched ? `<prefetched_pages>\nThe pages cited back then, re-read live just now by the system (cite them by number).\n${prefetched}\n</prefetched_pages>` : undefined,
+  ].filter(Boolean).join("\n");
 }
 
 export function buildRequest(input: { history: HistoryMessage[]; userText: string; turnContext: string }): {

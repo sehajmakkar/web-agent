@@ -22,7 +22,13 @@ describe("planMemory: assignment examples on seeded history", () => {
     expect(p.trace.recalled.map((r) => r.id)).not.toContain("conv-2026-11-10-offsite");
     expect(p.since).toBe("2026-11-03");
     expect(p.memoryBlock).toContain("Neon · Launch plan price: $19/mo (source: https://neon.com/pricing)");
-    expect(p.memoryBlock).toContain('1. Neon, Launch plan price: recorded "$19/mo" on Tue 3 Nov 2026 (re-read https://neon.com/pricing)');
+    expect(p.memoryBlock).toContain('1. Neon, Launch plan price: recorded "$19/mo" on Tue 3 Nov 2026 (source then: https://neon.com/pricing)');
+    // ADR-027: the code will re-read exactly these before the model runs.
+    expect(p.verifyUrls).toEqual(["https://neon.com/pricing", "https://supabase.com/pricing", "https://render.com/pricing"]);
+  });
+
+  it("no prefetch for questions that aren't about change", () => {
+    expect(plan(seeded(), "What did I ask you about Postgres hosting last Tuesday?").verifyUrls).toEqual([]);
   });
 
   it("B2: truly ambiguous when both Tuesdays discussed Postgres hosting", () => {

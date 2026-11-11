@@ -3,7 +3,7 @@
 A chat agent with one tool, web search, built around **memory, time and change**: it remembers what it told you,
 when, and from which sources, so "has anything changed since Tuesday?" gets a precise answer.
 
-> Status: Phase 3 (streaming chat, live search, citations, persistent conversations, temporal memory). See [docs/PLAN.md](docs/PLAN.md).
+> Status: Phase 4 (streaming chat, live search, citations, persistent conversations, temporal memory, evidence ledger). See [docs/PLAN.md](docs/PLAN.md).
 
 ## Run it
 

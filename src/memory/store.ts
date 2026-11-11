@@ -244,13 +244,37 @@ export class Store {
   }
 
   /** Evidence ledger writes (seeds now, extraction in Phase 4). */
-  addClaim(input: { messageId: string; entity: string; attribute: string; value: string; sourceN?: number; quote?: string; observedAt: string }) {
+  addClaim(input: {
+    messageId: string; entity: string; attribute: string; value: string; sourceN?: number; quote?: string; observedAt: string;
+    /** Link to the latest earlier claim about the same entity+attribute, so the ledger keeps history instead of overwriting. */
+    supersede?: boolean;
+  }): number {
     const sourceId = input.sourceN === undefined ? null : (this.db
       .prepare(`SELECT source_id FROM message_sources WHERE message_id = ? AND n = ?`)
       .get(input.messageId, input.sourceN) as { source_id: number } | undefined)?.source_id ?? null;
-    this.db
-      .prepare(`INSERT INTO claims (message_id, entity, attribute, value, source_id, quote, observed_at) VALUES (?, ?, ?, ?, ?, ?, ?)`)
-      .run(input.messageId, input.entity, input.attribute, input.value, sourceId, input.quote ?? null, input.observedAt);
+    const previous = input.supersede
+      ? (this.db
+          .prepare(
+            `SELECT id FROM claims WHERE lower(entity) = lower(?) AND lower(attribute) = lower(?) AND message_id != ? AND observed_at <= ?
+             ORDER BY observed_at DESC, id DESC LIMIT 1`,
+          )
+          .get(input.entity, input.attribute, input.messageId, input.observedAt) as { id: number } | undefined)?.id ?? null
+      : null;
+    const { lastInsertRowid } = this.db
+      .prepare(`INSERT INTO claims (message_id, entity, attribute, value, source_id, quote, observed_at, supersedes_claim_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`)
+      .run(input.messageId, input.entity, input.attribute, input.value, sourceId, input.quote ?? null, input.observedAt, previous);
+    return Number(lastInsertRowid);
+  }
+
+  /** History of one fact across conversations, oldest first (e.g. "Neon · Launch plan price"). */
+  claimHistory(entity: string, attribute: string): { value: string; observedAt: string; url?: string; supersedes?: number }[] {
+    return (this.db
+      .prepare(
+        `SELECT cl.value, cl.observed_at AS observedAt, s.url, cl.supersedes_claim_id AS supersedes FROM claims cl
+         LEFT JOIN sources s ON s.id = cl.source_id WHERE lower(cl.entity) = lower(?) AND lower(cl.attribute) = lower(?) ORDER BY cl.observed_at, cl.id`,
+      )
+      .all(entity, attribute) as { value: string; observedAt: string; url: string | null; supersedes: number | null }[])
+      .map((r) => ({ value: r.value, observedAt: r.observedAt, url: r.url ?? undefined, supersedes: r.supersedes ?? undefined }));
   }
 
   addNote(input: { conversationId: string; kind: string; payload: unknown; at?: Date }) {

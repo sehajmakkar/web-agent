@@ -101,6 +101,7 @@ Each memory flow failed live at least once, and the fix was the same every time:
 | "then: ~$15/mo" when $19/mo was recorded | where the "then" value comes from | verbatim checklist from the ledger (ADR-025) |
 | cold start: just asked for the list | whether to proceed or ask | `no_record_policy` (ADR-026) |
 | "on Monday" read as next Monday | what a date means | deterministic resolver (ADR-008) |
+| invented `site:` queries to re-check recorded pages | which pages to re-read | code re-reads them before the model runs: one step instead of two, 6.0s → 4.5s (ADR-027) |
 
 The model still does what it's good at: reading pages, judging relevance, writing the answer. Everything with one correct answer (dates, windows, what we recorded, what the policy is) is code, unit-tested, and shown in the turn trace. That's also why a *small* model (Flash-Lite) handles these flows. Where it still falls short (C23) is cleanly separated from architecture problems.
 

@@ -147,5 +147,19 @@ Format: **Decision**, **Considered**, **Why**, **Revisit if**. New decisions get
 - **Problem (Phase 3, live):** cold D2 ("On Monday we shortlisted…") only asked for the list, despite ADR-019 being in the system prompt.
 - **Decision:** when the user refers to history and nothing was recalled, the memory block carries an explicit `no_record_policy`. It says **PROCEED** (labelled assumption + search now; the no-record sentence opens the *final* answer) if the message is a change question with a topic. Otherwise it says **offer the next step, don't search or guess**.
 
+### ADR-027 · The code re-reads recorded pages before the model runs
+- **Problem (Phase 4, live):** asked to re-check, the model invented `site:neon.com/docs/...` *search queries* instead of re-reading the recorded URLs. It worked by luck, and cost a model round trip.
+- **Decision:** on change questions, `planMemory` returns `verifyUrls` (claim sources first, then other pages cited then; max 5, deduped). The loop reads them live (`/contents` + livecrawl) **before** the first model call and attaches them as `<prefetched_pages>`, numbered in the same source registry. The model searches only for what's missing (news, changelogs).
+- **Result:** the Day 2 re-check went from 2 model steps / 6.0s to **1 step / 4.5s**, with the primary pages guaranteed to be read. It's the same "code decides" pattern as ADR-018/024/025/026.
+
+### ADR-028 · Extraction rules: validated against facts, never trusted blindly
+- One Flash-Lite call per saved answer (`thinking: minimal`, JSON schema + zod validation). Malformed output is rejected and logged, never written.
+- **A claim may link only to a source that answer actually cited.** Otherwise it's kept but unlinked (counted as `unlinked` in the log).
+- `observed_at` = the answer's timestamp (anchored clock in demos), so "what we saw on 3 Nov" is exact.
+- New claims on the same entity + attribute **link to the claim they supersede**: the ledger is a history, not a key-value overwrite (`claimHistory()`).
+- Title only on the first exchange (later turns don't rename a conversation). Topics accumulate (they feed paraphrase-tolerant retrieval, C4).
+- Notes = what the **user** decided or stated (shortlist / decision / preference), never the assistant's suggestions.
+- Runs fire-and-forget. The next turn waits at most 1.5s for in-flight jobs (C6). `EXTRACT_ENABLED=false` turns it off (free-tier quota).
+
 ### ADR-016 · Single user, no auth
 - **Why:** this is the assignment scope. The `user_id` seam stays in the schema.

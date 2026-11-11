@@ -42,6 +42,8 @@ export interface ModelRequest {
   tools?: ToolSpec[];
   /** "none" forces a text answer (used on the final step of the loop). */
   toolMode?: "auto" | "none";
+  /** Constrain the reply to JSON matching this schema (no tools allowed alongside). */
+  jsonSchema?: Record<string, unknown>;
   signal?: AbortSignal;
 }
 

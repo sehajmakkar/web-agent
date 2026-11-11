@@ -50,7 +50,20 @@ export async function runTurn(input: TurnInput): Promise<void> {
     emit({ type: "status", text: `Recalled ${formatDay(first.localDate)}: “${first.title}”${more}` });
   }
   const searches: TurnMetrics["searches"] = [];
-  const turnContext = buildTurnContext({ now, tz: input.tz, extra: plan.contextLines, memory: plan.memoryBlock });
+
+  // ADR-027: the code knows which pages to re-check, so it reads them before the model runs (no model round trip,
+  // and the primary page is guaranteed to be read). Phase 4 caught the model inventing `site:` queries for this instead.
+  let prefetched: string | undefined;
+  if (plan.verifyUrls.length) {
+    searches.push({ queries: [], urls: plan.verifyUrls, since: plan.since, prefetch: true });
+    const r = await runWebSearch("prefetch", { urls: plan.verifyUrls }, {
+      search, registry, signal,
+      onStatus: () => emit({ type: "status", text: `Re-reading ${plan.verifyUrls.length} page(s) cited back then…` }),
+      onSources: (sources) => emit({ type: "sources", sources }),
+    });
+    if (!r.isError) prefetched = r.content;
+  }
+  const turnContext = buildTurnContext({ now, tz: input.tz, extra: plan.contextLines, memory: plan.memoryBlock, prefetched });
   const { system, messages } = buildRequest({ history: input.history, userText: input.userText, turnContext });
   const conversation: ChatMessage[] = [...messages];
 

@@ -78,7 +78,19 @@ Planned items:
 - `recall` tool for drill-down.
 - **Exit:** example 2 passes warm *and* cold. "Last Tuesday" ambiguity resolved by topic in the eval.
 
-## Phase 4 · Evidence ledger + re-verification (~4h)
+## Phase 4 · Evidence ledger + re-verification (~4h). ✅ **Done 2026-11-12**
+**Built:** `memory/extract.ts` (background extraction with Flash-Lite + JSON schema + zod; claims linked only to sources the answer cited; supersede history; title on first exchange only; topics accumulate), `ExtractionQueue` with an idle barrier (C6), `llm/json.ts`, `GET /api/conversations/:id/evidence`, and **code-driven prefetch of recorded pages** (ADR-027). 67 unit tests.
+
+**Live round trip, no fixtures** (scratch DB, clock moved between days):
+
+| Step | Result |
+|---|---|
+| "3 Nov": compare Neon / Supabase / Render entry plans | answer 6.4s; extraction **2.4s in the background**: 6 claims with source URLs, title + 6 topics |
+| "11 Nov": "Last Tuesday I asked about Postgres hosting. Changed?" (first version) | recalled the real 3 Nov chat (resolved by topic), 6-row checklist table, verbatim then-values, 6.0s, **but the model invented `site:` queries to re-read pages** |
+| Same, with prefetch (ADR-027) | code re-reads the 5 recorded pages before the model runs → **one model step, 4.5s**, primary pages cited |
+| Real exchange "Let's shortlist HubSpot, Pipedrive, Close, Attio and Zoho. Salesforce is too heavy." | extracted `shortlist` (exact five) + `preference` (Salesforce too heavy) in 1.9s; the planner built the 5-item checklist from it |
+
+Planned items:
 - Persist sources with excerpt and hash. Async extraction (small model, structured output) → title, topics, claims, notes.
 - Re-verification prompt policy: re-read cited URLs, date-bounded search, a changed / unchanged / couldn't-verify table.
 - **Exit:** examples 1 and 3 pass on seeded data. Answers name the date, the old value, the new value and both sources.
