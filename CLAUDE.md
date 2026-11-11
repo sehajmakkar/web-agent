@@ -6,7 +6,8 @@ Read `docs/THINKING.md` first for the why.
 
 ## Commands
 - `npm install && npm run dev`: server (Hono, `tsx watch`) + UI (Vite) via `concurrently`. This must always work on a fresh clone.
-- `npm test`: unit tests (vitest). Temporal resolver and memory retrieval must stay covered.
+- `npm run ask -- "question"`: one headless turn through the same `runTurn()`, printing status, answer, cited sources and metrics.
+- `npm test`: unit tests (vitest, `tests/`). Temporal resolver and memory retrieval must stay covered. `npm run typecheck`: tsc (TypeScript 7).
 - `npm run eval [-- --live] [-- --filter=B]`: scenario evals (see docs/EVALS.md).
 - `npm run seed:demo`: loads backdated demo history into `data/demo.db`.
 
@@ -23,14 +24,16 @@ Phase 0 spikes: `node --env-file=.env spikes/phase0/{models,search}.mjs`. Findin
 src/server/   Hono routes, SSE. No agent logic here.
 src/agent/    loop.ts (the agent loop), context.ts (ALL prompt assembly), prompts/ (system prompt text)
 src/llm/      ModelClient interface + gemini.ts (now) / anthropic.ts (preferred, later). ONLY place provider SDKs are imported.
-src/tools/    web_search, recall: zod schemas + handlers
+src/tools/    webSearch.ts (the one tool), sources.ts (SourceRegistry, citation validation)
 src/search/   provider interface, tavily.ts, exa.ts, cache.ts
 src/memory/   temporal.ts, store.ts, retrieve.ts, extract.ts
 src/db/       schema.sql, migrations, client
 src/lib/      clock.ts, logger.ts
 web/          Vite + React UI
-evals/        scenarios/, run.ts, judge.ts
-scripts/      seed-demo.ts
+evals/        scenarios.yaml, fixtures/history.yaml (runner in Phase 5)
+scripts/      ask.ts (headless turn), seed-demo.ts (Phase 2)
+tests/        vitest unit tests
+spikes/       Phase 0 probes + findings (not part of the app)
 ```
 
 ## Invariants (don't break these)

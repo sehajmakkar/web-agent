@@ -75,9 +75,8 @@ Format: **Decision**, **Considered**, **Why**, **Revisit if**. New decisions get
 ### ADR-017 · Run on Gemini via `@google/genai` behind a `ModelClient` interface [C-0]
 - **Decision:** `src/llm/ModelClient.ts` defines `stream(request) → AsyncIterable<TextDelta | ToolCall | Usage | Done>`. `src/llm/gemini.ts` implements it now. `src/llm/anthropic.ts` is the planned drop-in. The agent loop, context assembly, tools and memory never import a provider SDK.
 - **Models (chosen in Phase 0, `spikes/phase0/README.md`):**
-  - Conversation: **`gemini-3.5-flash`**. GA, reliably available, batched tool calls, ~2.5–3s to a tool decision.
-  - Extraction: **`gemini-3.5-flash-lite`**. Clean schema-constrained JSON in ~1.5–2s; cheapest.
-  - Fallback chain on 429/503: `gemini-3.5-flash` → `gemini-3.5-flash-lite` → `gemini-3.1-flash-lite`.
+  - **Update 2026-11-12: both roles use `gemini-3.5-flash-lite`.** Development runs on free-tier keys, and Flash-Lite is the cheapest model with acceptable tool calls (Phase 0: same batching behavior as Flash, valid JSON). `gemini-3.5-flash` is the first upgrade to evaluate in Phase 5.
+  - Overload policy: on **503 / timeout**, try `GEMINI_FALLBACK_MODELS` (default `gemini-3.1-flash-lite`). On **429 quota**, don't switch models silently. Surface a clear "quota exceeded, rotate `GEMINI_API_KEY`" error. The app doesn't pool or rotate keys automatically (that's an operator decision and could break provider terms).
   - Rejected for now: `gemini-3.8-flash` (newest, but **20 requests/day/model on the free tier** plus 503 "high demand") and `gemini-3.7-flash` (503s, timeouts). Revisit on a paid tier.
   - IDs are overridable via `GEMINI_MODEL` / `GEMINI_EXTRACT_MODEL`.
 - **Why the interface instead of Gemini everywhere:** the constraint is temporary, and the reviewers may prefer a different model. The interface also forces us to keep provider quirks out of the core.
@@ -111,6 +110,15 @@ Format: **Decision**, **Considered**, **Why**, **Revisit if**. New decisions get
 - **Options:** (1) only ask for the list: honest but no value this turn; (2) silently guess as if remembered: **invents memory**, so never; (3) state clearly that there's no record, then answer for a **labelled** likely set, inferred from the context in the message ("20-person sales team"), and invite correction.
 - **Decision:** option 3 when the request has enough context for a reasonable assumption. When it doesn't ("What did I ask you on 3 November?"), say there's no record, give memory coverage, and offer the next step ("paste it and I'll check it").
 - **Rule:** the no-record statement comes first, in plain words. Assumed items are never phrased as recalled.
+
+### ADR-020 · Past turns are replayed as plain text; tool traffic stays inside the turn
+- **Decision:** within a turn, the full provider transcript (function calls with their `thoughtSignature`, function responses) goes back to the model. Across turns, history is just `user text` / `assistant final answer` (with its [n] citations). Raw search results are not replayed.
+- **Why:** keeps every later turn small and fast, and avoids replaying stale web content as if it were fresh. Signatures only need to round-trip inside the current turn. What a past answer was based on lives in the evidence ledger (Phase 4), which is retrieved deliberately rather than dragged along.
+- **Phase 1 state:** the browser holds history and sends it with each turn (stateless server). Phase 2 moves history into SQLite.
+
+### ADR-021 · Perceived latency comes from status events, not model speed
+- **Decision:** the loop emits `status` events at each stage ("Searching “…” · reading neon.com", "Reading results…"), and the UI shows them as a live line, plus a sources count as results arrive.
+- **Why:** Phase 1 measured the first answer token at ~4s on search turns (the search round trip happens before any text), and Phase 0 measured 1.6–10.7s variance from the model API. Status lines appear within ~1–2s, so the user sees progress immediately.
 
 ### ADR-016 · Single user, no auth
 - **Why:** this is the assignment scope. The `user_id` seam stays in the schema.

@@ -72,9 +72,11 @@ Over-searching is slow; under-searching is wrong.
 
 ### C14 · Prompt caching vs a changing date. `mitigated (design)`
 **Approach:** the static prefix is cached. Date and memory go last (ADR-010): a `<turn_context>` block on the current user turn on Gemini, a mid-conversation system message on Claude. Verify cache-hit token counts in the usage metadata.
+Phase 1 observation: `cachedContentTokenCount` was 0 on every turn (the prefix is ~900 tokens, possibly below Gemini's implicit-cache minimum). Re-check in Phase 5 with longer histories. Explicit context caching is the option if it matters.
 
-### C19 · The model doesn't use tool parameters it should. `mitigated (design, ADR-018)`
+### C19 · The model doesn't use tool parameters it should. `mitigated (design, ADR-018); confirmed in Phase 1`
 Phase 0: Gemini batched queries but never set `since`, so the date went into the query text, which search engines treat loosely.
+Phase 1, a real failure: "changed pricing since 1 November?" → the model wrote "November 2026" into the queries with no `since`, and the answer included a Sep 18 item and an Oct 15 item. The plumbing for code-owned `since` (`forcedSince`) is in place and unit-tested. The Phase 3 resolver will feed it.
 **Approach:** the code sets `since` from the resolver. Other important parameters get the same treatment: anything that can be derived reliably from turn context is set by code, not left to the model.
 
 ### C20 · Latency variance from the model API. `open`

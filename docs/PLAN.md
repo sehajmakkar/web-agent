@@ -13,7 +13,20 @@ The rule throughout: **no phase adds a feature without an eval scenario for it.*
 - Findings that changed the design: the model doesn't fill `since` (→ ADR-018), it resolves "Monday" to the future (→ backs up ADR-008), Gemini SSE uses CRLF framing and requires `thoughtSignature` round-tripping (→ adapter notes), and latency varies 1.6–10.7s (→ C20).
 - **Exit:** ✅ provider chosen, ✅ models chosen, ✅ scenarios written.
 
-## Phase 1 · Walking skeleton: chat + search + streaming (~3h)
+## Phase 1 · Walking skeleton: chat + search + streaming (~3h). ✅ **Done 2026-11-12**
+**Result:** `npm run dev` serves the UI at :5173 and the API at :8787. `npm run ask -- "…"` runs the same turn headless. 13 unit tests, clean typecheck.
+Measured with `gemini-3.5-flash-lite`:
+
+| Turn | Searches / queries | First token | Total | Notes |
+|---|---|---|---|---|
+| "hey! what's 15% of 240?" | 0 / 0 | 1.4s | 1.4s | no search, correct (eval F1 ✓) |
+| "latest Node.js release…" | 1 / 2 | 4.1s | 4.9s | cited nodejs.org release + security posts |
+| "HubSpot, Pipedrive or Attio changed pricing since 1 Nov?" | 1 / 3 | 3.6s | 4.7s | primary sources found, **but `since` not set → Sep/Oct items leaked in** (C19, fixed by Phase 3 resolver) |
+| "most recent F1 race?" (via HTTP/SSE) | 1 / 3 | 4.6s | 4.6s | streaming SSE through the Vite proxy ✓ |
+
+Learnings: the first answer token only arrives after the search round trip, so **status events carry perceived latency** ("Searching …" shows in about 1–2s). `cachedTokens` stayed 0; check implicit caching in Phase 5.
+
+Planned items:
 - `npm run dev` → Hono server + Vite UI. `.env.example`.
 - `ModelClient` interface + Gemini adapter (`@google/genai`).
 - `runTurn()` agent loop against `ModelClient`: streaming, `web_search` tool with batched parallel queries, iteration and time caps.
