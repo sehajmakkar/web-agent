@@ -95,7 +95,10 @@ app.post("/api/chat", async (c) => {
       send(event.type, event.type === "sources" ? { ...event, sources: event.sources.map(forWire) } : event);
     };
 
-    await runTurn({ history, userText: message, tz, model, search, emit, signal: abort.signal });
+    await runTurn({
+      history, userText: message, tz, model, search, emit, signal: abort.signal,
+      memory: { store, currentConversationId: conversation.id },
+    });
     await chain;
   });
 });

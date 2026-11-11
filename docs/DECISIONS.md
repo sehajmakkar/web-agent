@@ -61,7 +61,7 @@ Format: **Decision**, **Considered**, **Why**, **Revisit if**. New decisions get
 
 ### ADR-008 · Temporal reasoning in code, not in the model
 - **Why:** relative dates are deterministic given `now` and a timezone, and the model is unreliable at weekday arithmetic. **Phase 0 evidence:** given "today is Wed 11 Nov", every Gemini Flash model resolved "on Monday" to the *next* Monday (16 Nov), where our test case means 9 Nov. The resolver returns windows plus ambiguity flags. The model decides what to *do* about ambiguity (usually: let memory disambiguate, state the assumption, never silently pick).
-- **Lib:** `chrono-node` to extract expressions, plus our own rules for "last <weekday>" ambiguity, plus `date-fns-tz` for zones.
+- **As built (Phase 3): our own resolver, no date library** (`src/memory/temporal.ts`, ~200 lines, 25 tests). I considered `chrono-node` and rejected it: its job is to pick *one* date, and ours is to return *all* plausible ones with an ambiguity flag. Its default weekday semantics are the very thing under test, and the rules ("last Tuesday" is ambiguous only when the most recent one is in the current ISO week; bare weekdays are past; day+month without a year is the most recent past occurrence) need to be visible and explainable. Timezones go through `Intl` (no `date-fns-tz`). Scope: English only.
 
 ### ADR-009 · Injectable clock + seed fixtures
 - **Why:** reproducible evals and demos. `AGENT_NOW=2026-11-11T10:00` freezes time. `npm run seed:demo` loads backdated conversations (3 Nov Postgres hosting, 9 Nov CRM shortlist) into a separate DB file, so the reviewers' real usage is never polluted.
@@ -128,6 +128,24 @@ Format: **Decision**, **Considered**, **Why**, **Revisit if**. New decisions get
 - **Sources are snapshotted per message, not deduplicated across messages.** `sources` keeps what a page said *when we read it* (excerpt + sha256 + fetched_at). That's the "then" side of every later "has it changed?" comparison. All retrieved sources are stored with a `cited` flag; the UI shows only cited ones.
 - **`local_date` is computed at write time** in the conversation's timezone, so date lookups are indexed equality, not timezone maths at query time (C5).
 - **Excerpts never go over the wire.** SSE and REST send link metadata only; excerpts can be several KB each.
+
+### ADR-023 · Dual retrieval for change windows
+- **Problem:** with `since` set, the provider's date filter drops **undated pages, and pricing pages are almost always undated**. A "has pricing changed since X" turn would lose the one page it needs.
+- **Decision:** when a window is active, every query runs twice in parallel: date-filtered (4 results: news, changelogs inside the window) and unfiltered (3 results: current pages). Each result is labelled: inside the window, `BEFORE WINDOW … background, not a change`, or `unknown (current page content)`.
+- **Cost:** 2× provider calls with no added latency (they run in parallel). This also fixes the Phase 1 leak at the source, since older items are now visibly labelled as background.
+
+### ADR-024 · The answer is the final step's text; pre-search drafts are discarded
+- **Problem (Phase 3, live):** the model wrote a full "no change found" table *before* searching, then searched and answered again. The draft's `[1][2][3]` passed citation checking only because sources numbered later happened to match.
+- **Decision:** text from a step that ends in a tool call is discarded. The loop emits `reset`, the UI clears it, and the status line takes over. Only the final (tool-free) step's text is saved, citation-checked and shown. The prompt also says "call web_search straight away", so drafts are rare, but correctness doesn't depend on that.
+
+### ADR-025 · Verification checklist and answer shape come from the ledger, in code
+- **Problem (Phase 3, live):** given claims in the memory block, Flash-Lite restated the "then" value from *today's* page and so reported "no change" for a real change. With a shortlist (no recorded prices) a forced "Then" column made it invent then-values.
+- **Decision:** on change turns the planner renders a numbered `verification_checklist` with the **recorded values verbatim**, plus an `answer_shape` that depends on what was recorded: `Item | Then | Now | Verdict` for claims, and `Item | What's new since <date> | Verdict` for decisions such as shortlists.
+- **Why:** the model's job becomes filling in a structure, not designing one. That's reliable even on a small model.
+
+### ADR-026 · The no-record policy is decided in code
+- **Problem (Phase 3, live):** cold D2 ("On Monday we shortlisted…") only asked for the list, despite ADR-019 being in the system prompt.
+- **Decision:** when the user refers to history and nothing was recalled, the memory block carries an explicit `no_record_policy`. It says **PROCEED** (labelled assumption + search now; the no-record sentence opens the *final* answer) if the message is a change question with a topic. Otherwise it says **offer the next step, don't search or guess**.
 
 ### ADR-016 · Single user, no auth
 - **Why:** this is the assignment scope. The `user_id` seam stays in the schema.

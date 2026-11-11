@@ -7,21 +7,21 @@ Status: `open` / `mitigated` / `verified (eval #)`.
 
 ## Memory and time
 
-### C1 · Ambiguous relative dates. `open` (Phase 0: models resolve "on Monday" to the *next* Monday, see ADR-008)
+### C1 · Ambiguous relative dates. `verified (Phase 3: unit B1/B2 + live B1)` (Phase 0: models resolve "on Monday" to the *next* Monday, see ADR-008)
 Said on Wed 11 Nov, "last Tuesday" can mean Tue 10 Nov or Tue 3 Nov. "On Monday" means 9 Nov.
 **Approach:** the resolver returns *all* candidates and an `ambiguous` flag. Memory retrieval checks
 every candidate window. If only one has a matching topic, use it and **state the date** in the answer
 ("On Tue 3 Nov you asked…"). If several match, briefly ask which one, or answer both when that's cheap.
 **Eval:** seeded matches on both Tuesdays, one Tuesday, and neither.
 
-### C2 · Cold start: invented memories. `open`
+### C2 · Cold start: invented memories. `verified (Phase 3: live D1–D3, ADR-026)`
 The reviewers' database is empty. "What did I ask you on 3 November?" must not get a made-up answer.
 **Approach:** the turn context always states the coverage of memory explicitly ("history covers
 11 Nov–today; nothing on 3 Nov"). The system prompt has a hard rule: never assert past conversation
 content that isn't in the provided memory. Offer a next step instead: "paste it and I'll check it".
 **Eval:** cold versions of all three examples. Any invented recall is an automatic fail.
 
-### C3 · Recovering what the *user* decided, not just what I said. `open`
+### C3 · Recovering what the *user* decided, not just what I said. `verified for seeded notes (live C1); extraction of new notes is Phase 4`
 "The 5 we shortlisted": the shortlist may have come out of a back-and-forth, with names spread across several messages.
 **Approach:** extraction produces `notes{kind:"shortlist", items:[...]}`. If none exists, the model reads the window's messages through the injected digest or `recall`.
 
@@ -39,11 +39,11 @@ A follow-up arrives before claims are extracted.
 
 ## Correctness of the answer
 
-### C7 · "Is your answer still correct?" means re-verify, not re-assert. `open`
+### C7 · "Is your answer still correct?" means re-verify, not re-assert. `mitigated (Phase 3: checklist with verbatim then-values, cited URLs re-read live; ADR-025)`
 The model tends to agree with its past self.
 **Approach:** the prompt frames the past answer as a *claim to check*. Re-read the cited URLs live and run fresh searches. Output has three categories: **changed**, **verified unchanged** (with today's source) and **couldn't verify**. If the old answer was wrong *at the time*, say so plainly.
 
-### C8 · Detecting "changed since X" when pages have no dates. `open`
+### C8 · Detecting "changed since X" when pages have no dates. `mitigated (Phase 3: dual retrieval ADR-023 + live re-reads + ledger diff)`
 Pricing pages are usually undated, and search engines' `published_at` is noisy.
 **Approach:** two signals. (1) **Snapshot diff**: compare stored claims and excerpts with the live page. (2) **Date-bounded search** for news, changelogs and "pricing update" posts after X. Changelog and blog pages from the vendor's own domain rank above third-party coverage.
 
@@ -74,7 +74,7 @@ Over-searching is slow; under-searching is wrong.
 **Approach:** the static prefix is cached. Date and memory go last (ADR-010): a `<turn_context>` block on the current user turn on Gemini, a mid-conversation system message on Claude. Verify cache-hit token counts in the usage metadata.
 Phase 1 observation: `cachedContentTokenCount` was 0 on every turn (the prefix is ~900 tokens, possibly below Gemini's implicit-cache minimum). Re-check in Phase 5 with longer histories. Explicit context caching is the option if it matters.
 
-### C19 · The model doesn't use tool parameters it should. `mitigated (design, ADR-018); confirmed in Phase 1`
+### C19 · The model doesn't use tool parameters it should. `resolved (Phase 3: planner sets since; trace shows it on every search)`
 Phase 0: Gemini batched queries but never set `since`, so the date went into the query text, which search engines treat loosely.
 Phase 1, a real failure: "changed pricing since 1 November?" → the model wrote "November 2026" into the queries with no `since`, and the answer included a Sep 18 item and an Oct 15 item. The plumbing for code-owned `since` (`forcedSince`) is in place and unit-tested. The Phase 3 resolver will feed it.
 **Approach:** the code sets `since` from the resolver. Other important parameters get the same treatment: anything that can be derived reliably from turn context is set by code, not left to the model.
@@ -86,6 +86,14 @@ Phase 0: the same tool-decision request took 1.6s once and 10.7s the next time.
 ### C21 · Demo and dev colliding on ports / databases. `resolved (Phase 2)`
 In testing, a running `npm run dev` held 8787/5173. The demo's server crashed with EADDRINUSE while Vite silently moved to 5174, which would have pointed the UI at the *wrong* server (the real DB, real clock).
 **Fix:** the demo uses its own ports (5180/8790) and DB file. Vite has `strictPort: true`, so a port clash fails loudly instead of quietly mixing data.
+
+### C22 · Reseeding deleted a database file a running server had open. `resolved (Phase 3)`
+`seed:demo` used to delete `data/demo.db`. The user's running `npm run demo` kept the unlinked file open, so it served stale data and its new writes were lost.
+**Fix:** reseed resets rows in place in one transaction (cascading deletes keep FTS and evidence consistent), so running servers see fresh data at once. Verified idempotent.
+
+### C23 · Small-model comparison limits. `open`
+Phase 3 live: Flash-Lite (1) treated "$25/mo per project" → "per organization" as no change despite an explicit rule, and (2) reported an event from 4 Nov / 8 Nov as "since 9 Nov" because the *article* was published on 9 Nov.
+**Options:** the Phase 5 model sweep (`gemini-3.5-flash`, a higher thinking level on change turns only); a per-item verification pass for checklist items; extracting event dates from the excerpt instead of trusting `publishedAt`. This is honest about where the architecture ends and model quality begins.
 
 ### C18 · Building on a non-preferred model [C-0]. `open`
 Only a Gemini key is available. Risks: different tool-calling quirks, different instruction-following on the "never invent memory" rule, and model IDs we can't assume.

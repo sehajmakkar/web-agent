@@ -18,17 +18,19 @@ export interface HistoryMessage {
 export interface TurnContextInput {
   now: Date;
   tz: string;
-  /** Phase 3+: resolved dates, memory digest, memory coverage. */
+  /** Resolved dates and the search window (from planMemory). */
   extra?: string[];
+  /** The rendered <memory> block (coverage, index, recalled conversations). */
+  memory?: string;
 }
 
-export function buildTurnContext({ now, tz, extra = [] }: TurnContextInput): string {
+export function buildTurnContext({ now, tz, extra = [], memory }: TurnContextInput): string {
   const lines = [
     `now: ${describeDateTime(now, tz)} (${tz})`,
     `today: ${localDate(now, tz)}`,
     ...extra,
   ];
-  return `<turn_context>\n${lines.join("\n")}\n</turn_context>`;
+  return `<turn_context>\n${lines.join("\n")}\n</turn_context>${memory ? `\n${memory}` : ""}`;
 }
 
 export function buildRequest(input: { history: HistoryMessage[]; userText: string; turnContext: string }): {

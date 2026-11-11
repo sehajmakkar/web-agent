@@ -35,6 +35,11 @@ describe("validateCitations", () => {
     expect(out.cited).toEqual([1, 2]);
     expect(out.dropped.sort()).toEqual([7, 9]);
   });
+  it("drops invented pseudo-citations like [memory]", () => {
+    expect(validateCitations("On Monday we shortlisted five tools [memory]. Pro is $25 [1].", valid).text).toBe(
+      "On Monday we shortlisted five tools. Pro is $25 [1].",
+    );
+  });
   it("does not touch markdown links", () => {
     const out = validateCitations("See [3](https://x.com) and [1].", valid);
     expect(out.text).toBe("See [3](https://x.com) and [1].");

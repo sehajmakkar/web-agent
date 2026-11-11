@@ -3,7 +3,7 @@
 A chat agent with one tool, web search, built around **memory, time and change**: it remembers what it told you,
 when, and from which sources, so "has anything changed since Tuesday?" gets a precise answer.
 
-> Status: Phase 2 (streaming chat, live search, citations, persistent conversations). See [docs/PLAN.md](docs/PLAN.md).
+> Status: Phase 3 (streaming chat, live search, citations, persistent conversations, temporal memory). See [docs/PLAN.md](docs/PLAN.md).
 
 ## Run it
 
@@ -29,7 +29,8 @@ into `data/demo.db` and anchors the clock at **Wed 11 Nov 2026, 10:00 London**, 
 - "On Monday we shortlisted 5 CRM tools for a 20-person sales team. Has any of them changed pricing or shipped something big since?"
 - "Last Tuesday I asked you about Postgres hosting. Has any pricing changed since then?"
 
-(Memory-aware answers arrive in Phase 3/4. Today the history is stored and browsable.)
+With an empty history (plain `npm run dev`), the same prompts get an honest "I don't have a record of that", and then
+a labelled best guess with a live search where that's possible.
 
 ## Keys
 

@@ -29,10 +29,20 @@ describe("runWebSearch", () => {
     expect(r.content).toMatch(/\[1\] Pricing/); // live reads come first
   });
 
-  it("code-owned since overrides the model (ADR-018)", async () => {
+  it("code-owned since overrides the model (ADR-018) and adds an unfiltered 'current pages' search (ADR-023)", async () => {
     const search = new FakeSearch();
     await runWebSearch("c1", { queries: ["x"], since: "2020-01-01" }, { search, registry: new SourceRegistry(), forcedSince: "2026-11-03" });
-    expect(search.queries[0]!.since).toBe("2026-11-03");
+    expect(search.queries.map((q) => q.since)).toEqual(["2026-11-03", undefined]);
+  });
+
+  it("labels pre-window results as background, not changes", async () => {
+    const search: SearchProvider = {
+      name: "fake",
+      search: async () => [{ url: "https://x.com/old", title: "Old news", publishedAt: "2026-09-18", content: "old", provider: "fake" }],
+      read: async () => [],
+    };
+    const r = await runWebSearch("c1", { queries: ["x"] }, { search, registry: new SourceRegistry(), forcedSince: "2026-11-01" });
+    expect(r.content).toContain("2026-09-18 (BEFORE WINDOW 2026-11-01: background, not a change)");
   });
 
   it("reports partial failures without failing the call", async () => {

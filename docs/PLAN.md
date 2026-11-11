@@ -46,7 +46,32 @@ Planned items:
 - `npm run seed:demo`: backdated conversations (Tue 3 Nov Postgres hosting with real cited prices; Mon 9 Nov CRM shortlist of 5; Tue 10 Nov something unrelated).
 - **Exit:** restart the server and history survives. The seeded conversations show under the right dates.
 
-## Phase 3 · Temporal memory (~3h)
+## Phase 3 · Temporal memory (~3h). ✅ **Done 2026-11-12**
+**Built:** `memory/temporal.ts` (own resolver, 25 tests), `memory/retrieve.ts` (planner: coverage, index, window recall with topic-based disambiguation, FTS fallback, verification checklist, no-record policy, code-owned `since`), dual retrieval in `web_search`, draft discarding in the loop, a memory trace on every `done` event. 58 unit tests.
+
+Live results on `gemini-3.5-flash-lite` (demo clock Wed 11 Nov 10:00 London):
+
+| Scenario | Result | Time |
+|---|---|---|
+| A1 "What did I ask on 3 Nov? Still correct?" (warm) | ✅ both 3 Nov questions, re-read the 3 cited URLs, per-item verdicts | 7.5s |
+| B1 "Last Tuesday … Postgres hosting" (warm) | ✅ resolved to **3 Nov** by topic (10 Nov = Lisbon), states the date, verbatim then-values, **Neon flagged changed** | 4.8s |
+| C1 "On Monday we shortlisted 5 CRMs…" (warm) | ✅ exact recorded shortlist (Attio, not Salesforce), 5 parallel queries since 9 Nov, per-tool verdict | 6.4–7.5s |
+| D1 cold "What did I ask on 3 Nov?" | ✅ "no record of Tue 3 Nov; history starts today" + next step, no search | 1.3s |
+| D2 cold CRM | ✅ no-record first, labelled assumed five, searched, invites correction | 5.4s |
+| D3 cold Postgres | ✅ same pattern; found Neon's 6 Nov changelog (primary) | 4.9s |
+| F1 no-search, warm DB | ✅ no search | 1.7s |
+
+**Iterations it took** (each one a live failure, then a structural fix rather than a prompt nudge):
+1. The model wrote an unverified draft table *before* searching, with citation numbers that only matched by luck → **only the final step's text is the answer**, plus a `reset` event (ADR-024).
+2. It rewrote the recorded "then" value from today's page and so missed Neon's change → **verification checklist with verbatim recorded values** (ADR-025).
+3. A forced "Then" column on a shortlist (no prices recorded) made it invent then-values → **answer shape depends on what was recorded**.
+4. Cold D2 only asked for the list despite the prompt rule → **no-record policy decided in code** (ADR-026). Then the no-record sentence got discarded with the pre-search draft → the policy now says it belongs in the *final* answer.
+5. SQLite: `bm25()` can't run inside an aggregate and plain subqueries get flattened → `MATERIALIZED` CTE.
+6. `seed:demo` deleted the DB file under a running demo server → reseed in place (C22).
+
+Known model-quality gaps (logged, not hidden): Flash-Lite missed "per project → per organization" as a change, and once reported a 4 Nov/8 Nov event as "since 9 Nov" because the article was published on 9 Nov (C23).
+
+Planned items:
 - `temporal.resolve()` with unit tests (weekday ambiguity, "3 November", "since then", "yesterday", tz edges).
 - `memory.retrieve()`: index, window hits and FTS. Injected as the turn-context system message.
 - Coverage statement plus the never-invent rule. Cold-start behavior.

@@ -28,7 +28,7 @@ src/agent/    loop.ts (the agent loop), context.ts (ALL prompt assembly), prompt
 src/llm/      ModelClient interface + gemini.ts (now) / anthropic.ts (preferred, later). ONLY place provider SDKs are imported.
 src/tools/    webSearch.ts (the one tool), sources.ts (SourceRegistry, citation validation)
 src/search/   provider interface, tavily.ts, exa.ts, cache.ts
-src/memory/   temporal.ts, store.ts, retrieve.ts, extract.ts
+src/memory/   temporal.ts (date resolver), retrieve.ts (planMemory: the <memory> block + since), store.ts (all SQL), seed.ts, extract.ts (Phase 4)
 src/db/       schema.sql, migrations, client
 src/lib/      clock.ts, logger.ts
 web/          Vite + React UI
@@ -48,7 +48,9 @@ spikes/       Phase 0 probes + findings (not part of the app)
 7. **`web_search` is the only tool the model sees** (ADR-005, pending). Memory reaches the model through context injection, not tools.
 8. Agent core (`agent/`, `memory/`, `tools/`, `search/`) must not import from `server/` or `web/`, or import any provider SDK directly (use `src/llm/`).
 9. **The server owns history** (ADR-022). Never accept conversation history from the client. Save the user message before running the turn.
-10. Don't kill processes you didn't start. The user often has `npm run dev` running on 5173/8787.
+10. Don't kill processes you didn't start. The user often has `npm run dev` (5173/8787) and/or `npm run demo` (5180/8790) running. Don't delete DB files a server may have open: reseed in place.
+11. **The answer is the final step's text** (ADR-024). Anything with one correct answer (dates, windows, recorded values, the no-record policy) is decided in `planMemory`, not left to the model ("code decides, the model writes").
+12. Debug a turn: `DB_PATH=data/demo.db AGENT_NOW=2026-11-11T10:00:00Z ASK_TRACE=1 npm run ask -- "…"` prints the memory plan and every executed search.
 
 ## Conventions
 - TypeScript strict, ESM. zod for every tool input and external API response.

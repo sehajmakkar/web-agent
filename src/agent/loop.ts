@@ -1,5 +1,8 @@
 import { clock } from "../lib/clock.js";
 import { ModelError, addUsage, emptyUsage, type ChatMessage, type ModelClient, type ToolCall, type ToolResult } from "../llm/types.js";
+import { planMemory } from "../memory/retrieve.js";
+import type { Store } from "../memory/store.js";
+import { formatDay } from "../memory/temporal.js";
 import type { SearchProvider } from "../search/types.js";
 import { SourceRegistry, validateCitations } from "../tools/sources.js";
 import { WEB_SEARCH, runWebSearch, webSearchSpec } from "../tools/webSearch.js";
@@ -14,6 +17,8 @@ export interface TurnInput {
   search: SearchProvider;
   emit: (event: AgentEvent) => void;
   signal?: AbortSignal;
+  /** Long-term memory. Without it the agent states it has no earlier conversations. */
+  memory?: { store: Store; currentConversationId?: string };
   /** Loop guards. */
   maxSteps?: number;
   budgetMs?: number;
@@ -31,7 +36,21 @@ export async function runTurn(input: TurnInput): Promise<void> {
   const elapsed = () => Math.round(clock.perf() - t0);
 
   const registry = new SourceRegistry();
-  const turnContext = buildTurnContext({ now: clock.now(), tz: input.tz });
+  const now = clock.now();
+  // Memory is planned in code before the model runs (ADR-005 A): dates, recall, the search window.
+  const plan = planMemory(input.memory?.store, {
+    text: input.userText,
+    now,
+    tz: input.tz,
+    excludeConversationId: input.memory?.currentConversationId,
+  });
+  if (plan.trace.recalled.length) {
+    const first = plan.trace.recalled[0]!;
+    const more = plan.trace.recalled.length > 1 ? ` +${plan.trace.recalled.length - 1} more` : "";
+    emit({ type: "status", text: `Recalled ${formatDay(first.localDate)}: “${first.title}”${more}` });
+  }
+  const searches: TurnMetrics["searches"] = [];
+  const turnContext = buildTurnContext({ now, tz: input.tz, extra: plan.contextLines, memory: plan.memoryBlock });
   const { system, messages } = buildRequest({ history: input.history, userText: input.userText, turnContext });
   const conversation: ChatMessage[] = [...messages];
 
@@ -50,11 +69,12 @@ export async function runTurn(input: TurnInput): Promise<void> {
       // Final step (or out of time, or an empty reply last time): force a text answer with what we have.
       const mustAnswer = forceAnswer || step === maxSteps - 1 || elapsed() > budgetMs;
       const calls: ToolCall[] = [];
+      let stepText = "";
 
       for await (const ev of model.stream({ system, messages: conversation, tools: [webSearchSpec], toolMode: mustAnswer ? "none" : "auto", signal })) {
         if (ev.type === "text") {
           if (ttftMs === null) ttftMs = elapsed();
-          answer += ev.delta;
+          stepText += ev.delta;
           emit({ type: "text", delta: ev.delta });
         } else if (ev.type === "tool_call") {
           calls.push(ev.call);
@@ -66,16 +86,18 @@ export async function runTurn(input: TurnInput): Promise<void> {
       }
 
       if (!calls.length) {
+        answer = stepText;
         if (answer.trim() || mustAnswer) break;
         // Model returned nothing: one forced-answer retry on the next step.
         forceAnswer = true;
         continue;
       }
 
-      // Separate pre-tool chatter ("Let me check…") from the final answer.
-      if (answer && !answer.endsWith("\n")) {
-        answer += "\n\n";
-        emit({ type: "text", delta: "\n\n" });
+      // ADR-024: text written before a tool call is a draft made without evidence (Phase 3 caught the model writing
+      // an unverified table, then searching). Only the final step's text is the answer; tell the UI to drop the draft.
+      if (stepText) {
+        emit({ type: "reset" });
+        ttftMs = null;
       }
 
       const results: ToolResult[] = await Promise.all(
@@ -84,10 +106,14 @@ export async function runTurn(input: TurnInput): Promise<void> {
             return { callId: call.id, name: call.name, isError: true, content: `Unknown tool "${call.name}". The only tool is ${WEB_SEARCH}.` };
           }
           searchCalls++;
-          queries += Array.isArray(call.args.queries) ? call.args.queries.length : 0;
+          const qs = Array.isArray(call.args.queries) ? call.args.queries.map(String) : [];
+          const us = Array.isArray(call.args.urls) ? call.args.urls.map(String) : [];
+          queries += qs.length;
+          searches.push({ queries: qs, urls: us, since: plan.since ?? (typeof call.args.since === "string" ? call.args.since : undefined) });
           return runWebSearch(call.id, call.args, {
             search,
             registry,
+            forcedSince: plan.since,
             signal,
             onStatus: (text) => emit({ type: "status", text }),
             onSources: (sources) => emit({ type: "sources", sources }),
@@ -108,6 +134,15 @@ export async function runTurn(input: TurnInput): Promise<void> {
       queries,
       usage,
       droppedCitations: dropped,
+      memory: {
+        dates: plan.trace.dates,
+        recalled: plan.trace.recalled,
+        since: plan.trace.since,
+        sinceReason: plan.trace.sinceReason,
+        memoryIntent: plan.trace.memoryIntent,
+        changeIntent: plan.trace.changeIntent,
+      },
+      searches,
     };
     emit({ type: "done", text, sources: registry.list(), cited, metrics });
   } catch (err) {

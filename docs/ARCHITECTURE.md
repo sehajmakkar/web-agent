@@ -54,10 +54,13 @@ User: *"Last Tuesday I asked you about Postgres hosting. Has any pricing changed
    `tools + static system prompt` → conversation history → user message + **turn context**
    (now, resolved dates, memory digest, memory coverage). Dynamic content goes *last*, so the date never breaks the prompt cache.
    On Gemini [C-0] the turn context is a tagged `<turn_context>` block on the current user turn, not saved to history. On Claude it would be a mid-conversation system message (ADR-010).
+   *As built (Phase 3):* `planMemory()` in `src/memory/retrieve.ts` renders `<memory>` with a coverage line, a 30-day index, recalled conversations (messages, cited URLs, claims, user decisions) and, on change questions, a `verification_checklist` + `answer_shape` (ADR-025). If nothing matches, it adds a `no_record_policy` (ADR-026).
 5. **Agent loop** (streaming):
    - The model calls `web_search({ queries: [...], urls: ["neon.com/pricing", ...], since: "2026-11-03" })`.
      Queries run **in parallel**. Previously cited URLs are re-read live. Results are numbered `[1]..[n]` and wrapped as untrusted data.
    - Text streams to the UI as SSE. Tool activity streams as status events ("Re-checking neon.com/pricing…").
+   - With a window active, each query runs twice in parallel: window-filtered and unfiltered (ADR-023). Results dated before the window are labelled background.
+   - Text from a step that ends in a tool call is a draft: discarded with a `reset` event (ADR-024).
    - Guard rails: at most N loop iterations and a wall-clock budget. When a budget runs out, the model answers with what it has and says what it couldn't check.
 6. **Persist (sync).** Save the assistant message, the sources (url, title, fetched_at, content hash, excerpt) and the validated citations. Citation numbers that don't exist are stripped.
 7. **Extract (async).** A small model with structured output produces the title, topics, claims `{entity, attribute, value, source_id, quote}`, and notes `{kind: decision|preference|shortlist, items}`. This runs off the critical path. The next turn's retrieval waits for pending extraction for at most ~1s, then falls back to raw messages.

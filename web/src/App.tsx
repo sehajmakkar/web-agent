@@ -113,6 +113,8 @@ export function App() {
           return patch(assistantId, (m) => ({ ...m, status: e.text }));
         case "text":
           return patch(assistantId, (m) => ({ ...m, content: m.content + e.delta }));
+        case "reset":
+          return patch(assistantId, (m) => ({ ...m, content: "" }));
         case "sources":
           return patch(assistantId, (m) => ({ ...m, sources: [...(m.sources ?? []), ...e.sources] }));
         case "done":

@@ -165,6 +165,84 @@ export class Store {
     }));
   }
 
+  // ---- retrieval queries (Phase 3) ----
+
+  /** How much history exists (excluding the current conversation): the "coverage" statement in every turn (C2). */
+  coverage(excludeId?: string): { count: number; first?: string; last?: string } {
+    const row = this.db
+      .prepare(`SELECT count(*) AS count, min(local_date) AS first, max(local_date) AS last FROM conversations
+                WHERE id IS NOT ? AND EXISTS (SELECT 1 FROM messages m WHERE m.conversation_id = conversations.id)`)
+      .get(excludeId ?? null) as { count: number; first: string | null; last: string | null };
+    return { count: row.count, first: row.first ?? undefined, last: row.last ?? undefined };
+  }
+
+  /** Conversations with at least one message dated in [from, to] (local dates), oldest first. */
+  conversationsInRange(from: string, to: string, excludeId?: string): Conversation[] {
+    const rows = this.db
+      .prepare(
+        `SELECT c.*, (SELECT count(*) FROM messages m WHERE m.conversation_id = c.id) AS message_count
+         FROM conversations c
+         WHERE c.id IS NOT ? AND EXISTS (SELECT 1 FROM messages m WHERE m.conversation_id = c.id AND m.local_date BETWEEN ? AND ?)
+         ORDER BY c.started_at`,
+      )
+      .all(excludeId ?? null, from, to) as ConvRow[];
+    return rows.map(toConversation);
+  }
+
+  /** Conversations active on/after `fromDate`, most recent first. */
+  recentConversations(fromDate: string, limit: number, excludeId?: string): Conversation[] {
+    const rows = this.db
+      .prepare(
+        `SELECT c.*, (SELECT count(*) FROM messages m WHERE m.conversation_id = c.id) AS message_count
+         FROM conversations c
+         WHERE c.id IS NOT ? AND c.local_date >= ? AND EXISTS (SELECT 1 FROM messages m WHERE m.conversation_id = c.id)
+         ORDER BY c.updated_at DESC LIMIT ?`,
+      )
+      .all(excludeId ?? null, fromDate, limit) as ConvRow[];
+    return rows.map(toConversation);
+  }
+
+  /** Full-text search over messages, ranked by BM25 and grouped per conversation (best rank first). */
+  searchConversations(terms: string[], limit: number, excludeId?: string): { conversationId: string; rank: number }[] {
+    const cleaned = terms.map((t) => t.replace(/[^\p{L}\p{N}]/gu, "")).filter((t) => t.length >= 2);
+    if (!cleaned.length) return [];
+    const query = cleaned.map((t) => `"${t}"*`).join(" OR ");
+    // bm25() can't run inside an aggregate, and SQLite flattens plain subqueries into one, so a MATERIALIZED CTE
+    // forces "rank FTS rows" to happen first, then we group per conversation.
+    return this.db
+      .prepare(
+        `WITH hits AS MATERIALIZED (
+           SELECT rowid AS rid, bm25(messages_fts) AS rank FROM messages_fts WHERE messages_fts MATCH ?
+         )
+         SELECT m.conversation_id AS conversationId, min(h.rank) AS rank
+         FROM hits h JOIN messages m ON m.rowid = h.rid
+         WHERE m.conversation_id IS NOT ?
+         GROUP BY m.conversation_id ORDER BY rank LIMIT ?`,
+      )
+      .all(query, excludeId ?? null, limit) as { conversationId: string; rank: number }[];
+  }
+
+  /** Claims and notes recorded for a conversation (the evidence the next "has it changed?" compares against). */
+  evidence(conversationId: string): {
+    claims: { messageId: string; entity: string; attribute: string; value: string; url?: string; quote?: string; observedAt: string }[];
+    notes: { kind: string; payload: unknown; createdAt: string }[];
+  } {
+    const claims = this.db
+      .prepare(
+        `SELECT cl.message_id AS messageId, cl.entity, cl.attribute, cl.value, s.url, cl.quote, cl.observed_at AS observedAt
+         FROM claims cl JOIN messages m ON m.id = cl.message_id LEFT JOIN sources s ON s.id = cl.source_id
+         WHERE m.conversation_id = ? ORDER BY cl.id`,
+      )
+      .all(conversationId) as { messageId: string; entity: string; attribute: string; value: string; url: string | null; quote: string | null; observedAt: string }[];
+    const notes = this.db
+      .prepare(`SELECT kind, payload, created_at AS createdAt FROM notes WHERE conversation_id = ? ORDER BY id`)
+      .all(conversationId) as { kind: string; payload: string; createdAt: string }[];
+    return {
+      claims: claims.map((c) => ({ ...c, url: c.url ?? undefined, quote: c.quote ?? undefined })),
+      notes: notes.map((n) => ({ ...n, payload: JSON.parse(n.payload) as unknown })),
+    };
+  }
+
   /** Evidence ledger writes (seeds now, extraction in Phase 4). */
   addClaim(input: { messageId: string; entity: string; attribute: string; value: string; sourceN?: number; quote?: string; observedAt: string }) {
     const sourceId = input.sourceN === undefined ? null : (this.db

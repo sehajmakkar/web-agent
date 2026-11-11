@@ -90,7 +90,21 @@ Before writing agent code I spent a couple of hours on probes. Four findings cha
 - **Every model read "on Monday" as next Monday.** That's direct evidence for resolving dates in code.
 - **Exa beat Tavily** on speed (0.7s vs 1.9s) and on returning the vendor's own page. For "HubSpot pricing change" it found hubspot.com's announcement; Tavily found LinkedIn posts.
 
-## 9. The iteration path
+## 9. "Code decides, the model writes" (the pattern behind Phase 3)
+
+Each memory flow failed live at least once, and the fix was the same every time: **take the decision away from the model and give it a structure to fill in.**
+
+| Failure seen live | The model was deciding… | Now decided in code |
+|---|---|---|
+| "since 1 Nov" answer included Sep/Oct news | whether to set `since` | planner sets the window on every search (ADR-018) |
+| unverified draft table, then a search | when the answer starts | only the final step is the answer (ADR-024) |
+| "then: ~$15/mo" when $19/mo was recorded | where the "then" value comes from | verbatim checklist from the ledger (ADR-025) |
+| cold start: just asked for the list | whether to proceed or ask | `no_record_policy` (ADR-026) |
+| "on Monday" read as next Monday | what a date means | deterministic resolver (ADR-008) |
+
+The model still does what it's good at: reading pages, judging relevance, writing the answer. Everything with one correct answer (dates, windows, what we recorded, what the policy is) is code, unit-tested, and shown in the turn trace. That's also why a *small* model (Flash-Lite) handles these flows. Where it still falls short (C23) is cleanly separated from architecture problems.
+
+## 10. The iteration path
 
 I built it in thin vertical slices, each one usable on its own (PLAN.md):
 skeleton chat + search → persistence + clock → temporal memory → evidence ledger + re-verification

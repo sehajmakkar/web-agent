@@ -60,6 +60,9 @@ export interface WebSearchContext {
 }
 
 const RESULTS_PER_QUERY = 5;
+/** With a `since` window (ADR-023): dated results inside the window + current pages of any date. */
+const WINDOW_RESULTS = 4;
+const CURRENT_RESULTS = 3;
 const SEARCH_EXCERPT = 1_500;
 const READ_EXCERPT = 6_000;
 
@@ -82,9 +85,17 @@ export async function runWebSearch(callId: string, rawArgs: unknown, ctx: WebSea
   ].join(" · ");
   ctx.onStatus?.(`Searching ${label}${since ? ` (since ${since})` : ""}`);
 
-  const searchJobs = args.queries.map((query) =>
-    ctx.search.search({ query, since, depth: args.depth, maxResults: RESULTS_PER_QUERY }, ctx.signal),
-  );
+  // ADR-023 dual retrieval: a date filter drops undated pages (most pricing pages!), so with a window we also fetch
+  // current pages of any date in parallel. Pre-window items are labelled as background, never as changes.
+  const searchJobs = args.queries.map(async (query) => {
+    if (!since) return ctx.search.search({ query, depth: args.depth, maxResults: RESULTS_PER_QUERY }, ctx.signal);
+    const [windowed, current] = await Promise.allSettled([
+      ctx.search.search({ query, since, depth: args.depth, maxResults: WINDOW_RESULTS }, ctx.signal),
+      ctx.search.search({ query, depth: args.depth, maxResults: CURRENT_RESULTS }, ctx.signal),
+    ]);
+    if (windowed.status === "rejected" && current.status === "rejected") throw windowed.reason;
+    return [...(windowed.status === "fulfilled" ? windowed.value : []), ...(current.status === "fulfilled" ? current.value : [])];
+  });
   const readJob = args.urls.length ? ctx.search.read(args.urls, ctx.signal) : Promise.resolve<SearchHit[]>([]);
   const [readOutcome, ...searchOutcomes] = await Promise.allSettled([readJob, ...searchJobs]);
 
@@ -102,7 +113,7 @@ export async function runWebSearch(callId: string, rawArgs: unknown, ctx: WebSea
       if (ctx.registry.list().length > before) fresh.push(source);
       if (seenThisCall.has(source.n)) continue;
       seenThisCall.add(source.n);
-      lines.push(formatSource(source));
+      lines.push(formatSource(source, since));
     }
     if (lines.length) blocks.push(`## ${heading}\n${lines.join("\n\n")}`);
   };
@@ -127,15 +138,24 @@ export async function runWebSearch(callId: string, rawArgs: unknown, ctx: WebSea
         blocks.join("\n\n") +
         "\n</untrusted_web_content>"
       : "No usable results.",
-    since ? `Filter applied: published on/after ${since}. Pages without a publish date (e.g. pricing pages) may be excluded or undated.` : "",
+    since
+      ? `Search window: ${since} onwards. Items dated inside the window can be changes; items marked BEFORE WINDOW are background only; ` +
+        `undated pages (often pricing pages) show their CURRENT content. Compare that with what was recorded earlier to detect a change.`
+      : "",
     failures.length ? `Failed or empty lookups:\n- ${failures.join("\n- ")}` : "",
   ].filter(Boolean).join("\n\n");
 
   return { callId, name: WEB_SEARCH, content, isError: allFailed && failures.length > 0 };
 }
 
-function formatSource(s: Source): string {
-  return `[${s.n}] ${s.title}\nURL: ${s.url}\nPublished: ${s.publishedAt ? s.publishedAt.slice(0, 10) : "unknown"}\n${s.excerpt}`;
+function formatSource(s: Source, since?: string): string {
+  const date = s.publishedAt?.slice(0, 10);
+  const when = !date
+    ? "unknown (treat as current page content)"
+    : since && date < since
+      ? `${date} (BEFORE WINDOW ${since}: background, not a change)`
+      : date;
+  return `[${s.n}] ${s.title}\nURL: ${s.url}\nPublished: ${when}\n${s.excerpt}`;
 }
 
 function clip(text: string, max: number): string {

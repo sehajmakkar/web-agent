@@ -74,5 +74,7 @@ export function validateCitations(text: string, isValid: (n: number) => boolean)
     });
     return ok.length ? ok.map((n) => `[${n}]`).join("") : "";
   });
-  return { text: out.replace(/[ \t]+([.,;:!?])/g, "$1"), cited: [...cited].sort((a, b) => a - b), dropped: [...dropped] };
+  // Pseudo-citations the model sometimes invents ("[memory]", "[source]") aren't links to anything: drop them.
+  const cleaned = out.replace(/\s?\[(?:memory|source|sources|citation|ref)\](?!\()/gi, "");
+  return { text: cleaned.replace(/[ \t]+([.,;:!?])/g, "$1"), cited: [...cited].sort((a, b) => a - b), dropped: [...dropped] };
 }

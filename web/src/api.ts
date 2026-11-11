@@ -40,6 +40,7 @@ export type AgentEvent =
   | { type: "conversation"; conversation: Conversation }
   | { type: "status"; text: string }
   | { type: "text"; delta: string }
+  | { type: "reset" }
   | { type: "sources"; sources: Source[] }
   | { type: "done"; text: string; sources: Source[]; cited: number[]; metrics: Metrics; messageId: string }
   | { type: "error"; kind: string; message: string };
