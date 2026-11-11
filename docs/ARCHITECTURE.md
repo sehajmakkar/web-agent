@@ -68,14 +68,14 @@ followed by a table (*Then (3 Nov)* | *Now* | *Changed?* | *Source*) and a clear
 
 ## Data model (SQLite)
 
+As built in `src/db/migrations/001_init.sql` (all timestamps ISO UTC; `local_date` = the date in the conversation's tz):
 ```sql
-conversations(id, started_at_utc, tz, local_date, title, summary, topics_json)
-messages(id, conversation_id, role, content, created_at_utc, local_date)   -- + messages_fts (FTS5)
-sources(id, url, title, fetched_at_utc, content_hash, excerpt, published_at)
-message_sources(message_id, source_id, citation_index)
-claims(id, message_id, entity, attribute, value, unit, source_id, quote, observed_at_utc,
-       supersedes_claim_id)                                                -- the evidence ledger
-notes(id, conversation_id, kind, payload_json, created_at_utc)              -- decisions, shortlists, prefs
+conversations(id, title, summary, topics[json], tz, started_at, local_date, updated_at)
+messages(id, conversation_id, seq, role, content, created_at, local_date, meta[json])   -- + messages_fts (FTS5, porter), trigger-synced
+sources(id, url, title, provider, published_at, fetched_at, excerpt, content_hash)       -- snapshot per message (ADR-022)
+message_sources(message_id, source_id, n, cited)                                         -- n = the [n] in the text
+claims(id, message_id, entity, attribute, value, source_id, quote, observed_at, supersedes_claim_id)  -- evidence ledger
+notes(id, conversation_id, kind, payload[json], created_at)                              -- shortlists, decisions, prefs
 ```
 
 There is one user, so no auth. The schema keeps a `user_id`-shaped seam for later.

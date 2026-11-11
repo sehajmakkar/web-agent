@@ -9,7 +9,9 @@ Read `docs/THINKING.md` first for the why.
 - `npm run ask -- "question"`: one headless turn through the same `runTurn()`, printing status, answer, cited sources and metrics.
 - `npm test`: unit tests (vitest, `tests/`). Temporal resolver and memory retrieval must stay covered. `npm run typecheck`: tsc (TypeScript 7).
 - `npm run eval [-- --live] [-- --filter=B]`: scenario evals (see docs/EVALS.md).
-- `npm run seed:demo`: loads backdated demo history into `data/demo.db`.
+- `npm run seed:demo`: (re)loads backdated fixture history into `data/demo.db` (`-- --set ambiguous_tuesday` for the other set).
+- `npm run demo`: reseed + run on ports 5180/8790 with the clock anchored at 2026-11-11 10:00 London. Never touches `data/agent.db`.
+- Ports: dev 5173 (UI) / 8787 (API); override with `WEB_PORT` / `PORT`. Vite uses `strictPort`.
 
 ## Env
 See `.env.example`. `LLM_PROVIDER` (`gemini` now, `anthropic` preferred later), `GEMINI_API_KEY`, `EXA_API_KEY` (primary search),
@@ -45,6 +47,8 @@ spikes/       Phase 0 probes + findings (not part of the app)
 6. **Citations are validated server-side** against the sources the tool returned.
 7. **`web_search` is the only tool the model sees** (ADR-005, pending). Memory reaches the model through context injection, not tools.
 8. Agent core (`agent/`, `memory/`, `tools/`, `search/`) must not import from `server/` or `web/`, or import any provider SDK directly (use `src/llm/`).
+9. **The server owns history** (ADR-022). Never accept conversation history from the client. Save the user message before running the turn.
+10. Don't kill processes you didn't start. The user often has `npm run dev` running on 5173/8787.
 
 ## Conventions
 - TypeScript strict, ESM. zod for every tool input and external API response.

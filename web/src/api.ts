@@ -17,29 +17,57 @@ export interface Metrics {
   queries: number;
 }
 
+export interface Conversation {
+  id: string;
+  title: string;
+  tz: string;
+  startedAt: string;
+  localDate: string;
+  updatedAt: string;
+  messageCount: number;
+}
+
+export interface StoredMessage {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  createdAt: string;
+  meta?: { metrics?: Metrics };
+  sources: (Source & { cited: boolean })[];
+}
+
 export type AgentEvent =
+  | { type: "conversation"; conversation: Conversation }
   | { type: "status"; text: string }
   | { type: "text"; delta: string }
   | { type: "sources"; sources: Source[] }
-  | { type: "done"; text: string; sources: Source[]; cited: number[]; metrics: Metrics }
+  | { type: "done"; text: string; sources: Source[]; cited: number[]; metrics: Metrics; messageId: string }
   | { type: "error"; kind: string; message: string };
 
 export interface Health {
   model: string;
   search: string;
+  db: string;
   now: string;
   clockOverridden: boolean;
 }
 
-export async function getHealth(): Promise<Health> {
-  const res = await fetch("/api/health");
-  if (!res.ok) throw new Error(`health ${res.status}`);
-  return res.json();
+async function getJson<T>(url: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(url, init);
+  if (!res.ok) throw new Error(`${url} → ${res.status}`);
+  return res.json() as Promise<T>;
 }
+
+export const getHealth = () => getJson<Health>("/api/health");
+export const listConversations = () => getJson<{ conversations: Conversation[] }>("/api/conversations").then((r) => r.conversations);
+export const getConversation = (id: string) =>
+  getJson<{ conversation: Conversation; messages: StoredMessage[] }>(`/api/conversations/${encodeURIComponent(id)}`);
+export const deleteConversation = (id: string) =>
+  getJson<{ ok: boolean }>(`/api/conversations/${encodeURIComponent(id)}`, { method: "DELETE" });
 
 /** POST a turn and invoke onEvent for each SSE event. Resolves when the stream ends. */
 export async function streamChat(
-  body: { message: string; history: { role: "user" | "assistant"; content: string }[]; tz: string },
+  body: { conversationId?: string; message: string; tz: string },
   onEvent: (e: AgentEvent) => void,
   signal: AbortSignal,
 ): Promise<void> {

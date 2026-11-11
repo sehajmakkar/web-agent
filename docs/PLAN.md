@@ -34,7 +34,13 @@ Planned items:
 - Today's date in the turn context (via `clock.ts` from day one).
 - **Exit:** "What changed in the latest Node.js release?" gives a cited, current answer. Logs show TTFT and total time.
 
-## Phase 2 · Persistence + clock (~2h)
+## Phase 2 · Persistence + clock (~2h). ✅ **Done 2026-11-12**
+**Result:** SQLite (`better-sqlite3`, prebuilt, no compile step) with numbered migrations. All 6 tables are created now (claims/notes are filled by seeds; extraction comes in Phase 4). The server owns history: the browser sends only `conversationId`. There's a sidebar grouped by day using the *server* clock, `#c=<id>` deep links, and delete.
+`npm run seed:demo` loads the fixtures into `data/demo.db`. `npm run demo` reseeds and starts on **its own ports (5180/8790)** with the clock anchored at Wed 11 Nov 10:00 London, so the assignment's prompts work verbatim and it can run next to `npm run dev`.
+Verified: the 4 seeded chats list under 10 Nov / 9 Nov / 3 Nov. A new two-turn chat persisted, and the follow-up ("how much per year?") resolved "that" from the stored history. Timestamps follow the anchored clock. 19 unit tests (+6: store, timezone local dates, FTS sync, seeds, history merge).
+Found while testing: a `npm run dev` the user had running held 8787/5173, so the first demo attempt crashed with EADDRINUSE and Vite silently moved to 5174. Fixed with dedicated demo ports and Vite `strictPort` (C21).
+
+Planned items:
 - SQLite schema and migrations. Conversations and messages saved. Sidebar with past chats, "new chat".
 - Browser timezone captured. `AGENT_NOW` override. Separate DB path for the demo and eval.
 - `npm run seed:demo`: backdated conversations (Tue 3 Nov Postgres hosting with real cited prices; Mon 9 Nov CRM shortlist of 5; Tue 10 Nov something unrelated).

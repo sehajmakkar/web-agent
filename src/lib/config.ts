@@ -23,6 +23,7 @@ const EnvSchema = z
     AGENT_NOW: opt(z.string().optional()),
     AGENT_TZ: opt(z.string().default(Intl.DateTimeFormat().resolvedOptions().timeZone)),
     PORT: opt(z.coerce.number().int().default(8787)),
+    DB_PATH: opt(z.string().default("data/agent.db")),
   })
   .refine((e) => e.EXA_API_KEY || e.TAVILY_API_KEY, {
     message: "Set at least one of EXA_API_KEY or TAVILY_API_KEY",

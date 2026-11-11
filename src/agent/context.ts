@@ -35,9 +35,18 @@ export function buildRequest(input: { history: HistoryMessage[]; userText: strin
   system: string;
   messages: ChatMessage[];
 } {
-  const messages: ChatMessage[] = input.history
-    .filter((m) => m.content.trim())
-    .map((m) => (m.role === "user" ? { role: "user", text: m.content } : { role: "assistant", text: m.content }));
-  messages.push({ role: "user", text: `${input.userText}\n\n${input.turnContext}` });
+  const turns = [...input.history.filter((m) => m.content.trim()), { role: "user" as const, content: input.userText }];
+  // Merge consecutive same-role turns (e.g. a question whose answer failed is kept in history, then re-asked).
+  const merged: HistoryMessage[] = [];
+  for (const t of turns) {
+    const prev = merged.at(-1);
+    if (prev && prev.role === t.role) prev.content = `${prev.content}\n\n${t.content}`;
+    else merged.push({ ...t });
+  }
+  const messages: ChatMessage[] = merged.map((m, i) => {
+    if (m.role === "assistant") return { role: "assistant", text: m.content };
+    const isCurrent = i === merged.length - 1;
+    return { role: "user", text: isCurrent ? `${m.content}\n\n${input.turnContext}` : m.content };
+  });
   return { system: SYSTEM_PROMPT, messages };
 }

@@ -29,7 +29,7 @@ content that isn't in the provided memory. Offer a next step instead: "paste it 
 "Postgres hosting" vs "managed database" vs "Neon vs Supabase".
 **Approach:** FTS5 on raw text plus small-model `topics` tags written at extraction time (synonyms and vendor names). Embeddings are the plan for another week.
 
-### C5 · Timezones. `open`
+### C5 · Timezones. `mitigated (Phase 2: local_date at write time, unit-tested Tokyo vs LA)`
 "3 November" means the user's 3 November.
 **Approach:** store UTC plus the tz the conversation used, and resolve in the user's current tz. The browser sends the tz.
 
@@ -82,6 +82,10 @@ Phase 1, a real failure: "changed pricing since 1 November?" → the model wrote
 ### C20 · Latency variance from the model API. `open`
 Phase 0: the same tool-decision request took 1.6s once and 10.7s the next time.
 **Approach:** stream status events immediately ("Checking memory…", "Searching 4 queries…") so the UI never looks frozen. Use per-call timeouts, falling back to the next model after a time limit. Record p50 and p90 in the eval, not single numbers.
+
+### C21 · Demo and dev colliding on ports / databases. `resolved (Phase 2)`
+In testing, a running `npm run dev` held 8787/5173. The demo's server crashed with EADDRINUSE while Vite silently moved to 5174, which would have pointed the UI at the *wrong* server (the real DB, real clock).
+**Fix:** the demo uses its own ports (5180/8790) and DB file. Vite has `strictPort: true`, so a port clash fails loudly instead of quietly mixing data.
 
 ### C18 · Building on a non-preferred model [C-0]. `open`
 Only a Gemini key is available. Risks: different tool-calling quirks, different instruction-following on the "never invent memory" rule, and model IDs we can't assume.

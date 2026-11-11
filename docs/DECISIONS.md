@@ -66,6 +66,8 @@ Format: **Decision**, **Considered**, **Why**, **Revisit if**. New decisions get
 ### ADR-009 · Injectable clock + seed fixtures
 - **Why:** reproducible evals and demos. `AGENT_NOW=2026-11-11T10:00` freezes time. `npm run seed:demo` loads backdated conversations (3 Nov Postgres hosting, 9 Nov CRM shortlist) into a separate DB file, so the reviewers' real usage is never polluted.
 - **Rule:** nothing calls `Date.now()` / `new Date()` directly. Everything goes through `src/lib/clock.ts`.
+- **As built (Phase 2):** `AGENT_NOW` *anchors* the clock and time keeps ticking from there, so message ordering still works in a time-travelled demo. `npm run demo` = reseed `data/demo.db` plus clock anchored at 2026-11-11T10:00Z plus its own ports (5180/8790), so it never touches `data/agent.db` and can run beside `npm run dev`.
+- **Considered:** shifting fixture dates to be relative to the real "now" (so no clock override is needed). Rejected: it breaks absolute-date prompts like "What did I ask you on 3 November?", which is the reviewers' own example, and whole-week shifting gets odd on Mondays and Tuesdays. Anchoring makes their prompts work word for word.
 
 ### ADR-010 · Context assembly for prompt caching
 - **Principle (provider-independent):** `tools + static system prompt + history` is a stable prefix. Per-turn facts (now, resolved dates, memory digest) come **last**. Putting `now` in the system prompt would break caching on every turn.
@@ -119,6 +121,13 @@ Format: **Decision**, **Considered**, **Why**, **Revisit if**. New decisions get
 ### ADR-021 · Perceived latency comes from status events, not model speed
 - **Decision:** the loop emits `status` events at each stage ("Searching “…” · reading neon.com", "Reading results…"), and the UI shows them as a live line, plus a sources count as results arrive.
 - **Why:** Phase 1 measured the first answer token at ~4s on search turns (the search round trip happens before any text), and Phase 0 measured 1.6–10.7s variance from the model API. Status lines appear within ~1–2s, so the user sees progress immediately.
+
+### ADR-022 · Persistence rules (Phase 2)
+- **The server owns history.** The client sends only `conversationId` and the new message. It can't inject or edit past turns, and the agent sees exactly what is stored.
+- **The question is saved before the answer is generated.** "What did I ask you on X?" must include questions whose answer failed or was cancelled. Consecutive user turns are merged in `context.ts` so the model still sees alternating turns.
+- **Sources are snapshotted per message, not deduplicated across messages.** `sources` keeps what a page said *when we read it* (excerpt + sha256 + fetched_at). That's the "then" side of every later "has it changed?" comparison. All retrieved sources are stored with a `cited` flag; the UI shows only cited ones.
+- **`local_date` is computed at write time** in the conversation's timezone, so date lookups are indexed equality, not timezone maths at query time (C5).
+- **Excerpts never go over the wire.** SSE and REST send link metadata only; excerpts can be several KB each.
 
 ### ADR-016 · Single user, no auth
 - **Why:** this is the assignment scope. The `user_id` seam stays in the schema.

@@ -37,7 +37,29 @@ body {
 button { font: inherit; cursor: pointer; }
 button:disabled { cursor: default; opacity: 0.5; }
 
-.app { display: flex; flex-direction: column; height: 100%; max-width: 820px; margin: 0 auto; padding: 0 16px; }
+.layout { display: flex; height: 100%; }
+.app { display: flex; flex-direction: column; height: 100%; flex: 1; min-width: 0; max-width: 820px; margin: 0 auto; padding: 0 16px; }
+
+.sidebar { width: 260px; flex-shrink: 0; display: flex; flex-direction: column; border-right: 1px solid var(--border); background: var(--surface); padding: 12px 8px; }
+.sidebar .new { background: var(--accent); color: white; border: 0; border-radius: 10px; padding: 8px 12px; font-weight: 600; text-align: left; }
+.sidebar nav { flex: 1; overflow-y: auto; margin-top: 12px; }
+.sidebar h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 14px 8px 4px; font-weight: 600; }
+.sidebar .hint { color: var(--muted); font-size: 13px; padding: 0 8px; }
+.conv { display: flex; align-items: center; border-radius: 8px; }
+.conv:hover, .conv.active { background: var(--user); }
+.conv .pick { flex: 1; min-width: 0; text-align: left; background: none; border: 0; color: var(--text); padding: 6px 8px; font-size: 13px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.conv .del { background: none; border: 0; color: var(--muted); padding: 0 8px; font-size: 16px; visibility: hidden; }
+.conv:hover .del { visibility: visible; }
+.menu { display: none; }
+.scrim { display: none; }
+
+@media (max-width: 760px) {
+  .sidebar { position: fixed; inset: 0 auto 0 0; z-index: 20; transform: translateX(-100%); transition: transform 0.2s ease; box-shadow: 0 0 24px rgb(0 0 0 / 0.2); }
+  .sidebar.open { transform: none; }
+  .scrim { display: block; position: fixed; inset: 0; z-index: 10; background: rgb(0 0 0 / 0.3); }
+  .menu { display: inline-block; }
+  .conv .del { visibility: visible; }
+}
 
 .top { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
 .brand { font-weight: 650; }
