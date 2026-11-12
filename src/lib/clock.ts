@@ -5,7 +5,8 @@
  * so message ordering still works in a "time-travelled" demo or eval. Tests can pin it with setNow().
  */
 
-const bootReal = Date.now();
+/** Real time at which the current anchor was set (boot for AGENT_NOW, call time for setNow). */
+let anchorReal = Date.now();
 let anchor: number | null = parseAnchor(process.env.AGENT_NOW);
 
 function parseAnchor(value: string | undefined): number | null {
@@ -17,7 +18,7 @@ function parseAnchor(value: string | undefined): number | null {
 
 export const clock = {
   now(): Date {
-    return anchor === null ? new Date() : new Date(anchor + (Date.now() - bootReal));
+    return anchor === null ? new Date() : new Date(anchor + (Date.now() - anchorReal));
   },
   /** Monotonic milliseconds for measuring durations (not wall-clock). */
   perf(): number {
@@ -31,6 +32,7 @@ export const clock = {
 /** Test/eval hook: pin "now" (string or Date). Pass null to return to real time. */
 export function setNow(value: string | Date | null): void {
   anchor = value === null ? null : typeof value === "string" ? parseAnchor(value) : value.getTime();
+  anchorReal = Date.now();
 }
 
 /** "2026-11-12" in the given IANA timezone. */

@@ -1,0 +1,1234 @@
+{
+ "summary": {
+  "label": "baseline-flash-lite",
+  "model": "gemini-3.5-flash-lite",
+  "thinking": "low",
+  "runs": 1,
+  "scenarios": 6,
+  "passed": 5,
+  "checks": {
+   "total": 32,
+   "passed": 31
+  },
+  "byFamily": [
+   "A 1/1",
+   "B 1/2",
+   "C 1/1",
+   "D 2/2"
+  ],
+  "latency": {
+   "p50": 4048,
+   "p90": 4950,
+   "ttftP50": 3281,
+   "ttftP90": 4192
+  },
+  "judgeMean": 5,
+  "searchRecording": {
+   "hits": 2,
+   "misses": 29
+  },
+  "stoppedAt": "D3-cold-last-tuesday"
+ },
+ "results": [
+  {
+   "id": "A1-absolute-date-recall",
+   "family": "A",
+   "run": 1,
+   "turns": [
+    {
+     "user": "What did I ask you on 3 November? Is your answer still correct today?",
+     "text": "On Tue 3 Nov 2026, you asked about the cheapest managed Postgres hosting options (comparing Neon, Supabase, and Render) and whether you need a connection pooler for serverless functions.\n\n| Item | Then | Now | Verdict |\n|:--- |:--- |:--- |:--- |\n| 1. Neon, Launch plan price | $19/mo | Pay for what you use (metered compute/storage) [1] | Changed; Neon moved to a consumption-based model with no monthly minimum instead of a fixed $19/mo tier. |\n| 2. Supabase, Pro plan price | $25/mo per project | $25/mo per organization (includes $10 compute credit) [2] | No change found; the base plan remains $25/mo, though billing is structured per organization with individual project compute added. |\n| 3. Render, Basic-256mb Postgres price | $6/mo | $6/mo [3] | No change found; the 256MB RAM / <1 CPU Postgres tier remains $6/mo. |",
+     "sources": [
+      {
+       "n": 1,
+       "url": "https://neon.com/pricing",
+       "title": "Neon Pricing Plans",
+       "provider": "exa",
+       "excerpt": "# Neon Pricing Plans\n> Neon is a complete set of cloud backend primitives built around Lakebase Postgres, for developers, startups, and agent platforms, from Databricks. Services include Lakebase Postgres, Managed Better Auth, a Data API, Functions, Object Storage, and an AI Gateway, on three plans: Free, Launch, and Scale. Lakebase Postgres on Neon includes autoscaling, instant restore, and scale-to-zero, and works with any language, framework, or ORM that supports Postgres. Storage is unlimited on paid plans and grows with your usage. Pay only for what you use on paid plans; no monthly minimum and no per-project fee. The Free plan includes 100 projects, which with usage-based paid plans suits a database per tenant or per agent (see How much does a database per tenant or per agent cost?). Typical spend is about $15/month on Launch for a small database and $701/month on Scale for a production workload (see Typical monthly cost).\nLast updated: 2026-11-04\n## How billing works\nPaid plans are pay-as-you-go: usage is metered hourly and billed at the end of the month, with no monthly minimum. Plans apply per organization, and one Neon account can belong to multiple orgs on different plans. The Free plan is permanent (not a trial); no credit card required.\n| Unit | Meaning |\n| --- | --- |\n| CU (Compute Unit) | ~4 GB RAM + CPU + SSD. |\n| CU-hour | `compute size × hours running`. 0.25 CU × 4 hours = 1 CU-hour. Suspended (scaled-to-zero) compute = $0. |\n| GB-month | Storage, metered hourly. |\n| branch-month | Extra branch kept for one month. Prorated hourly. |\nCompute suspends automatically after inactivity (scale-to-zero); no CU-hours accrue while suspended. Always enabled on Free (suspends after 5 min, cannot be turned off); can be disabled on Launch; fully configurable on Scale.\nInvoices under $0.50 are not collected.\n## Plans at a glance\n| Feature | Free | Launch | Scale |\n| --- | --- | --- | --- |\n| Price | $0/month | Pay for what you use | Pay for what you use |\n| Who it's for | Prototypes, side projects, and small teams | Startups and growing teams | Production-grade workloads and larger companies |\n| Organization members | Unlimited | Unlimited | Unlimited |\n| Projects | 100 | 100 | 1,000 (can be increased on request) |\n| Branches per project | 10 | 10 | 25 |\n| Extra branches | - | $1.50/branch-month (prorated hourly) | $1.50/branch-month (prorated hourly) |\n| Compute | 100 CU-hours/project | $0.106/CU-hour | $0.222/CU-hour |\n| Autoscaling | Up to 2 CU (8 GB RAM) | Up to 16 CU (64 GB RAM) | Up to 16 CU autoscaling, or fixed sizes up to 56 CU (224 GB RAM) |\n| Scale to zero | After 5 min | After 5 min, can be disabled | Configurable (1 minute to always on) |\n| Storage | 1 GB/project, 20 GB account total | $0.35/GB-month | $0.35/GB-month |\n| Instant restore | - | $0.20/GB-month | $0.20/GB-month |\n| History window | 6 hours (1 GB limit) | Up to 7 days | Up to 30 days |\n| Snapshots (manual) | 1 | 100 | 100 |\n| Snapshots (scheduled) | - | Yes ($0.09/GB-month) | Yes ($0.09/GB-month) |\n| Public network transfer (egress) | 5 GB per project included | 500 GB per project included, then $0.10/GB | 500 GB per project included, then $0.10/GB |\n| Private network transfer | - | - | $0.01/GB |\n| Auth (MAU) | Up to 60k MAU per project | Up to 1M MAU per project | Up to 1M MAU per project |\n| Object Storage | 5 GB per project included | $0.023/GB-month | $0.023/GB-month |\n| Functions | 10 active / 400 waiting Capacity-Hours, 1M invocations per project | Active $0.10, waiting $0.025 per Capacity-Hour; $0.60/M invocations | Active $0.12, waiting $0.03 per Capacity-Hour; $0.60/M invocations |\n| AI Gateway | Prepaid credits (no markup), card required | Prepaid credits (no markup) | Prepaid credits (no markup) |\n| Realtime (beta) | Free during beta | Free during beta | Free during beta |\n| Monitoring retention | 1 day | 3 days | 14 days |\n| Metrics/logs export | - | - | Yes |\n| Spending notifications | - | Yes | Yes |\n| Protected branches | - | Yes | Yes |\n| IP Allow rules | - | - | Yes |\n| Private Networking | - | - | Yes |\n| HIPAA | - | - | Available |\n| SOC 2 | - | - | Available |\n| Uptime SLA | - | - | Yes |\n| Support | Community | Billing support | Standard, Business, or Production |\nA \"-\" means the feature is not available on that plan.\nAll plans include: multi-AZ storage (high availability without standbys), autoscaling and scale to zero, database branching (auth, Object Storage, and Functions branch with the database), read replicas, connection pooling (up to 10,000 pooled connections per compute), Postgres extensions (pgvector, PostGIS, TimescaleDB, and more), Managed Better Auth, a Data API for querying over HTTP, Object Storage, Functions, AI Gateway (prepaid credits), Realtime (beta), and a full management API and CLI. Neon is ISO 27001 and 27701 certified, SOC 2 audited, and GDPR and CCPA compliant; HIPAA is available on Scale.\n## Table clarifications\n- Branches are capped at 5,000 per project on paid plans (10/25 included). Free is capped at 10 per project.\n- Instant restore is charged only on root branches; child branches don't add to this charge.\n- Storage size (Postgres storage) is unlimited on paid plans: there's no hard per-branch size limit and storage grows with your usage. Free is capped at 1 GB of Postgres storage per project and 20 GB total across all projects. This is separate from Object Storage, which has its own Free allowance.\n- Storage on child branches uses copy-on-write: they start at $0 and grow with writes on that branch, capped at the branch's data size. Root branches are billed on their full data size.\n- Snapshots are billed at $0.09/GB-month for both manual and scheduled storage. The table figures are per-project count limits, not free allowances. Scheduled snapshots don't count against the manual limit.\n- Read replicas are separate computes and count toward CU-hours.\n- Auth (MAU) can scale beyond 1M; contact Neon for higher limits.\n- Private Networking ($0.01/GB on Scale) cou…"
+      },
+      {
+       "n": 2,
+       "url": "https://supabase.com/pricing",
+       "title": "Supabase Pricing",
+       "provider": "exa",
+       "excerpt": "# Supabase Pricing\n> Start for free, scale as you grow. Pay only for what you use.\nSupabase offers four plans: Free, Pro, Team, and Enterprise. All plans include unlimited API requests. Projects on paid plans aren't paused for inactivity.\n## How billing works\nSupabase uses organization-based billing. You choose a plan (Pro, Team, or Enterprise) for your organization, then each project within it runs on its own compute instance. The plan subscription covers platform features and usage quotas. Compute is billed separately per project.\nPro and Team plans include $10/month in compute credits, which covers one Micro instance. Additional projects each add their own compute cost. For example, a Pro org with 2 projects on Micro compute costs: $25 (plan) + $10 (project 1) + $10 (project 2) - $10 (credits) = $35/month.\nFor current pricing, visit https://supabase.com/pricing.\n## Database-only projects\nA Supabase project can be used as a standalone Postgres database. Connect with psql, Prisma, Drizzle, or any Postgres client or ORM using the project's connection string. Auth, Storage, Realtime, and Edge Functions are included in every project but optional. Unused products cost nothing.\n- Free: $0/month, including 500 MB database size. Free projects are paused after 1 week of inactivity. Limit of 2 active projects.\n- Pro: from $25/month, including 8 GB disk size per project and $10/month in compute credits that cover one project on Micro compute. A single database-only project on Micro compute costs $25/month before usage beyond the included quotas.\n- Projects on paid plans are not paused for inactivity.\nConnection guide: https://supabase.com/docs/guides/database/connecting-to-postgres.md\n## Plan Tiers\n### Free - from $0/month\n- Unlimited API requests\n- 50,000 monthly active users\n- 500 MB database size (Shared CPU • 500 MB RAM)\n- 5 GB egress\n- 5 GB cached egress\n- 1 GB file storage\n- Community support\n- Note: Free projects are paused after 1 week of inactivity. Limit of 2 active projects.\n### Pro - from $25/month\n- 100,000 monthly active users (then $0.00325 per MAU)\n- 8 GB disk size per project (then $0.125 per GB)\n- 250 GB egress (then $0.09 per GB)\n- 250 GB cached egress (then $0.03 per GB)\n- 100 GB file storage (then $0.0213 per GB)\n- Email support\n- Daily backups stored for 7 days\n- 7-day log retention\n- Add Log Drains (additional $60 per drain, per project)\n### Team - from $599/month\n- SOC2 & ISO 27001\n- Project-scoped and read-only access\n- HIPAA available as paid add-on\n- SSO for Supabase Dashboard\n- Priority email support & SLAs\n- Daily backups stored for 14 days\n- 28-day log retention\n### Enterprise - custom pricing\n- Technical Account Management\n- Uptime SLAs\n- Supports AWS PrivateLink\n- 24×7×365 premium enterprise support\n- Private Slack channel\n- Custom Security Questionnaires\n## Compute Add-Ons\nAll projects run on a compute instance. Pro and Team plans include Micro compute in the base price.\n| Size | $/month | Compute | RAM | Direct Connections | Pooler Connections |\n| --- | --- | --- | --- | --- | --- |\n| Micro | $10 | Shared compute | 1 GB | 60 | 200 |\n| Small | $15 | Shared compute | 2 GB | 90 | 400 |\n| Medium | $60 | Shared compute | 4 GB | 120 | 600 |\n| Large | $110 | Dedicated · 2 vCPUs | 8 GB | 160 | 800 |\n| XL | $210 | Dedicated · 4 vCPUs | 16 GB | 240 | 1,000 |\n| 2XL | $410 | Dedicated · 8 vCPUs | 32 GB | 380 | 1,500 |\n| 4XL | $960 | Dedicated · 16 vCPUs | 64 GB | 480 | 3,000 |\n| 8XL | $1,870 | Dedicated · 32 vCPUs | 128 GB | 490 | 6,000 |\n| 12XL | $2,800 | Dedicated · 48 vCPUs | 192 GB | 500 | 9,000 |\n| 16XL | $3,730 | Dedicated · 64 vCPUs | 256 GB | 500 | 12,000 |\n| >16XL | Contact Us | Custom | Custom | Custom | Custom |\nCompute is billed hourly. Each project runs its own instance. Pro and Team plans include $10/month in compute credits (covers one Micro instance). Additional projects add their full compute cost.\n## Disk Storage\n### General Purpose\n- Max size: 64 TB\n- Size: 8 GB included, then $0.125 per GB\n- IOPS: 3,000 IOPS included, then $0.024 per IOPS\n- Throughput: 125 MB/s included, then $0.095 per MB/s\n- Durability: 99.9%\n### High Performance\n- Max size: 60 TB\n- Size: $0.195 per GB\n- IOPS: $0.119 per IOPS\n- Throughput: Scales automatically with IOPS\n- Durability: 99.999%\n## Add-Ons\n| Add-on | Price |\n| --- | --- |\n| Point-in-Time Recovery (PITR) | $100 per month per 7 days retention |\n| Custom Domain | $10 per domain per month per project add on |\n| Database Branching | $0.01344 per branch, per hour |\n| Advanced MFA (Phone) | $75 per month for first project, then $10 per month per additional projects |\n| SAML/SSO Auth | 50 included, then $0.015 per MAU |\n| Log Drains | $60 per drain per month, + $0.20 per million events, + $0.09 per GB egress |\n| Image Transformations | 100 origin images included, then $5 per 1000 origin images |\n## Full Feature Comparison\n### Database\n| Feature | Free | Pro | Team | Enterprise |\n| --- | --- | --- | --- | --- |\n| Dedicated Postgres Database | Included | Included | Included | Included |\n| Unlimited API requests | Included | Included | Included | Included |\n| Database size | 500 MB database size per project included | 8 GB disk size per project included, then $0.125 per GB | 8 GB disk size per project included, then $0.125 per GB | Custom |\n| Advanced disk config | Not included | Included | Included | Included |\n| Automatic backups | Not included | 7 days | 14 days | Custom |\n| Point in time recovery | Not included | $100 per month per 7 days retention | $100 per month per 7 days retention | $100 per month per 7 days retention, >28 days retention available |\n| Pausing | After 1 week of inactivity | Never | Never | Never |\n| Branching | Not included | $0.01344 per branch, per hour | $0.01344 per branch, per hour | Custom |\n| Egress | 5 GB included | 250 GB included, then $0.09 per GB | 250 GB included, then $0.09 per GB | Custom |\n| Pipelines | Not included | $0.053 per pipeline per hour, $3.00 per GB processed during ongoing replicati…"
+      },
+      {
+       "n": 3,
+       "url": "https://render.com/pricing",
+       "title": "Render Pricing",
+       "provider": "exa",
+       "excerpt": "# Render Pricing\n## Pricing Tiers\n| Tier | Price | Description |\n| --- | --- | --- |\n| Hobby | $0/month + compute | For individuals building personal projects and prototypes. |\n| Pro | $25/month + compute | For teams deploying production-grade apps and agents. |\n| Scale | $499/month + compute | For teams that need advanced governance and compliance. |\n| Enterprise | Custom pricing | For teams that need dedicated support and uptime SLAs. |\n### Hobby Features\nConnect your repo, and go\n- Deploy up to 25 services\n- 5 GB of bandwidth included\n- Single-service previews\n- Global regions & CDN\n- Custom domains\n- Firewall & DDoS mitigation\n- Database PITR\n- Chat support\n### Pro Features\nAll Hobby features, plus:\n- Unlimited seats & services\n- 25 GB bandwidth included\n- Full-stack previews\n- Horizontal autoscaling\n- Isolated environments\n- OIDC authentication\n- AWS Private Links\n- Workspace audit logs\n### Scale Features\nAll Pro features, plus:\n- Multiple workspaces\n- 1 TB of bandwidth included\n- Extended metrics retention\n- Inbound IP rules\n- HIPAA-compliant workspaces\n- SAML SSO & SCIM\n- Advanced RBAC roles\n- Organization audit logs\n### Enterprise Features\nAll Scale features, plus:\n- Contractual uptime SLAs\n- Dedicated technical account team\n- Support Slack channel\n- Support response SLAs\nView our compute pricing and FAQs\nCompute costs: Pay only for provisioned resources, with transparent pricing based on CPU and service activation prorated to the second.\n## Compute\nDeploy for free, scale compute as you need.\n### Services & Workers\n- Private services\n- Web services with HTTP/2 and full TLS\n- Background workers\n- Node, Python, Go, Rust, Ruby, and Elixir\n- Custom Docker containers\n- SSDs for $0.25/GB per month\n| Compute | Price | RAM | Plan ID |\n| --- | --- | --- | --- |\n| Free | $0/month | 512 MB RAM | free |\n| Less than 1 CPU | $7/month | 512 MB RAM | 0.5c-512mb |\n| 1 CPU | $25/month | 2 GB RAM | 1c-2g |\n| 2 CPU | $85/month | 4 GB RAM | 2c-4g |\n| 2 CPU | $135/month | 8 GB RAM | 2c-8g |\n| 2 CPU | $200/month | 16 GB RAM | 2c-16g |\n| 4 CPU | $175/month | 8 GB RAM | 4c-8g |\n| 4 CPU | $225/month | 16 GB RAM | 4c-16g |\n| 4 CPU | $350/month | 32 GB RAM | 4c-32g |\n| 8 CPU | $300/month | 16 GB RAM | 8c-16g |\n| 8 CPU | $450/month | 32 GB RAM | 8c-32g |\n| 8 CPU | $1,000/month | 64 GB RAM | 8c-64g |\n| 12 CPU | $450/month | 24 GB RAM | 12c-24g |\n| 12 CPU | $800/month | 48 GB RAM | 12c-48g |\n| 12 CPU | $1,500/month | 96 GB RAM | 12c-96g |\n### Postgres\n- Fully managed PostgreSQL\n- Logical exports for paid instances\n- Connect from anywhere\n- Expandable storage ($0.30/GB)\n- Connection pooling\n- Point-in-time-recovery (PITR)\n| Compute | Price | RAM | Connections | Plan ID |\n| --- | --- | --- | --- | --- |\n| Free | $0/month | 256 MB RAM | 100 connections | free |\n| Less than 1 CPU | $6/month | 256 MB RAM | 100 connections | 0.1c-256mb |\n| Less than 1 CPU | $19/month | 1 GB RAM | 100 connections | 0.5c-1g |\n| 1 CPU | $40/month | 2GB RAM | 100 connections | 1c-2g |\n| 1 CPU | $55/month | 4GB RAM | 100 connections | 1c-4g |\n| 2 CPU | $75/month | 4GB RAM | 100 connections | 2c-4g |\n| 2 CPU | $100/month | 8GB RAM | 200 connections | 2c-8g |\n| 2 CPU | $160/month | 16GB RAM | 400 connections | 2c-16g |\n| 4 CPU | $200/month | 16GB RAM | 400 connections | 4c-16g |\n| 4 CPU | $350/month | 32GB RAM | 500 connections | 4c-32g |\n| 8 CPU | $400/month | 32GB RAM | 500 connections | 8c-32g |\n| 8 CPU | $750/month | 64GB RAM | 500 connections | 8c-64g |\n| 16 CPU | $800/month | 64GB RAM | 500 connections | 16c-64g |\n| 16 CPU | $1,500/month | 128GB RAM | 500 connections | 16c-128g |\n| 32 CPU | $1,700/month | 128GB RAM | 500 connections | 32c-128g |\n| 32 CPU | $2,500/month | 256GB RAM | 500 connections | 32c-256g |\n| 48 CPU | $2,500/month | 192GB RAM | 500 connections | 48c-192g |\n| 48 CPU | $4,500/month | 384GB RAM | 500 connections | 48c-384g |\n| 64 CPU | $3,000/month | 256GB RAM | 500 connections | 64c-256g |\n| 64 CPU | $6,000/month | 512GB RAM | 500 connections | 64c-512g |\n| 96 CPU | $4,600/month | 384GB RAM | 500 connections | 96c-384g |\n| 96 CPU | $9,000/month | 768GB RAM | 500 connections | 96-768g |\n| 128 CPU | $6,200/month | 512GB RAM | 500 connections | 128c-512g |\n| 128 CPU | $11,000/month | 1024GB RAM | 500 connections | 128c-1024g |\n### Key Value\n- Fully managed Redis-compatible storage\n- Connect from anywhere\n- Disk-backed persistence on paid plans\n- Maximize availability by queueing jobs\n- Reduce primary DB's load\n- Cache pages, results, fragments\n| Column 1 | Column 2 | Column 3 | Column 4 | Column 5 | Column 6 |\n| --- | --- | --- | --- | --- | --- |\n| Free | $0/month | 25 MB RAM | -- | 50 connections | free |\n| Standard CPU | $10/month | 256 MB RAM | 256 MB storage | 200 connections | 256mb |\n| Standard CPU | $20/month | 1 GB RAM | 2.5 GB storage | 250 connections | 1g |\n| Standard CPU | $60/month | 3 GB RAM | 3 GB storage | 3,000 connections | 3g |\n| Standard CPU | $100/month | 5 GB RAM | 5 GB storage | 5,000 connections | 5g |\n| Standard CPU | $200/month | 10 GB RAM | 10 GB storage | 10,000 connections | 10g |\n| High CPU | $350/month | 20 GB RAM | 20 GB storage | 20,000 connections | 20g |\n| High CPU | $600/month | 40 GB RAM | 40 GB storage | 40,000 connections | 40g |\n| High CPU | $750/month | 50 GB RAM | 50 GB storage | 50,000 connections | 50g |\n### Cron Jobs\n- Run any command or script periodically\n- Failure notifications\n- Full support for cron expressions\n- Prorated by the second\n- Live cron job logs\n| Compute | Price | RAM | Plan ID |\n| --- | --- | --- | --- |\n| Less than 1 CPU | $0.00016/minute | 512 MB RAM | 0.5c-512mb |\n| 1 CPU | $0.00058/minute | 2 GB RAM | 1c-2g |\n| 2 CPU | $0.00197/minute | 4 GB RAM | 2c-4g |\n| 2 CPU | $0.00313/minute | 8 GB RAM | 2c-8g |\n| 2 CPU | $0.00463/minute | 16 GB RAM | 2c-16g |\n| 4 CPU | $0.00405/minute | 8 GB RAM | 4c-8g |\n| 4 CPU | $0.00521/minute | 16 GB RAM | 4c-16g |\n| 4 CPU | $0.00810/minute | 32 GB RAM | 4c-32g |\n| 8 CPU | $0.00694/minute | 16 GB RAM | 8c-16g |\n| 8 CPU | $…"
+      }
+     ],
+     "cited": [
+      1,
+      2,
+      3
+     ],
+     "metrics": {
+      "model": "gemini-3.5-flash-lite",
+      "ttftMs": 4192,
+      "totalMs": 4819,
+      "steps": 1,
+      "searchCalls": 0,
+      "queries": 0,
+      "usage": {
+       "inputTokens": 8921,
+       "outputTokens": 245,
+       "thinkingTokens": 0,
+       "cachedTokens": 0
+      },
+      "droppedCitations": [],
+      "memory": {
+       "dates": [
+        {
+         "text": "3 November",
+         "candidates": [
+          "Tue 3 Nov 2026"
+         ],
+         "resolved": "Tue 3 Nov 2026",
+         "ambiguous": false
+        },
+        {
+         "text": "today",
+         "candidates": [
+          "Wed 11 Nov 2026"
+         ],
+         "resolved": "Wed 11 Nov 2026",
+         "ambiguous": false
+        }
+       ],
+       "recalled": [
+        {
+         "id": "conv-2026-11-03-postgres",
+         "title": "Managed Postgres hosting for a small SaaS",
+         "localDate": "2026-11-03",
+         "why": "3 November → Tue 3 Nov 2026"
+        },
+        {
+         "id": "conv-2026-11-03-pooler",
+         "title": "Postgres connection pooling",
+         "localDate": "2026-11-03",
+         "why": "3 November → Tue 3 Nov 2026"
+        }
+       ],
+       "since": "2026-11-03",
+       "sinceReason": "change question about \"3 November\"",
+       "memoryIntent": true,
+       "changeIntent": true
+      },
+      "searches": [
+       {
+        "queries": [],
+        "urls": [
+         "https://neon.com/pricing",
+         "https://supabase.com/pricing",
+         "https://render.com/pricing"
+        ],
+        "since": "2026-11-03",
+        "prefetch": true
+       }
+      ]
+     },
+     "checks": [
+      {
+       "name": "resolved_dates",
+       "pass": true,
+       "detail": "want Tue 3 Nov 2026; got Tue 3 Nov 2026, Wed 11 Nov 2026"
+      },
+      {
+       "name": "mentions_all",
+       "pass": true
+      },
+      {
+       "name": "mentions_none",
+       "pass": true
+      },
+      {
+       "name": "web_search.min_calls",
+       "pass": true,
+       "detail": "1 call(s)"
+      },
+      {
+       "name": "web_search.since",
+       "pass": true,
+       "detail": "since: 2026-11-03"
+      },
+      {
+       "name": "web_search.rereads",
+       "pass": true,
+       "detail": "re-read: https://neon.com/pricing, https://supabase.com/pricing, https://render.com/pricing"
+      },
+      {
+       "name": "cites",
+       "pass": true,
+       "detail": "3 cited"
+      }
+     ]
+    }
+   ],
+   "pass": true,
+   "judge": {
+    "score": 5,
+    "reason": "The assistant clearly separates the 3 November query from current reality and provides a verdict with today's source for each quoted price."
+   }
+  },
+  {
+   "id": "B1-last-tuesday-resolved-by-topic",
+   "family": "B",
+   "run": 1,
+   "turns": [
+    {
+     "user": "Last Tuesday I asked you about Postgres hosting. Has any pricing changed since then?",
+     "text": "On Tue 3 Nov 2026, we discussed managed Postgres hosting options for a small SaaS, focusing on Neon, Supabase, and Render.\n\n| Item | Then | Now | Verdict |\n|:--- |:--- |:--- |:--- |\n| Neon, Launch plan price | $19/mo | Pay for what you use (metered hourly, typical spend ~$15/mo) [1] | **Changed**<br>Shifted from a fixed $19/mo tier to a pure usage-based model with no monthly minimum. |\n| Supabase, Pro plan price | $25/mo per project | From $25/mo per organization ($10 compute credits included) [2] | **No change found**<br>Base plan price remains $25/mo, though billing applies per organization rather than strictly per project. |\n| Render, Basic-256mb Postgres price | $6/mo | $6/mo (0.1c-256mb plan) [3] | **No change found**<br>The Basic 256MB Postgres tier remains priced at $6/mo. |",
+     "sources": [
+      {
+       "n": 1,
+       "url": "https://neon.com/pricing",
+       "title": "Neon Pricing Plans",
+       "provider": "exa",
+       "excerpt": "# Neon Pricing Plans\n> Neon is a complete set of cloud backend primitives built around Lakebase Postgres, for developers, startups, and agent platforms, from Databricks. Services include Lakebase Postgres, Managed Better Auth, a Data API, Functions, Object Storage, and an AI Gateway, on three plans: Free, Launch, and Scale. Lakebase Postgres on Neon includes autoscaling, instant restore, and scale-to-zero, and works with any language, framework, or ORM that supports Postgres. Storage is unlimited on paid plans and grows with your usage. Pay only for what you use on paid plans; no monthly minimum and no per-project fee. The Free plan includes 100 projects, which with usage-based paid plans suits a database per tenant or per agent (see How much does a database per tenant or per agent cost?). Typical spend is about $15/month on Launch for a small database and $701/month on Scale for a production workload (see Typical monthly cost).\nLast updated: 2026-11-04\n## How billing works\nPaid plans are pay-as-you-go: usage is metered hourly and billed at the end of the month, with no monthly minimum. Plans apply per organization, and one Neon account can belong to multiple orgs on different plans. The Free plan is permanent (not a trial); no credit card required.\n| Unit | Meaning |\n| --- | --- |\n| CU (Compute Unit) | ~4 GB RAM + CPU + SSD. |\n| CU-hour | `compute size × hours running`. 0.25 CU × 4 hours = 1 CU-hour. Suspended (scaled-to-zero) compute = $0. |\n| GB-month | Storage, metered hourly. |\n| branch-month | Extra branch kept for one month. Prorated hourly. |\nCompute suspends automatically after inactivity (scale-to-zero); no CU-hours accrue while suspended. Always enabled on Free (suspends after 5 min, cannot be turned off); can be disabled on Launch; fully configurable on Scale.\nInvoices under $0.50 are not collected.\n## Plans at a glance\n| Feature | Free | Launch | Scale |\n| --- | --- | --- | --- |\n| Price | $0/month | Pay for what you use | Pay for what you use |\n| Who it's for | Prototypes, side projects, and small teams | Startups and growing teams | Production-grade workloads and larger companies |\n| Organization members | Unlimited | Unlimited | Unlimited |\n| Projects | 100 | 100 | 1,000 (can be increased on request) |\n| Branches per project | 10 | 10 | 25 |\n| Extra branches | - | $1.50/branch-month (prorated hourly) | $1.50/branch-month (prorated hourly) |\n| Compute | 100 CU-hours/project | $0.106/CU-hour | $0.222/CU-hour |\n| Autoscaling | Up to 2 CU (8 GB RAM) | Up to 16 CU (64 GB RAM) | Up to 16 CU autoscaling, or fixed sizes up to 56 CU (224 GB RAM) |\n| Scale to zero | After 5 min | After 5 min, can be disabled | Configurable (1 minute to always on) |\n| Storage | 1 GB/project, 20 GB account total | $0.35/GB-month | $0.35/GB-month |\n| Instant restore | - | $0.20/GB-month | $0.20/GB-month |\n| History window | 6 hours (1 GB limit) | Up to 7 days | Up to 30 days |\n| Snapshots (manual) | 1 | 100 | 100 |\n| Snapshots (scheduled) | - | Yes ($0.09/GB-month) | Yes ($0.09/GB-month) |\n| Public network transfer (egress) | 5 GB per project included | 500 GB per project included, then $0.10/GB | 500 GB per project included, then $0.10/GB |\n| Private network transfer | - | - | $0.01/GB |\n| Auth (MAU) | Up to 60k MAU per project | Up to 1M MAU per project | Up to 1M MAU per project |\n| Object Storage | 5 GB per project included | $0.023/GB-month | $0.023/GB-month |\n| Functions | 10 active / 400 waiting Capacity-Hours, 1M invocations per project | Active $0.10, waiting $0.025 per Capacity-Hour; $0.60/M invocations | Active $0.12, waiting $0.03 per Capacity-Hour; $0.60/M invocations |\n| AI Gateway | Prepaid credits (no markup), card required | Prepaid credits (no markup) | Prepaid credits (no markup) |\n| Realtime (beta) | Free during beta | Free during beta | Free during beta |\n| Monitoring retention | 1 day | 3 days | 14 days |\n| Metrics/logs export | - | - | Yes |\n| Spending notifications | - | Yes | Yes |\n| Protected branches | - | Yes | Yes |\n| IP Allow rules | - | - | Yes |\n| Private Networking | - | - | Yes |\n| HIPAA | - | - | Available |\n| SOC 2 | - | - | Available |\n| Uptime SLA | - | - | Yes |\n| Support | Community | Billing support | Standard, Business, or Production |\nA \"-\" means the feature is not available on that plan.\nAll plans include: multi-AZ storage (high availability without standbys), autoscaling and scale to zero, database branching (auth, Object Storage, and Functions branch with the database), read replicas, connection pooling (up to 10,000 pooled connections per compute), Postgres extensions (pgvector, PostGIS, TimescaleDB, and more), Managed Better Auth, a Data API for querying over HTTP, Object Storage, Functions, AI Gateway (prepaid credits), Realtime (beta), and a full management API and CLI. Neon is ISO 27001 and 27701 certified, SOC 2 audited, and GDPR and CCPA compliant; HIPAA is available on Scale.\n## Table clarifications\n- Branches are capped at 5,000 per project on paid plans (10/25 included). Free is capped at 10 per project.\n- Instant restore is charged only on root branches; child branches don't add to this charge.\n- Storage size (Postgres storage) is unlimited on paid plans: there's no hard per-branch size limit and storage grows with your usage. Free is capped at 1 GB of Postgres storage per project and 20 GB total across all projects. This is separate from Object Storage, which has its own Free allowance.\n- Storage on child branches uses copy-on-write: they start at $0 and grow with writes on that branch, capped at the branch's data size. Root branches are billed on their full data size.\n- Snapshots are billed at $0.09/GB-month for both manual and scheduled storage. The table figures are per-project count limits, not free allowances. Scheduled snapshots don't count against the manual limit.\n- Read replicas are separate computes and count toward CU-hours.\n- Auth (MAU) can scale beyond 1M; contact Neon for higher limits.\n- Private Networking ($0.01/GB on Scale) cou…"
+      },
+      {
+       "n": 2,
+       "url": "https://supabase.com/pricing",
+       "title": "Supabase Pricing",
+       "provider": "exa",
+       "excerpt": "# Supabase Pricing\n> Start for free, scale as you grow. Pay only for what you use.\nSupabase offers four plans: Free, Pro, Team, and Enterprise. All plans include unlimited API requests. Projects on paid plans aren't paused for inactivity.\n## How billing works\nSupabase uses organization-based billing. You choose a plan (Pro, Team, or Enterprise) for your organization, then each project within it runs on its own compute instance. The plan subscription covers platform features and usage quotas. Compute is billed separately per project.\nPro and Team plans include $10/month in compute credits, which covers one Micro instance. Additional projects each add their own compute cost. For example, a Pro org with 2 projects on Micro compute costs: $25 (plan) + $10 (project 1) + $10 (project 2) - $10 (credits) = $35/month.\nFor current pricing, visit https://supabase.com/pricing.\n## Database-only projects\nA Supabase project can be used as a standalone Postgres database. Connect with psql, Prisma, Drizzle, or any Postgres client or ORM using the project's connection string. Auth, Storage, Realtime, and Edge Functions are included in every project but optional. Unused products cost nothing.\n- Free: $0/month, including 500 MB database size. Free projects are paused after 1 week of inactivity. Limit of 2 active projects.\n- Pro: from $25/month, including 8 GB disk size per project and $10/month in compute credits that cover one project on Micro compute. A single database-only project on Micro compute costs $25/month before usage beyond the included quotas.\n- Projects on paid plans are not paused for inactivity.\nConnection guide: https://supabase.com/docs/guides/database/connecting-to-postgres.md\n## Plan Tiers\n### Free - from $0/month\n- Unlimited API requests\n- 50,000 monthly active users\n- 500 MB database size (Shared CPU • 500 MB RAM)\n- 5 GB egress\n- 5 GB cached egress\n- 1 GB file storage\n- Community support\n- Note: Free projects are paused after 1 week of inactivity. Limit of 2 active projects.\n### Pro - from $25/month\n- 100,000 monthly active users (then $0.00325 per MAU)\n- 8 GB disk size per project (then $0.125 per GB)\n- 250 GB egress (then $0.09 per GB)\n- 250 GB cached egress (then $0.03 per GB)\n- 100 GB file storage (then $0.0213 per GB)\n- Email support\n- Daily backups stored for 7 days\n- 7-day log retention\n- Add Log Drains (additional $60 per drain, per project)\n### Team - from $599/month\n- SOC2 & ISO 27001\n- Project-scoped and read-only access\n- HIPAA available as paid add-on\n- SSO for Supabase Dashboard\n- Priority email support & SLAs\n- Daily backups stored for 14 days\n- 28-day log retention\n### Enterprise - custom pricing\n- Technical Account Management\n- Uptime SLAs\n- Supports AWS PrivateLink\n- 24×7×365 premium enterprise support\n- Private Slack channel\n- Custom Security Questionnaires\n## Compute Add-Ons\nAll projects run on a compute instance. Pro and Team plans include Micro compute in the base price.\n| Size | $/month | Compute | RAM | Direct Connections | Pooler Connections |\n| --- | --- | --- | --- | --- | --- |\n| Micro | $10 | Shared compute | 1 GB | 60 | 200 |\n| Small | $15 | Shared compute | 2 GB | 90 | 400 |\n| Medium | $60 | Shared compute | 4 GB | 120 | 600 |\n| Large | $110 | Dedicated · 2 vCPUs | 8 GB | 160 | 800 |\n| XL | $210 | Dedicated · 4 vCPUs | 16 GB | 240 | 1,000 |\n| 2XL | $410 | Dedicated · 8 vCPUs | 32 GB | 380 | 1,500 |\n| 4XL | $960 | Dedicated · 16 vCPUs | 64 GB | 480 | 3,000 |\n| 8XL | $1,870 | Dedicated · 32 vCPUs | 128 GB | 490 | 6,000 |\n| 12XL | $2,800 | Dedicated · 48 vCPUs | 192 GB | 500 | 9,000 |\n| 16XL | $3,730 | Dedicated · 64 vCPUs | 256 GB | 500 | 12,000 |\n| >16XL | Contact Us | Custom | Custom | Custom | Custom |\nCompute is billed hourly. Each project runs its own instance. Pro and Team plans include $10/month in compute credits (covers one Micro instance). Additional projects add their full compute cost.\n## Disk Storage\n### General Purpose\n- Max size: 64 TB\n- Size: 8 GB included, then $0.125 per GB\n- IOPS: 3,000 IOPS included, then $0.024 per IOPS\n- Throughput: 125 MB/s included, then $0.095 per MB/s\n- Durability: 99.9%\n### High Performance\n- Max size: 60 TB\n- Size: $0.195 per GB\n- IOPS: $0.119 per IOPS\n- Throughput: Scales automatically with IOPS\n- Durability: 99.999%\n## Add-Ons\n| Add-on | Price |\n| --- | --- |\n| Point-in-Time Recovery (PITR) | $100 per month per 7 days retention |\n| Custom Domain | $10 per domain per month per project add on |\n| Database Branching | $0.01344 per branch, per hour |\n| Advanced MFA (Phone) | $75 per month for first project, then $10 per month per additional projects |\n| SAML/SSO Auth | 50 included, then $0.015 per MAU |\n| Log Drains | $60 per drain per month, + $0.20 per million events, + $0.09 per GB egress |\n| Image Transformations | 100 origin images included, then $5 per 1000 origin images |\n## Full Feature Comparison\n### Database\n| Feature | Free | Pro | Team | Enterprise |\n| --- | --- | --- | --- | --- |\n| Dedicated Postgres Database | Included | Included | Included | Included |\n| Unlimited API requests | Included | Included | Included | Included |\n| Database size | 500 MB database size per project included | 8 GB disk size per project included, then $0.125 per GB | 8 GB disk size per project included, then $0.125 per GB | Custom |\n| Advanced disk config | Not included | Included | Included | Included |\n| Automatic backups | Not included | 7 days | 14 days | Custom |\n| Point in time recovery | Not included | $100 per month per 7 days retention | $100 per month per 7 days retention | $100 per month per 7 days retention, >28 days retention available |\n| Pausing | After 1 week of inactivity | Never | Never | Never |\n| Branching | Not included | $0.01344 per branch, per hour | $0.01344 per branch, per hour | Custom |\n| Egress | 5 GB included | 250 GB included, then $0.09 per GB | 250 GB included, then $0.09 per GB | Custom |\n| Pipelines | Not included | $0.053 per pipeline per hour, $3.00 per GB processed during ongoing replicati…"
+      },
+      {
+       "n": 3,
+       "url": "https://render.com/pricing",
+       "title": "Render Pricing",
+       "provider": "exa",
+       "excerpt": "# Render Pricing\n## Pricing Tiers\n| Tier | Price | Description |\n| --- | --- | --- |\n| Hobby | $0/month + compute | For individuals building personal projects and prototypes. |\n| Pro | $25/month + compute | For teams deploying production-grade apps and agents. |\n| Scale | $499/month + compute | For teams that need advanced governance and compliance. |\n| Enterprise | Custom pricing | For teams that need dedicated support and uptime SLAs. |\n### Hobby Features\nConnect your repo, and go\n- Deploy up to 25 services\n- 5 GB of bandwidth included\n- Single-service previews\n- Global regions & CDN\n- Custom domains\n- Firewall & DDoS mitigation\n- Database PITR\n- Chat support\n### Pro Features\nAll Hobby features, plus:\n- Unlimited seats & services\n- 25 GB bandwidth included\n- Full-stack previews\n- Horizontal autoscaling\n- Isolated environments\n- OIDC authentication\n- AWS Private Links\n- Workspace audit logs\n### Scale Features\nAll Pro features, plus:\n- Multiple workspaces\n- 1 TB of bandwidth included\n- Extended metrics retention\n- Inbound IP rules\n- HIPAA-compliant workspaces\n- SAML SSO & SCIM\n- Advanced RBAC roles\n- Organization audit logs\n### Enterprise Features\nAll Scale features, plus:\n- Contractual uptime SLAs\n- Dedicated technical account team\n- Support Slack channel\n- Support response SLAs\nView our compute pricing and FAQs\nCompute costs: Pay only for provisioned resources, with transparent pricing based on CPU and service activation prorated to the second.\n## Compute\nDeploy for free, scale compute as you need.\n### Services & Workers\n- Private services\n- Web services with HTTP/2 and full TLS\n- Background workers\n- Node, Python, Go, Rust, Ruby, and Elixir\n- Custom Docker containers\n- SSDs for $0.25/GB per month\n| Compute | Price | RAM | Plan ID |\n| --- | --- | --- | --- |\n| Free | $0/month | 512 MB RAM | free |\n| Less than 1 CPU | $7/month | 512 MB RAM | 0.5c-512mb |\n| 1 CPU | $25/month | 2 GB RAM | 1c-2g |\n| 2 CPU | $85/month | 4 GB RAM | 2c-4g |\n| 2 CPU | $135/month | 8 GB RAM | 2c-8g |\n| 2 CPU | $200/month | 16 GB RAM | 2c-16g |\n| 4 CPU | $175/month | 8 GB RAM | 4c-8g |\n| 4 CPU | $225/month | 16 GB RAM | 4c-16g |\n| 4 CPU | $350/month | 32 GB RAM | 4c-32g |\n| 8 CPU | $300/month | 16 GB RAM | 8c-16g |\n| 8 CPU | $450/month | 32 GB RAM | 8c-32g |\n| 8 CPU | $1,000/month | 64 GB RAM | 8c-64g |\n| 12 CPU | $450/month | 24 GB RAM | 12c-24g |\n| 12 CPU | $800/month | 48 GB RAM | 12c-48g |\n| 12 CPU | $1,500/month | 96 GB RAM | 12c-96g |\n### Postgres\n- Fully managed PostgreSQL\n- Logical exports for paid instances\n- Connect from anywhere\n- Expandable storage ($0.30/GB)\n- Connection pooling\n- Point-in-time-recovery (PITR)\n| Compute | Price | RAM | Connections | Plan ID |\n| --- | --- | --- | --- | --- |\n| Free | $0/month | 256 MB RAM | 100 connections | free |\n| Less than 1 CPU | $6/month | 256 MB RAM | 100 connections | 0.1c-256mb |\n| Less than 1 CPU | $19/month | 1 GB RAM | 100 connections | 0.5c-1g |\n| 1 CPU | $40/month | 2GB RAM | 100 connections | 1c-2g |\n| 1 CPU | $55/month | 4GB RAM | 100 connections | 1c-4g |\n| 2 CPU | $75/month | 4GB RAM | 100 connections | 2c-4g |\n| 2 CPU | $100/month | 8GB RAM | 200 connections | 2c-8g |\n| 2 CPU | $160/month | 16GB RAM | 400 connections | 2c-16g |\n| 4 CPU | $200/month | 16GB RAM | 400 connections | 4c-16g |\n| 4 CPU | $350/month | 32GB RAM | 500 connections | 4c-32g |\n| 8 CPU | $400/month | 32GB RAM | 500 connections | 8c-32g |\n| 8 CPU | $750/month | 64GB RAM | 500 connections | 8c-64g |\n| 16 CPU | $800/month | 64GB RAM | 500 connections | 16c-64g |\n| 16 CPU | $1,500/month | 128GB RAM | 500 connections | 16c-128g |\n| 32 CPU | $1,700/month | 128GB RAM | 500 connections | 32c-128g |\n| 32 CPU | $2,500/month | 256GB RAM | 500 connections | 32c-256g |\n| 48 CPU | $2,500/month | 192GB RAM | 500 connections | 48c-192g |\n| 48 CPU | $4,500/month | 384GB RAM | 500 connections | 48c-384g |\n| 64 CPU | $3,000/month | 256GB RAM | 500 connections | 64c-256g |\n| 64 CPU | $6,000/month | 512GB RAM | 500 connections | 64c-512g |\n| 96 CPU | $4,600/month | 384GB RAM | 500 connections | 96c-384g |\n| 96 CPU | $9,000/month | 768GB RAM | 500 connections | 96-768g |\n| 128 CPU | $6,200/month | 512GB RAM | 500 connections | 128c-512g |\n| 128 CPU | $11,000/month | 1024GB RAM | 500 connections | 128c-1024g |\n### Key Value\n- Fully managed Redis-compatible storage\n- Connect from anywhere\n- Disk-backed persistence on paid plans\n- Maximize availability by queueing jobs\n- Reduce primary DB's load\n- Cache pages, results, fragments\n| Column 1 | Column 2 | Column 3 | Column 4 | Column 5 | Column 6 |\n| --- | --- | --- | --- | --- | --- |\n| Free | $0/month | 25 MB RAM | -- | 50 connections | free |\n| Standard CPU | $10/month | 256 MB RAM | 256 MB storage | 200 connections | 256mb |\n| Standard CPU | $20/month | 1 GB RAM | 2.5 GB storage | 250 connections | 1g |\n| Standard CPU | $60/month | 3 GB RAM | 3 GB storage | 3,000 connections | 3g |\n| Standard CPU | $100/month | 5 GB RAM | 5 GB storage | 5,000 connections | 5g |\n| Standard CPU | $200/month | 10 GB RAM | 10 GB storage | 10,000 connections | 10g |\n| High CPU | $350/month | 20 GB RAM | 20 GB storage | 20,000 connections | 20g |\n| High CPU | $600/month | 40 GB RAM | 40 GB storage | 40,000 connections | 40g |\n| High CPU | $750/month | 50 GB RAM | 50 GB storage | 50,000 connections | 50g |\n### Cron Jobs\n- Run any command or script periodically\n- Failure notifications\n- Full support for cron expressions\n- Prorated by the second\n- Live cron job logs\n| Compute | Price | RAM | Plan ID |\n| --- | --- | --- | --- |\n| Less than 1 CPU | $0.00016/minute | 512 MB RAM | 0.5c-512mb |\n| 1 CPU | $0.00058/minute | 2 GB RAM | 1c-2g |\n| 2 CPU | $0.00197/minute | 4 GB RAM | 2c-4g |\n| 2 CPU | $0.00313/minute | 8 GB RAM | 2c-8g |\n| 2 CPU | $0.00463/minute | 16 GB RAM | 2c-16g |\n| 4 CPU | $0.00405/minute | 8 GB RAM | 4c-8g |\n| 4 CPU | $0.00521/minute | 16 GB RAM | 4c-16g |\n| 4 CPU | $0.00810/minute | 32 GB RAM | 4c-32g |\n| 8 CPU | $0.00694/minute | 16 GB RAM | 8c-16g |\n| 8 CPU | $…"
+      }
+     ],
+     "cited": [
+      1,
+      2,
+      3
+     ],
+     "metrics": {
+      "model": "gemini-3.5-flash-lite",
+      "ttftMs": 1568,
+      "totalMs": 2155,
+      "steps": 1,
+      "searchCalls": 0,
+      "queries": 0,
+      "usage": {
+       "inputTokens": 8961,
+       "outputTokens": 252,
+       "thinkingTokens": 0,
+       "cachedTokens": 0
+      },
+      "droppedCitations": [],
+      "memory": {
+       "dates": [
+        {
+         "text": "Last Tuesday",
+         "candidates": [
+          "Tue 10 Nov 2026",
+          "Tue 3 Nov 2026"
+         ],
+         "resolved": "Tue 3 Nov 2026",
+         "ambiguous": true,
+         "how": "only Tue 3 Nov 2026 has a conversation matching \"postgres hosting pricing\""
+        }
+       ],
+       "recalled": [
+        {
+         "id": "conv-2026-11-03-postgres",
+         "title": "Managed Postgres hosting for a small SaaS",
+         "localDate": "2026-11-03",
+         "why": "Last Tuesday → Tue 3 Nov 2026"
+        },
+        {
+         "id": "conv-2026-11-03-pooler",
+         "title": "Postgres connection pooling",
+         "localDate": "2026-11-03",
+         "why": "Last Tuesday → Tue 3 Nov 2026"
+        }
+       ],
+       "since": "2026-11-03",
+       "sinceReason": "change question about \"Last Tuesday\"",
+       "memoryIntent": true,
+       "changeIntent": true
+      },
+      "searches": [
+       {
+        "queries": [],
+        "urls": [
+         "https://neon.com/pricing",
+         "https://supabase.com/pricing",
+         "https://render.com/pricing"
+        ],
+        "since": "2026-11-03",
+        "prefetch": true
+       }
+      ]
+     },
+     "checks": [
+      {
+       "name": "resolved_candidates",
+       "pass": true,
+       "detail": "got Tue 10 Nov 2026 / Tue 3 Nov 2026"
+      },
+      {
+       "name": "picks_date",
+       "pass": true,
+       "detail": "got Tue 3 Nov 2026"
+      },
+      {
+       "name": "states_date",
+       "pass": true,
+       "detail": "answer names the resolved date"
+      },
+      {
+       "name": "asks_clarification",
+       "pass": true,
+       "detail": "answer proceeds"
+      },
+      {
+       "name": "web_search.min_calls",
+       "pass": true,
+       "detail": "1 call(s)"
+      },
+      {
+       "name": "web_search.since",
+       "pass": true,
+       "detail": "since: 2026-11-03"
+      },
+      {
+       "name": "cites",
+       "pass": true,
+       "detail": "3 cited"
+      }
+     ]
+    }
+   ],
+   "pass": true,
+   "judge": {
+    "score": 5,
+    "reason": "The assistant clearly lists old and new values for Neon, Supabase, and Render, includes sources, and remains concise."
+   }
+  },
+  {
+   "id": "B2-last-tuesday-truly-ambiguous",
+   "family": "B",
+   "run": 1,
+   "turns": [
+    {
+     "user": "Last Tuesday I asked you about Postgres hosting. Has any pricing changed since then?",
+     "text": "On Tue 3 Nov 2026, we discussed managed Postgres hosting options for a small SaaS, comparing Neon, Supabase, and Render.\n\n| Item | Then | Now | Verdict |\n|:--- |:--- |:--- |:--- |\n| Neon, Launch plan price | $19/mo | Pay for what you use | **Changed** (shifted from a fixed $19/mo starting tier to pure consumption-based pricing with no monthly minimum [1]). |\n| Supabase, Pro plan price | $25/mo per project | $25/mo per project | **No change found** (Pro plan base price remains from $25/month, which includes $10 in compute credits [2]). |\n| Render, Basic-256mb Postgres price | $6/mo | $6/mo [3] | **No change found** (the 0.1 CPU / 256 MB RAM Postgres tier remains at $6/month [3]). |",
+     "sources": [
+      {
+       "n": 1,
+       "url": "https://neon.com/pricing",
+       "title": "Neon Pricing Plans",
+       "provider": "exa",
+       "excerpt": "# Neon Pricing Plans\n> Neon is a complete set of cloud backend primitives built around Lakebase Postgres, for developers, startups, and agent platforms, from Databricks. Services include Lakebase Postgres, Managed Better Auth, a Data API, Functions, Object Storage, and an AI Gateway, on three plans: Free, Launch, and Scale. Lakebase Postgres on Neon includes autoscaling, instant restore, and scale-to-zero, and works with any language, framework, or ORM that supports Postgres. Storage is unlimited on paid plans and grows with your usage. Pay only for what you use on paid plans; no monthly minimum and no per-project fee. The Free plan includes 100 projects, which with usage-based paid plans suits a database per tenant or per agent (see How much does a database per tenant or per agent cost?). Typical spend is about $15/month on Launch for a small database and $701/month on Scale for a production workload (see Typical monthly cost).\nLast updated: 2026-11-04\n## How billing works\nPaid plans are pay-as-you-go: usage is metered hourly and billed at the end of the month, with no monthly minimum. Plans apply per organization, and one Neon account can belong to multiple orgs on different plans. The Free plan is permanent (not a trial); no credit card required.\n| Unit | Meaning |\n| --- | --- |\n| CU (Compute Unit) | ~4 GB RAM + CPU + SSD. |\n| CU-hour | `compute size × hours running`. 0.25 CU × 4 hours = 1 CU-hour. Suspended (scaled-to-zero) compute = $0. |\n| GB-month | Storage, metered hourly. |\n| branch-month | Extra branch kept for one month. Prorated hourly. |\nCompute suspends automatically after inactivity (scale-to-zero); no CU-hours accrue while suspended. Always enabled on Free (suspends after 5 min, cannot be turned off); can be disabled on Launch; fully configurable on Scale.\nInvoices under $0.50 are not collected.\n## Plans at a glance\n| Feature | Free | Launch | Scale |\n| --- | --- | --- | --- |\n| Price | $0/month | Pay for what you use | Pay for what you use |\n| Who it's for | Prototypes, side projects, and small teams | Startups and growing teams | Production-grade workloads and larger companies |\n| Organization members | Unlimited | Unlimited | Unlimited |\n| Projects | 100 | 100 | 1,000 (can be increased on request) |\n| Branches per project | 10 | 10 | 25 |\n| Extra branches | - | $1.50/branch-month (prorated hourly) | $1.50/branch-month (prorated hourly) |\n| Compute | 100 CU-hours/project | $0.106/CU-hour | $0.222/CU-hour |\n| Autoscaling | Up to 2 CU (8 GB RAM) | Up to 16 CU (64 GB RAM) | Up to 16 CU autoscaling, or fixed sizes up to 56 CU (224 GB RAM) |\n| Scale to zero | After 5 min | After 5 min, can be disabled | Configurable (1 minute to always on) |\n| Storage | 1 GB/project, 20 GB account total | $0.35/GB-month | $0.35/GB-month |\n| Instant restore | - | $0.20/GB-month | $0.20/GB-month |\n| History window | 6 hours (1 GB limit) | Up to 7 days | Up to 30 days |\n| Snapshots (manual) | 1 | 100 | 100 |\n| Snapshots (scheduled) | - | Yes ($0.09/GB-month) | Yes ($0.09/GB-month) |\n| Public network transfer (egress) | 5 GB per project included | 500 GB per project included, then $0.10/GB | 500 GB per project included, then $0.10/GB |\n| Private network transfer | - | - | $0.01/GB |\n| Auth (MAU) | Up to 60k MAU per project | Up to 1M MAU per project | Up to 1M MAU per project |\n| Object Storage | 5 GB per project included | $0.023/GB-month | $0.023/GB-month |\n| Functions | 10 active / 400 waiting Capacity-Hours, 1M invocations per project | Active $0.10, waiting $0.025 per Capacity-Hour; $0.60/M invocations | Active $0.12, waiting $0.03 per Capacity-Hour; $0.60/M invocations |\n| AI Gateway | Prepaid credits (no markup), card required | Prepaid credits (no markup) | Prepaid credits (no markup) |\n| Realtime (beta) | Free during beta | Free during beta | Free during beta |\n| Monitoring retention | 1 day | 3 days | 14 days |\n| Metrics/logs export | - | - | Yes |\n| Spending notifications | - | Yes | Yes |\n| Protected branches | - | Yes | Yes |\n| IP Allow rules | - | - | Yes |\n| Private Networking | - | - | Yes |\n| HIPAA | - | - | Available |\n| SOC 2 | - | - | Available |\n| Uptime SLA | - | - | Yes |\n| Support | Community | Billing support | Standard, Business, or Production |\nA \"-\" means the feature is not available on that plan.\nAll plans include: multi-AZ storage (high availability without standbys), autoscaling and scale to zero, database branching (auth, Object Storage, and Functions branch with the database), read replicas, connection pooling (up to 10,000 pooled connections per compute), Postgres extensions (pgvector, PostGIS, TimescaleDB, and more), Managed Better Auth, a Data API for querying over HTTP, Object Storage, Functions, AI Gateway (prepaid credits), Realtime (beta), and a full management API and CLI. Neon is ISO 27001 and 27701 certified, SOC 2 audited, and GDPR and CCPA compliant; HIPAA is available on Scale.\n## Table clarifications\n- Branches are capped at 5,000 per project on paid plans (10/25 included). Free is capped at 10 per project.\n- Instant restore is charged only on root branches; child branches don't add to this charge.\n- Storage size (Postgres storage) is unlimited on paid plans: there's no hard per-branch size limit and storage grows with your usage. Free is capped at 1 GB of Postgres storage per project and 20 GB total across all projects. This is separate from Object Storage, which has its own Free allowance.\n- Storage on child branches uses copy-on-write: they start at $0 and grow with writes on that branch, capped at the branch's data size. Root branches are billed on their full data size.\n- Snapshots are billed at $0.09/GB-month for both manual and scheduled storage. The table figures are per-project count limits, not free allowances. Scheduled snapshots don't count against the manual limit.\n- Read replicas are separate computes and count toward CU-hours.\n- Auth (MAU) can scale beyond 1M; contact Neon for higher limits.\n- Private Networking ($0.01/GB on Scale) cou…"
+      },
+      {
+       "n": 2,
+       "url": "https://supabase.com/pricing",
+       "title": "Supabase Pricing",
+       "provider": "exa",
+       "excerpt": "# Supabase Pricing\n> Start for free, scale as you grow. Pay only for what you use.\nSupabase offers four plans: Free, Pro, Team, and Enterprise. All plans include unlimited API requests. Projects on paid plans aren't paused for inactivity.\n## How billing works\nSupabase uses organization-based billing. You choose a plan (Pro, Team, or Enterprise) for your organization, then each project within it runs on its own compute instance. The plan subscription covers platform features and usage quotas. Compute is billed separately per project.\nPro and Team plans include $10/month in compute credits, which covers one Micro instance. Additional projects each add their own compute cost. For example, a Pro org with 2 projects on Micro compute costs: $25 (plan) + $10 (project 1) + $10 (project 2) - $10 (credits) = $35/month.\nFor current pricing, visit https://supabase.com/pricing.\n## Database-only projects\nA Supabase project can be used as a standalone Postgres database. Connect with psql, Prisma, Drizzle, or any Postgres client or ORM using the project's connection string. Auth, Storage, Realtime, and Edge Functions are included in every project but optional. Unused products cost nothing.\n- Free: $0/month, including 500 MB database size. Free projects are paused after 1 week of inactivity. Limit of 2 active projects.\n- Pro: from $25/month, including 8 GB disk size per project and $10/month in compute credits that cover one project on Micro compute. A single database-only project on Micro compute costs $25/month before usage beyond the included quotas.\n- Projects on paid plans are not paused for inactivity.\nConnection guide: https://supabase.com/docs/guides/database/connecting-to-postgres.md\n## Plan Tiers\n### Free - from $0/month\n- Unlimited API requests\n- 50,000 monthly active users\n- 500 MB database size (Shared CPU • 500 MB RAM)\n- 5 GB egress\n- 5 GB cached egress\n- 1 GB file storage\n- Community support\n- Note: Free projects are paused after 1 week of inactivity. Limit of 2 active projects.\n### Pro - from $25/month\n- 100,000 monthly active users (then $0.00325 per MAU)\n- 8 GB disk size per project (then $0.125 per GB)\n- 250 GB egress (then $0.09 per GB)\n- 250 GB cached egress (then $0.03 per GB)\n- 100 GB file storage (then $0.0213 per GB)\n- Email support\n- Daily backups stored for 7 days\n- 7-day log retention\n- Add Log Drains (additional $60 per drain, per project)\n### Team - from $599/month\n- SOC2 & ISO 27001\n- Project-scoped and read-only access\n- HIPAA available as paid add-on\n- SSO for Supabase Dashboard\n- Priority email support & SLAs\n- Daily backups stored for 14 days\n- 28-day log retention\n### Enterprise - custom pricing\n- Technical Account Management\n- Uptime SLAs\n- Supports AWS PrivateLink\n- 24×7×365 premium enterprise support\n- Private Slack channel\n- Custom Security Questionnaires\n## Compute Add-Ons\nAll projects run on a compute instance. Pro and Team plans include Micro compute in the base price.\n| Size | $/month | Compute | RAM | Direct Connections | Pooler Connections |\n| --- | --- | --- | --- | --- | --- |\n| Micro | $10 | Shared compute | 1 GB | 60 | 200 |\n| Small | $15 | Shared compute | 2 GB | 90 | 400 |\n| Medium | $60 | Shared compute | 4 GB | 120 | 600 |\n| Large | $110 | Dedicated · 2 vCPUs | 8 GB | 160 | 800 |\n| XL | $210 | Dedicated · 4 vCPUs | 16 GB | 240 | 1,000 |\n| 2XL | $410 | Dedicated · 8 vCPUs | 32 GB | 380 | 1,500 |\n| 4XL | $960 | Dedicated · 16 vCPUs | 64 GB | 480 | 3,000 |\n| 8XL | $1,870 | Dedicated · 32 vCPUs | 128 GB | 490 | 6,000 |\n| 12XL | $2,800 | Dedicated · 48 vCPUs | 192 GB | 500 | 9,000 |\n| 16XL | $3,730 | Dedicated · 64 vCPUs | 256 GB | 500 | 12,000 |\n| >16XL | Contact Us | Custom | Custom | Custom | Custom |\nCompute is billed hourly. Each project runs its own instance. Pro and Team plans include $10/month in compute credits (covers one Micro instance). Additional projects add their full compute cost.\n## Disk Storage\n### General Purpose\n- Max size: 64 TB\n- Size: 8 GB included, then $0.125 per GB\n- IOPS: 3,000 IOPS included, then $0.024 per IOPS\n- Throughput: 125 MB/s included, then $0.095 per MB/s\n- Durability: 99.9%\n### High Performance\n- Max size: 60 TB\n- Size: $0.195 per GB\n- IOPS: $0.119 per IOPS\n- Throughput: Scales automatically with IOPS\n- Durability: 99.999%\n## Add-Ons\n| Add-on | Price |\n| --- | --- |\n| Point-in-Time Recovery (PITR) | $100 per month per 7 days retention |\n| Custom Domain | $10 per domain per month per project add on |\n| Database Branching | $0.01344 per branch, per hour |\n| Advanced MFA (Phone) | $75 per month for first project, then $10 per month per additional projects |\n| SAML/SSO Auth | 50 included, then $0.015 per MAU |\n| Log Drains | $60 per drain per month, + $0.20 per million events, + $0.09 per GB egress |\n| Image Transformations | 100 origin images included, then $5 per 1000 origin images |\n## Full Feature Comparison\n### Database\n| Feature | Free | Pro | Team | Enterprise |\n| --- | --- | --- | --- | --- |\n| Dedicated Postgres Database | Included | Included | Included | Included |\n| Unlimited API requests | Included | Included | Included | Included |\n| Database size | 500 MB database size per project included | 8 GB disk size per project included, then $0.125 per GB | 8 GB disk size per project included, then $0.125 per GB | Custom |\n| Advanced disk config | Not included | Included | Included | Included |\n| Automatic backups | Not included | 7 days | 14 days | Custom |\n| Point in time recovery | Not included | $100 per month per 7 days retention | $100 per month per 7 days retention | $100 per month per 7 days retention, >28 days retention available |\n| Pausing | After 1 week of inactivity | Never | Never | Never |\n| Branching | Not included | $0.01344 per branch, per hour | $0.01344 per branch, per hour | Custom |\n| Egress | 5 GB included | 250 GB included, then $0.09 per GB | 250 GB included, then $0.09 per GB | Custom |\n| Pipelines | Not included | $0.053 per pipeline per hour, $3.00 per GB processed during ongoing replicati…"
+      },
+      {
+       "n": 3,
+       "url": "https://render.com/pricing",
+       "title": "Render Pricing",
+       "provider": "exa",
+       "excerpt": "# Render Pricing\n## Pricing Tiers\n| Tier | Price | Description |\n| --- | --- | --- |\n| Hobby | $0/month + compute | For individuals building personal projects and prototypes. |\n| Pro | $25/month + compute | For teams deploying production-grade apps and agents. |\n| Scale | $499/month + compute | For teams that need advanced governance and compliance. |\n| Enterprise | Custom pricing | For teams that need dedicated support and uptime SLAs. |\n### Hobby Features\nConnect your repo, and go\n- Deploy up to 25 services\n- 5 GB of bandwidth included\n- Single-service previews\n- Global regions & CDN\n- Custom domains\n- Firewall & DDoS mitigation\n- Database PITR\n- Chat support\n### Pro Features\nAll Hobby features, plus:\n- Unlimited seats & services\n- 25 GB bandwidth included\n- Full-stack previews\n- Horizontal autoscaling\n- Isolated environments\n- OIDC authentication\n- AWS Private Links\n- Workspace audit logs\n### Scale Features\nAll Pro features, plus:\n- Multiple workspaces\n- 1 TB of bandwidth included\n- Extended metrics retention\n- Inbound IP rules\n- HIPAA-compliant workspaces\n- SAML SSO & SCIM\n- Advanced RBAC roles\n- Organization audit logs\n### Enterprise Features\nAll Scale features, plus:\n- Contractual uptime SLAs\n- Dedicated technical account team\n- Support Slack channel\n- Support response SLAs\nView our compute pricing and FAQs\nCompute costs: Pay only for provisioned resources, with transparent pricing based on CPU and service activation prorated to the second.\n## Compute\nDeploy for free, scale compute as you need.\n### Services & Workers\n- Private services\n- Web services with HTTP/2 and full TLS\n- Background workers\n- Node, Python, Go, Rust, Ruby, and Elixir\n- Custom Docker containers\n- SSDs for $0.25/GB per month\n| Compute | Price | RAM | Plan ID |\n| --- | --- | --- | --- |\n| Free | $0/month | 512 MB RAM | free |\n| Less than 1 CPU | $7/month | 512 MB RAM | 0.5c-512mb |\n| 1 CPU | $25/month | 2 GB RAM | 1c-2g |\n| 2 CPU | $85/month | 4 GB RAM | 2c-4g |\n| 2 CPU | $135/month | 8 GB RAM | 2c-8g |\n| 2 CPU | $200/month | 16 GB RAM | 2c-16g |\n| 4 CPU | $175/month | 8 GB RAM | 4c-8g |\n| 4 CPU | $225/month | 16 GB RAM | 4c-16g |\n| 4 CPU | $350/month | 32 GB RAM | 4c-32g |\n| 8 CPU | $300/month | 16 GB RAM | 8c-16g |\n| 8 CPU | $450/month | 32 GB RAM | 8c-32g |\n| 8 CPU | $1,000/month | 64 GB RAM | 8c-64g |\n| 12 CPU | $450/month | 24 GB RAM | 12c-24g |\n| 12 CPU | $800/month | 48 GB RAM | 12c-48g |\n| 12 CPU | $1,500/month | 96 GB RAM | 12c-96g |\n### Postgres\n- Fully managed PostgreSQL\n- Logical exports for paid instances\n- Connect from anywhere\n- Expandable storage ($0.30/GB)\n- Connection pooling\n- Point-in-time-recovery (PITR)\n| Compute | Price | RAM | Connections | Plan ID |\n| --- | --- | --- | --- | --- |\n| Free | $0/month | 256 MB RAM | 100 connections | free |\n| Less than 1 CPU | $6/month | 256 MB RAM | 100 connections | 0.1c-256mb |\n| Less than 1 CPU | $19/month | 1 GB RAM | 100 connections | 0.5c-1g |\n| 1 CPU | $40/month | 2GB RAM | 100 connections | 1c-2g |\n| 1 CPU | $55/month | 4GB RAM | 100 connections | 1c-4g |\n| 2 CPU | $75/month | 4GB RAM | 100 connections | 2c-4g |\n| 2 CPU | $100/month | 8GB RAM | 200 connections | 2c-8g |\n| 2 CPU | $160/month | 16GB RAM | 400 connections | 2c-16g |\n| 4 CPU | $200/month | 16GB RAM | 400 connections | 4c-16g |\n| 4 CPU | $350/month | 32GB RAM | 500 connections | 4c-32g |\n| 8 CPU | $400/month | 32GB RAM | 500 connections | 8c-32g |\n| 8 CPU | $750/month | 64GB RAM | 500 connections | 8c-64g |\n| 16 CPU | $800/month | 64GB RAM | 500 connections | 16c-64g |\n| 16 CPU | $1,500/month | 128GB RAM | 500 connections | 16c-128g |\n| 32 CPU | $1,700/month | 128GB RAM | 500 connections | 32c-128g |\n| 32 CPU | $2,500/month | 256GB RAM | 500 connections | 32c-256g |\n| 48 CPU | $2,500/month | 192GB RAM | 500 connections | 48c-192g |\n| 48 CPU | $4,500/month | 384GB RAM | 500 connections | 48c-384g |\n| 64 CPU | $3,000/month | 256GB RAM | 500 connections | 64c-256g |\n| 64 CPU | $6,000/month | 512GB RAM | 500 connections | 64c-512g |\n| 96 CPU | $4,600/month | 384GB RAM | 500 connections | 96c-384g |\n| 96 CPU | $9,000/month | 768GB RAM | 500 connections | 96-768g |\n| 128 CPU | $6,200/month | 512GB RAM | 500 connections | 128c-512g |\n| 128 CPU | $11,000/month | 1024GB RAM | 500 connections | 128c-1024g |\n### Key Value\n- Fully managed Redis-compatible storage\n- Connect from anywhere\n- Disk-backed persistence on paid plans\n- Maximize availability by queueing jobs\n- Reduce primary DB's load\n- Cache pages, results, fragments\n| Column 1 | Column 2 | Column 3 | Column 4 | Column 5 | Column 6 |\n| --- | --- | --- | --- | --- | --- |\n| Free | $0/month | 25 MB RAM | -- | 50 connections | free |\n| Standard CPU | $10/month | 256 MB RAM | 256 MB storage | 200 connections | 256mb |\n| Standard CPU | $20/month | 1 GB RAM | 2.5 GB storage | 250 connections | 1g |\n| Standard CPU | $60/month | 3 GB RAM | 3 GB storage | 3,000 connections | 3g |\n| Standard CPU | $100/month | 5 GB RAM | 5 GB storage | 5,000 connections | 5g |\n| Standard CPU | $200/month | 10 GB RAM | 10 GB storage | 10,000 connections | 10g |\n| High CPU | $350/month | 20 GB RAM | 20 GB storage | 20,000 connections | 20g |\n| High CPU | $600/month | 40 GB RAM | 40 GB storage | 40,000 connections | 40g |\n| High CPU | $750/month | 50 GB RAM | 50 GB storage | 50,000 connections | 50g |\n### Cron Jobs\n- Run any command or script periodically\n- Failure notifications\n- Full support for cron expressions\n- Prorated by the second\n- Live cron job logs\n| Compute | Price | RAM | Plan ID |\n| --- | --- | --- | --- |\n| Less than 1 CPU | $0.00016/minute | 512 MB RAM | 0.5c-512mb |\n| 1 CPU | $0.00058/minute | 2 GB RAM | 1c-2g |\n| 2 CPU | $0.00197/minute | 4 GB RAM | 2c-4g |\n| 2 CPU | $0.00313/minute | 8 GB RAM | 2c-8g |\n| 2 CPU | $0.00463/minute | 16 GB RAM | 2c-16g |\n| 4 CPU | $0.00405/minute | 8 GB RAM | 4c-8g |\n| 4 CPU | $0.00521/minute | 16 GB RAM | 4c-16g |\n| 4 CPU | $0.00810/minute | 32 GB RAM | 4c-32g |\n| 8 CPU | $0.00694/minute | 16 GB RAM | 8c-16g |\n| 8 CPU | $…"
+      }
+     ],
+     "cited": [
+      1,
+      2,
+      3
+     ],
+     "metrics": {
+      "model": "gemini-3.5-flash-lite",
+      "ttftMs": 1240,
+      "totalMs": 1707,
+      "steps": 1,
+      "searchCalls": 0,
+      "queries": 0,
+      "usage": {
+       "inputTokens": 9071,
+       "outputTokens": 216,
+       "thinkingTokens": 0,
+       "cachedTokens": 0
+      },
+      "droppedCitations": [],
+      "memory": {
+       "dates": [
+        {
+         "text": "Last Tuesday",
+         "candidates": [
+          "Tue 10 Nov 2026",
+          "Tue 3 Nov 2026"
+         ],
+         "resolved": null,
+         "ambiguous": true,
+         "how": "several candidate dates match the topic"
+        }
+       ],
+       "recalled": [
+        {
+         "id": "conv-2026-11-10-postgres",
+         "title": "Postgres hosting in the EU",
+         "localDate": "2026-11-10",
+         "why": "Last Tuesday → Tue 10 Nov 2026"
+        },
+        {
+         "id": "conv-2026-11-03-postgres",
+         "title": "Managed Postgres hosting for a small SaaS",
+         "localDate": "2026-11-03",
+         "why": "Last Tuesday → Tue 3 Nov 2026"
+        },
+        {
+         "id": "conv-2026-11-03-pooler",
+         "title": "Postgres connection pooling",
+         "localDate": "2026-11-03",
+         "why": "Last Tuesday → Tue 3 Nov 2026"
+        }
+       ],
+       "since": "2026-11-03",
+       "sinceReason": "change question about \"Last Tuesday\" (ambiguous: earliest candidate)",
+       "memoryIntent": true,
+       "changeIntent": true
+      },
+      "searches": [
+       {
+        "queries": [],
+        "urls": [
+         "https://neon.com/pricing",
+         "https://supabase.com/pricing",
+         "https://render.com/pricing"
+        ],
+        "since": "2026-11-03",
+        "prefetch": true
+       }
+      ]
+     },
+     "checks": [
+      {
+       "name": "resolved_candidates",
+       "pass": true,
+       "detail": "got Tue 10 Nov 2026 / Tue 3 Nov 2026"
+      },
+      {
+       "name": "handles_ambiguity",
+       "pass": false,
+       "detail": "picked one silently"
+      }
+     ]
+    }
+   ],
+   "pass": false,
+   "judge": {
+    "score": 5,
+    "reason": "The assistant handled the ambiguity in zero sentences and provided a direct, friction-free comparison table."
+   }
+  },
+  {
+   "id": "C1-crm-shortlist-warm",
+   "family": "C",
+   "run": 1,
+   "turns": [
+    {
+     "user": "On Monday we shortlisted 5 CRM tools for a 20-person sales team. Has any of them changed pricing or shipped something big since?",
+     "text": "On Monday 9 Nov 2026, we shortlisted HubSpot, Pipedrive, Close, Attio, and Zoho CRM for a 20-person B2B sales team. \n\n| Item | Since Mon 9 Nov 2026 | Verdict |\n|:--- |:--- |:--- |\n| **HubSpot** | Expanded its \"seats-and-credits\" pricing pilot to all new EMEA customers on Nov 4, integrating AI agents and usage into a single credit pool alongside go-to-market seats [1][2]. | Major launch |\n| **Pipedrive** | Restructured its lineup into Lite ($14), Growth ($39), Premium ($59), and Ultimate ($79) annual tiers, folding LeadBooster into Premium/Ultimate [11]. | Pricing change |\n| **Close** | Added a repeating connecting tone to outbound calls from its web and desktop apps while calls dial [14]. | Major launch |\n| **Attio** | Replaced its custom Enterprise quote with a self-serve Ultra plan at $1,000/month and shifted Plus/Pro plans to workspace-level pricing [18][23]. | Pricing change |\n| **Zoho CRM** | Rebranded Zoho CRM Plus as Zoho One and repositioned it as a bundled platform starting at $30/user/month [28]. | Major launch |\n\nFor a 20-person team, Attio's shift to a $1,000/month self-serve Ultra tier and HubSpot's regional credit pilot are the most significant structural updates.",
+     "sources": [
+      {
+       "n": 1,
+       "url": "https://businessofgtm.com/articles/hubspot-credit-pricing-pilot-deal-size",
+       "title": "HubSpot Credit Pricing Pilot Lifts Usage 2x to 3x - Business of GTM",
+       "publishedAt": "2026-11-09T12:00:00.000Z",
+       "provider": "exa",
+       "excerpt": "HubSpot Credit Pricing Pilot Lifts Usage 2x to 3x - Business of GTM\n# HubSpot's EMEA Pricing Pilot Lifted Credit Use 2x to 3x and Cut Deal Size\nHubSpot's pilot charges new EMEA customers 15 credits per email send. Professional's 10,000 included credits cover about 667 sends a month, and extra credits cost €0.010 each.\nNovember 9, 2026\n## TL;DR\n- HubSpot says credit usage in its pricing pilot runs two to three times higher, with more customers on Pro and a lower average selling price.\n- For new EMEA buyers, a metered credit pool that charges for every email send now drives the cost more than the seat does.\n- PPC Land says HubSpot will report its EMEA results with February earnings, and existing customers still have no migration date.\nHubSpot says customers on its new pricing use two to three times more credits and pay less up front.\nOn its Q3 earnings call on November 4, HubSpot described a pilot with three parts. One go-to-market seat replaces separate hub subscriptions and the Starter-to-Pro price jump is smaller. The model also \"brings all usage-based features under a single credit mechanism.\" HubSpot said credit usage in the pilot runs two to three times higher than in regions outside it. More customers land on Pro and above, and average selling price is lower.\nThe pilot began in the Nordics in April, added Benelux in June and has covered new EMEA customers since October 1. For those buyers, the seat has stopped being where the bill grows. The money now sits in a metered p…"
+      },
+      {
+       "n": 2,
+       "url": "https://itsalesaas.com/news/hubspot-seats-credits-pricing-pilot-emea",
+       "title": "HubSpot Seats and Credits Pricing in EMEA | IT SalesaaS",
+       "publishedAt": "2026-11-10T10:22:53.000Z",
+       "provider": "exa",
+       "excerpt": "HubSpot Seats and Credits Pricing in EMEA | IT SalesaaS\nNovember 10, 2026 · HubSpot\n# HubSpot expands its seats and credits pricing pilot to all new customers in EMEA\nHubSpot told investors on 4 November 2026 that its pricing pilot now covers all new customers in EMEA. The model drops separate hubs, sells one go-to-market seat and puts AI agents and other usage on a single credit balance. Existing customers stay outside it for now, and no date is set for the rest of the world.\n## Key facts\nAnnounced\n: 4 November 2026, on the Q3 earnings call\nCompany\n: HubSpot\nWhat changed\n: The pricing pilot was extended in Q4 to all new customers in EMEA\nNew model\n: One GTM seat replaces separate hubs; usage runs on HubSpot Credits\nListed prices\n: GTM seats from €20 (Starter), €100 (Professional) and €175 (Enterprise) per seat per month\nExisting customers and other regions\n: No date stated in the announcement\n## What HubSpot announced\nOn its third quarter earnings call on 4 November, HubSpot CEO Yamini Rangan said the company is moving to a hybrid of seats and credits. The pilot began for new customers in the Nordics in April and in Benelux in June. In the fourth quarter it was extended to all new EMEA customers.\nThe pilot changes three things. A go-to-market seat gives access to all HubSpot capabilities, so buyers no longer purchase separate hubs. The price jump from Starter to Pro gets smaller across the Marketing, Content and Data Hubs. All usage-based features draw on one credit balance.…"
+      },
+      {
+       "n": 3,
+       "url": "https://markaicode.com/pricing/hubspot-crm-pricing/",
+       "title": "HubSpot Sales Hub Pricing (November 2026): Free, Starter, Professional, Enterprise | Markaicode",
+       "publishedAt": "2026-11-09T20:00:00.000Z",
+       "provider": "exa",
+       "excerpt": "HubSpot Sales Hub Pricing (November 2026): Free, Starter, Professional, Enterprise | Markaicode\n# HubSpot Sales Hub Pricing (November 2026): Free, Starter, Professional, Enterprise\nHubSpot Sales Hub is free for up to 2 users, then from $7 (new customers, list $20), $90 (list $100) and $150 per seat per month. Professional and Enterprise add $1,500 and $3,500 onboarding. Checked November 10, 2026.\n Nov 10, 2026\nHubSpot sells its CRM in hubs. For a sales team the relevant one is Sales Hub, and its price page is the one most guides quote wrongly, because HubSpot moved to per-seat pricing and now shows new-customer discounts next to crossed-out list prices. Every number below was read on HubSpot's own Sales Hub pricing page on November 10, 2026, in US dollars, before tax.\n> Quick Answer: Sales Hub is free for up to 2 users. Paid plans start at $7 per seat per month for Starter (a new-customer price; the list price of $20 is shown crossed out), $90 per seat for Professional (list $100, annual commitment) and $150 per seat for Enterprise. Professional adds a required one-time onboarding fee of $1,500 and Enterprise one of $3,500.\n## Plans and prices\n| Plan | Price per seat per month | Required one-time fee | HubSpot Credits included | Notes |\n| --- | --- | --- | --- | --- |\n| Free | $0 | – | – | Up to 2 users, HubSpot branding on email and chat |\n| Starter | from $7 (new customers), list $20 | – | 500 | Email support |\n| Professional | from $90, list $100 | $1,500 onboarding | 3,00…"
+      },
+      {
+       "n": 4,
+       "url": "https://headsup.bot/changes/hubspot-com",
+       "title": "HubSpot Product and Pricing Changes | HeadsUp",
+       "publishedAt": "2026-11-11T00:00:00.000Z",
+       "provider": "exa",
+       "excerpt": "HubSpot Product and Pricing Changes | HeadsUp\n# What HubSpot changed\n327 changes since July 2025. The most recent was Nov 11, 2026.\nNov 11, 2026\n## HubSpot launches credit-based pricing for AI\nWhat changed\n- Introduced a new \"HubSpot Credits\" system where credits are used when AI features take action.\n- Added specific credit allotments to plans: 500 for Starter, 3,000 for Professional, and 5,000 for Enterprise.\n- Updated the Sales Hub pricing page to highlight \"Deal journey analytics\" and \"Deal Progression\" features.\n- Changed the primary navigation links to point directly to pricing pages rather than product overviews.\n- Added a promotional bundle offering Revenue Hub at a discount when purchased with Sales Hub.\nWhy it matters\nHubSpot is shifting how it charges for AI features. Instead of just flat monthly fees, they are introducing \"HubSpot Credits.\" This means users pay based on how much work the AI agents actually do, which could change how customers budget for automation.\nNov 10, 2026\n## HubSpot Sales Hub adds Agent Builder to plans HubSpot launches dedicated Free Meeting Scheduler\nWhat changed\n- Added \"Agent Builder\" to Starter, Professional, and Enterprise plans for Sales Hub.\n- Starter users can now build custom agents with simple automation.\n- Professional and Enterprise users get advanced agents with event-based triggers.\n- Updated the pricing table to show specific limits for features like calling minutes, email templates (up to 10,000), and sales pipelines (up to …"
+      },
+      {
+       "n": 5,
+       "url": "https://ppc.land/hubspot-forecasts-q4-revenue-below-q3-as-growth-slows-to-12-from-17/",
+       "title": "HubSpot forecasts Q4 revenue below Q3 as growth slows to 12% from 17%",
+       "publishedAt": "2026-11-06T21:19:41.000Z",
+       "provider": "exa",
+       "excerpt": "HubSpot forecasts Q4 revenue below Q3 as growth slows to 12% from 17%\nHubSpot expects Q4 revenue under Q3’s $947.6m as growth slows to 12% from 17%\n# HubSpot forecasts Q4 revenue below Q3 as growth slows to 12% from 17%\nNet revenue retention slipped to 101% across 311,704 paying customers, and net new ARR will shrink in 2026. Can a seats-and-credits pricing pilot reverse it?\n- by Luis Rijo\nLuis Rijo\nLuís Rijo has written PPC Land daily since founding it in 2016. Over 10,000 articles, funded by readers, no sponsored coverage. Tips and corrections: luis@ppc.land\n- LinkedIn\n- November 6, 2026\n- •\n- 23 min read\nHubSpot, the Cambridge, Massachusetts-based maker of marketing, sales and customer service software, on November 4, 2026 forecast fourth-quarter revenue of $945 million to $947 million, a 12% rise on a year earlier and less than the $947.6 million it booked in the three months to September. Third-quarter revenue had grown 17%. The company also said the recurring revenue it adds in 2026 would fall short of what it added in 2025, reported net revenue retention of 101%, and declined to estimate how many customers it would add in the final quarter, citing changes in how businesses discover, test and pay for software as AI spreads through their budgets.\n## In Short\nHubSpot sells software that businesses use to find customers, send marketing emails and answer support questions, and it told investors its sales growth will slow sharply at the end of 2026. It says AI has changed ho…"
+      },
+      {
+       "n": 6,
+       "url": "https://toollers.com/pricing/pipedrive-pricing/",
+       "title": "Pipedrive Pricing 2026: Plans, Seats and Real Costs",
+       "publishedAt": "2026-11-11T14:24:00.000Z",
+       "provider": "exa",
+       "excerpt": "Pipedrive Pricing 2026: Plans, Seats and Real Costs\n# Pipedrive Pricing 2026: Plans, Seats and Real Costs\nPipedrive prices start at $14 per seat per month on US annual billing. Compare Lite, Growth, Premium, Ultimate, add-ons, usage limits, and cancellation.\nPipedrive Pricing last verified: 11/6/2026\nPipedrive starts at $14 per seat per month on the US annual-billing reference for Lite, with $168 due per seat for a full year. The CRM offers a 14-day trial but no permanent free plan. Growth, Premium, and Ultimate have higher annual-equivalent seat prices. This guide uses USD reference prices checked on November 6, 2026; the checkout currency and final charges depend on location.\n### Quick verdict\nPipedrive starts at $14 per seat per month equivalent on US annual billing; Growth is the first tier with full email sync and automation.\n### Key takeaways\n- Four paid plans from Lite to Ultimate\n- 14-day trial and no permanent free tier\n- Annual commitments, add-ons and seats shape total cost\nPipedrive Tested\nVisual sales CRM for pipeline tracking, deal management and automated follow-ups.\nBest for: SMB B2B sales teams, agencies, account executives and sales managers who need visible pipelines and repeatable follow-up activity.\n4.4\nResearch-based\nFeatures and capabilities 4.5 Usability and implementation 4.6 Pricing and value transparency 4.1 Integrations, security and trust 4.4\nKey features\n- Lead scoring and enrichment (Premium+)\n- Custom fields and data import\n- Multiple custom sa…"
+      },
+      {
+       "n": 7,
+       "url": "https://triedandpaid.com/crm/pipedrive/pricing/",
+       "title": "Pipedrive Pricing: Plans, Add-ons and Real Monthly Cost | Tried and Paid",
+       "publishedAt": "2026-11-10T15:56:04.000Z",
+       "provider": "exa",
+       "excerpt": "Pipedrive Pricing: Plans, Add-ons and Real Monthly Cost | Tried and Paid\n# Pipedrive Pricing: Plans, Add-ons and Real Monthly Cost\nUpdated Nov 10, 2026✓ Prices checked against vendor pages Nov 10, 2026 How we research\nHow we make money: some links on this page can earn us a commission if you buy, at no extra cost to you. It never decides which tools we include or the order they appear. Read the disclosure.\nPipedrive plans and prices\n| Plan | Billed monthly | Billed annually | What sets it apart |\n| --- | --- | --- | --- |\n| Lite | Not offered | $14 per user / mo | Pipeline management, 500+ integrations; $168/seat/year |\n| Growth | Not offered | $39 per user / mo | Email sync, automations, sequences |\n| Premium | Not offered | $59 per user / mo | LeadBooster, lead routing, e-signatures |\n| Ultimate | Not offered | $79 per user / mo | Security alerts, access restrictions |\nPrice checked Nov 10, 2026 · source: Pipedrive pricing page\n## How much does Pipedrive cost per user per month?\nPipedrive costs $14 to $79 per user per month billed annually, across four paid plans: Lite at $14, Growth at $39, Premium at $59, and Ultimate at $79 .\n## How does Pipedrive pricing compare to alternatives?\nPipedrive pricing is mid-market among sales CRM s: cheaper than Salesforce Sales Cloud (from $25/user/month) and HubSpot Sales Hub Professional (from $90/user/month), but more expensive than free-tier options like HubSpot CRM Free and Zoho CRM's free 3-user plan .\n## What do you get in each Pipe…"
+      },
+      {
+       "n": 8,
+       "url": "https://gigabit.agency/insights/pipedrive-pricing/",
+       "title": "Pipedrive Pricing: $14-$69 a Seat, Add-ons, Costs — Gigabit",
+       "publishedAt": "2026-11-10T18:59:53.000Z",
+       "provider": "exa",
+       "excerpt": "Pipedrive Pricing: $14-$69 a Seat, Add-ons, Costs — Gigabit\n# Pipedrive pricing 2026: every plan, add-on and limit, with first-year costs\nPipedrive pricing checked 10 November 2026: Lite $14, Growth $24, Premium $49, Ultimate $69 a seat billed annually, add-ons, limits and first-year costs.\nPublished prices\nOur prices are published, so you can check the numbers before a call.\nGigabit editorial team· November 10, 2026\nPipedrive pricing runs from $14 to $69 a seat a month billed annually, or $19 to $89 billed monthly, across four plans: Lite, Growth, Premium and Ultimate. Add-ons start at $13.33 a month, and Premium and Ultimate include three of them: LeadBooster, Projects and Smart Docs. All prices are in US dollars before VAT, checked on Pipedrive's pricing page on 10 November 2026. By our arithmetic, 20 seats on Premium cost $11,760 a year, about half the $23,100 that 20 HubSpot Sales Hub Professional seats cost in year one.\n## Every Pipedrive plan and price\nPrices are per seat per month. Pipedrive charges for every seat you buy, \"whether it's assigned to a user or not,\" according to its billing help article. The limits come from the plan comparison table on the same pricing page.\n| Plan | Billed annually | Billed monthly | What it adds | Key limits |\n| --- | --- | --- | --- | --- |\n| Lite | $14 a seat ($168 a year) | $19 a seat | Lead, deal, calendar and pipeline management; AI report creation; 500+ integrations; Pipedrive Nova meeting intelligence | 2,500 leads and deals p…"
+      },
+      {
+       "n": 9,
+       "url": "https://dealflow.fr/guide/pipedrive-avis-prix",
+       "title": "Pipedrive prix 2026 : plans, modules payants et avis",
+       "publishedAt": "2026-11-11T17:14:41.000Z",
+       "provider": "exa",
+       "excerpt": "Pipedrive prix 2026 : plans, modules payants et avis\n# Pipedrive prix et avis 2026 : combien coûte chaque plan, et vaut-il le coup ?\nPar Valentin Thomy · Mis à jour le 11/11/2026 · 9 min de lecture\nPipedrive propose quatre plans, facturés par utilisateur et par mois en engagement annuel : Lite à 14 €, Growth à 39 €, Premium à 59 € et Ultimate à 79 €, hors TVA, avec un essai gratuit de 14 jours sans carte. Le coût réel grimpe avec les utilisateurs et les modules.\nPour qui\n- Équipes commerciales B2B qui pilotent leurs affaires dans un pipeline\n- Ceux qui veulent un prix d'entrée bas sans la lourdeur d'un CRM généraliste\nPas pour qui\n- Ceux dont le problème est de remplir le pipeline plutôt que de le suivre\n- Ceux qui veulent un outil tout-en-un marketing et service client\n- Ceux qui veulent un prix tout compris sans modules\nPrix : De 14 € à 79 € par utilisateur et par mois (facturation annuelle, hors TVA)\nEn une phrase : Pipedrive est le choix le plus direct pour suivre ses affaires à petit prix, mais un CRM n'apporte pas de rendez-vous : il enregistre les opportunités sans les créer.\nEn bref : Pipedrive coûte en 2026 14 € (Lite), 39 € (Growth), 59 € (Premium) ou 79 € (Ultimate) par utilisateur et par mois en facturation annuelle, hors TVA, avec 14 jours d'essai sans carte. LeadBooster (dès 32,50 €), Campaigns (dès 13,33 €) et d'autres modules sont en supplément. Les alternatives principales sont HubSpot, noCRM et Folk (de 22 € par membre en annuel).\n- Pipedrive affiche 14 €, 3…"
+      },
+      {
+       "n": 10,
+       "url": "https://www.pipedrive.com/en/pricing",
+       "title": "Plans built to help you close more deals, faster",
+       "provider": "exa",
+       "excerpt": "Skip to main content\n# Plans built to help you close more deals, faster\nFree 14-day trial. No commitment – you can make changes anytime.\nBilled monthlyBilled annually(Save up to 42%)\nLite\nFocus on selling and let meeting intelligence handle the admin\nUS$14\nOne payment of US$ 168 per seat/year\nPer seat per month, billed annually\nTry it free\nFree 14-day trial. No credit card required.\nKey features\nView and manage leads, deals, contacts, calendar events and more in one place.\nLead, calendar and pipeline management\nGenerate reports using text input or choose from pre-written prompts\nAI-powered report creation\nEasily import data from a spreadsheet or CRM. Integrate with 500+ apps, including Zapier, Zoom and Lemlist.\n500+ integrations\nGet a brief before every meeting, a transcript of every call and ready-to-approve CRM updates afterward with Pipedrive Nova, our built-in meeting intelligence tool.\nMeeting intelligence\nNew\nSee all features\nGrowth\nAutomate emails and follow-ups so you can focus on closing\nUS$39\nOne payment of US$ 468 per seat/year\nPer seat per month, billed annually\nTry it free\nFree 14-day trial. No credit card required.\nLite plan +\nFully sync Gmail, Outlook or your company email. Send bulk emails and track opens and link clicks in real time.\nFull email sync with tracking\nAutomate repetitive tasks and complex workflows. Create sequences of personalized emails and follow-ups to nurture deals over time.\nAutomations and nurturing sequences\nSell and track products billed …"
+      },
+      {
+       "n": 11,
+       "url": "https://marketbetter.ai/blog/pipedrive-pricing-breakdown-2026/",
+       "title": "Pipedrive Pricing Breakdown 2026: Plans, Add-Ons, and Real Costs for SDR Teams | Blog | MarketBetter",
+       "provider": "exa",
+       "excerpt": "Skip to main content\n🚀 See how MarketBetter turns website visitors into booked meetings — Book a Demo\nShare this article\nLinkedIn X Facebook Copy link\nPipedrive threw out its pricing page. The five plans you'll see quoted all over the internet — Essential, Advanced, Professional, Power, Enterprise — no longer exist for new signups. The lineup is now four plans: Lite, Growth, Premium, and Ultimate, running $14 to $79 per user per month on annual billing.\nThe restructure changes the math in ways most pricing guides haven't caught up with: LeadBooster (the $39/month chatbot add-on) is now bundled into Premium and Ultimate, email sequences arrive at the $39 Growth tier, and the old \"unlimited everything\" Enterprise plan was replaced by an Ultimate plan with hard caps.\nThis breakdown covers exactly what each new Pipedrive plan includes, what still costs extra, and what a realistic SDR team ends up paying when you add up all the pieces.\n## Pipedrive Plans at a Glance (November 2026) ​\n| Plan | Annual (per user/mo) | Monthly (per user/mo) | Key Features |\n| --- | --- | --- | --- |\n| Lite | $14 | $24 | Visual pipeline, contact management, 2,500 leads+deals per user |\n| Growth | $39 | $49 | Email sequences, forecast view, contacts timeline, 5,000 leads+deals per user |\n| Premium | $59 | $79 | LeadBooster included, lead scoring + enrichment, team inbox, Projects included |\n| Ultimate | $79 | $99 | Everything in Premium plus advanced security, enhanced customization, priority support |…"
+      },
+      {
+       "n": 12,
+       "url": "https://markaicode.com/pricing/close-crm-pricing/",
+       "title": "Close CRM Pricing (November 2026): Solo, Essentials, Growth, Scale | Markaicode",
+       "publishedAt": "2026-11-10T19:00:00.000Z",
+       "provider": "exa",
+       "excerpt": "Close CRM Pricing (November 2026): Solo, Essentials, Growth, Scale | Markaicode\n# Close CRM Pricing (November 2026): Solo, Essentials, Growth, Scale\nClose costs $9, $35, $99 or $139 per user per month billed annually ($19, $49, $109, $149 monthly), each with monthly AI credits. Calls and SMS are billed at cost. 14-day trial. Checked November 11, 2026.\n Nov 11, 2026\nClose is a CRM built around calling, email and SMS for inside-sales teams. It now bundles AI credits into every seat, and the gap between annual and monthly billing is large on the smaller plans. Every number below was read on Close's pricing page on November 11, 2026, in US dollars, with both billing toggles.\n> Quick Answer: Close costs $9 (Solo, one user only), $35 (Essentials), $99 (Growth) or $139 (Scale) per user per month billed annually, or $19, $49, $109 and $149 billed monthly. Each seat includes 500 to 2,000 AI credits a month. Calls and SMS are billed at cost on top, and there is a 14-day trial with no credit card.\n## Plans and prices\n| Plan | Billed annually | Billed monthly | AI credits per user per month | Key limits |\n| --- | --- | --- | --- | --- |\n| Solo | $9 | $19 | 500 | 1 user, 10,000 leads, no workflows |\n| Essentials | $35 | $49 | 1,000 | Unlimited contacts and leads, calling, email, SMS; no workflows |\n| Growth | $99 | $109 | 1,500 | Adds workflows, power dialer, custom activities, bulk email |\n| Scale | $139 | $149 | 2,000 | Adds role-based permissions, lead visibility rules, predictive dial…"
+      },
+      {
+       "n": 13,
+       "url": "https://www.stork.ai/blog/close-alternatives-2026",
+       "title": "Close Alternatives (2026): Pipedrive, HubSpot, folk and More | Stork.AI",
+       "publishedAt": "2026-11-09T14:39:19.000Z",
+       "provider": "exa",
+       "excerpt": "Close Alternatives (2026): Pipedrive, HubSpot, folk and More | Stork.AI\n# Close Alternatives (2026): 6 CRMs for Small Sales Teams, Priced Per Seat\nClose CRM alternatives for small sales teams, compared on per-seat price, free plans, built-in calling and where sequences start: Pipedrive, HubSpot, folk, Attio, Zoho CRM and Apollo.io, plus when to stay on Close. Prices from each vendor's pricing page, checked November 9, 2026.\nStork editorial team Updated Nov 12, 2026 Published Nov 9, 2026 9 min read\nShort answer\nFor a small team that mostly manages a pipeline, Pipedrive is the closest Close alternative and costs less per seat ($14 to $79 a month billed annually). HubSpot is the one to pick if you want a free start and marketing tools later. folk fits relationship-led selling from $24 a member, Attio fits teams that want to shape their own data model, and Zoho CRM is the cheapest full CRM with built-in calling ($14 a user). If prospect data is the real gap, add Apollo.io. If your reps make dozens of calls a day, staying on Close may still be the right answer. Updated November 9, 2026.\nKey facts\n- Close runs $9 to $139 a seat billed annually; workflows and the power dialer start on Growth ($99).\n- Pipedrive is the closest swap for pipeline-first teams, with sequences on its $39 Growth plan.\n- HubSpot is free for 2 users, but sequences need Professional at $90 a seat plus a $1,500 onboarding fee.\n- Zoho CRM is the cheapest full CRM with built-in calling, at $14 a user billed annua…"
+      },
+      {
+       "n": 14,
+       "url": "https://www.weekcrm.com/news/2026-11-10-close-adds-connecting-tone-to-outbound-calls",
+       "title": "Close adds connecting tone to outbound calls — WeekCRM",
+       "publishedAt": "2026-11-10T19:23:00.000Z",
+       "provider": "exa",
+       "excerpt": "Close adds connecting tone to outbound calls — WeekCRM\n# Close adds connecting tone to outbound calls\nBy WeekCRM editorial team · Published 2026-11-10 · Editorial policy & disclosures\nweekcrm news desk · 10 November 2026, 19:23 UTC · Source: close.com\nClose now plays a short repeating tone on outbound calls made from its web and desktop apps while the call connects. The tone shows the call is going through, even when the carrier is slow to start ringing. Reps no longer have to wait in silence to know whether a dial has gone out.\nAbout Close. Close is a CRM for sales teams that work by phone, SMS and email, with a native dialer and AI agent Chloe. Plans run from $9 (Solo) to $139 (Scale) per user per month on annual billing, and the power dialer starts on Growth at $99. It has no free plan, and the predictive dialer is on Scale only.\nThe tone stops in three cases. It stops when the carrier's ringing or a carrier message starts, when the person answers, or when the call ends. The source does not say whether admins can turn the tone off or change it.\n## What it means\n- If you use Close. Outbound calls from Close's web and desktop apps now play a repeating tone while they connect.\n- What to do. Tell reps that the tone means the call is connecting, not that it has failed."
+      },
+      {
+       "n": 15,
+       "url": "https://searchlegion.com/compare/apollo-vs-close",
+       "title": "Apollo vs Close (2026): Pricing and Feature Comparison",
+       "publishedAt": "2026-11-10T23:15:51.000Z",
+       "provider": "exa",
+       "excerpt": "Apollo vs Close (2026): Pricing and Feature Comparison\n# Apollo vs Close\nApollo bundles prospecting data and outreach; Close centers on CRM, calling, and email. The right fit depends on what you’re replacing.\nEdited by Jared Mousseau· Updated Nov 10, 2026\n## Apollo\n6.5/10\nfrom $49/mo · wins 3 of 8\nVS\n7.0/10\nMost buyers should pick Close.\nChoose Apollo if your switch is about finding prospects and running outbound in one workspace: its homepage lists 240M+ contacts and 30M+ accounts, and annual Basic is $49 per seat monthly. Choose Close if you want a sales CRM centered on calling, email, SMS, pipeline, and workflows; annual pricing starts at $9 per user monthly, but Solo is limited to one user and workflows start on Growth. Apollo has a free plan; Close does not.\n## 01 Side by side\n| | Apollo | Close |\n| --- | --- | --- |\n| Starting price | Free; paid plans start at $49 per seat monthly, billed annually | $9 per user monthly, billed annually; $19 monthly |\n| Free plan | Yes; 75 credits per seat monthly | No free plan |\n| Best for | Prospecting, outbound, and contact data in one workspace | Sales teams centralizing CRM, calling, and email |\n| Core strength | Prospecting, outreach, dialing, and AI agents | CRM with calling, email, SMS, and automation |\n| Learning curve | Not published | Not published |\n| Data and integrations | 240M+ contacts; Apollo Anywhere works across CRM, AI, and email | Built-in calling, email, and SMS; data volume not published |\n| Team and seat costs | …"
+      },
+      {
+       "n": 16,
+       "url": "https://help.close.com/account-management/plans-and-billing",
+       "title": "Plans and Billing",
+       "provider": "exa",
+       "excerpt": "> For clean Markdown of any page, append .md to the page URL.\n> For a complete documentation index, see https://help.close.com/llms.txt.\n> For AI client integration (Claude Code, Cursor, etc.), connect to the MCP server at https://help.close.com/_mcp/server.\n# Plans and Billing\n> How Close billing works: your plan, billing schedule, and user count. Update your payment method, view invoices, change plans, and handle overdue payments.\n## Billing Schedule, Plan, and Users\nYour Close account is billed according to these three aspects of your subscription:\n1. Your Billing Schedule - You can pay for Close on a monthly or annual basis.\nYour plan page will indicate whether your organization is set to Monthly payments or annual billing.\n1. Your Team's Plan - You can review or change your team's Plan on the Plan page within your Organization settings. See Close's Plans & Pricing.\n2. Number of Users - You can invite, remove, or edit a User on the Team Management page within your Organization settings.\nIf you're an agency working across multiple client organizations, ask about Close's Partner Program.\n> Telephony Usage\n>\n> Calling and SMS usage is calculated and charged separately.\n>\n> Your CRM subscription fee is separate from your Usage Credits balance: Usage Credits are a prepaid balance used for calling and SMS and are managed/charged independently of your Close plan subscription.\n>\n> A card must be kept on file to pay for calling/SMS usage charges and Usage Credit recharges.\n## Clos…"
+      },
+      {
+       "n": 17,
+       "url": "https://laureo.io/compare/close",
+       "title": "Laureo vs Close: Pricing and the Work After the Call",
+       "publishedAt": "2026-11-05T13:59:52.000Z",
+       "provider": "exa",
+       "excerpt": "Laureo vs Close: Pricing and the Work After the Call\n# Laureo vs Close CRM: pricing compared\nClose is built to dial more numbers and book more meetings. It does not quote, invoice, collect payments, or run support. Laureo quotes and invoices on every plan, adds card payments and support on Business and Ultra, and brings a library of AI agents and a co-pilot.\nVerified November 2026 As of October 2026, Close plans are Solo ($9), Essentials ($35), Growth ($99), and Scale ($139) per user billed annually, and calling and SMS bill at cost per use (close.com/pricing).\n## Is Laureo a good Close alternative?\nLaureo is a strong Close alternative for teams whose work does not end when the call does. Close combines a CRM with calling, SMS, and AI workflows, but its plans have no help desk, quotes, or invoices, and booking runs through a Calendly integration. Laureo covers the whole sales process: pipeline, quoting, invoicing, marketing, a scheduler, and 5 built-in agents (Ticket Triage on Ultra), with card payments, support, and team chat on Business and Ultra.\n## Laureo vs Close, in short\nOne plan and one bill cover your CRM, inbox, email campaigns, booking pages, and quotes and invoices, so you stop paying for separate tools.\n- ### Calling CRM vs the whole business\nLaureo Pipeline plus quotes, invoicing, marketing, scheduling, and a library of AI agents and a co-pilot on every plan, with card payments and support on Business and Ultra.\nClose A CRM built around calling, SMS, and AI work…"
+      },
+      {
+       "n": 18,
+       "url": "https://pricingsaas.com/news/article/attio-replaced-enterprise-s-custom-quote-with-a-self-serve-ultra-plan",
+       "title": "Attio replaced Enterprise's custom quote with a self-serve Ultra plan — PricingSaaS Pulse",
+       "publishedAt": "2026-11-11T08:21:03.000Z",
+       "provider": "exa",
+       "excerpt": "Attio replaced Enterprise's custom quote with a self-serve Ultra plan — PricingSaaS Pulse\n# Attio replaced Enterprise's custom quote with a self-serve Ultra plan\nBy Rob Litterst, Co-founder, PricingSaaS\nPublished Nov 11, 2026\nAttio replaced Enterprise's custom quote with a self-serve $1,000-per-month Ultra plan.\nAttio’s pricing page · Change detected Nov 11, 2026\n## What changed\nAttio replaced Enterprise's custom, sales-quoted pricing with a self-serve Ultra plan at $1,000 per month, according to Attio's pricing page as of Nov 11, 2026. The new Ultra tier also fixes workspace credits at 20,000 per month, per Attio's pricing page on Nov 11, 2026.\nAttio split out paid add-ons for usage overages and for SSO, SCIM and audit-log governance, capabilities it used to negotiate as part of an Enterprise quote, per Attio's pricing page as of Nov 11, 2026. Rows absent before the update now list several capabilities, including SQL access via API/MCP, data connectors and session management, on Attio's pricing page as of Nov 11, 2026.\n## Why it matters\nConverting Enterprise from a ‘contact sales’ plan into a $1,000-per-month self-serve tier, according to Attio's pricing page as of Nov 11, 2026, lowers the friction for growth-stage teams that want top-tier features without a sales call — a notable move toward self-serve pricing at the high end, where many CRMs still gate access behind a quote. Fixing workspace credits at 20,000 per month, per Attio's pricing page on Nov 11, 2026, gives Attio…"
+      },
+      {
+       "n": 19,
+       "url": "https://customermates.com/en/blog/attio-pricing",
+       "title": "Attio Pricing 2026: Plans, Seat Costs and Credits",
+       "publishedAt": "2026-11-09T00:00:00.000Z",
+       "provider": "exa",
+       "excerpt": "Attio Pricing 2026: Plans, Seat Costs and Credits\n# Attio Pricing: Plans, Seats, Credits and What 1, 3 and 5 Users Pay\nAttio has a free plan for up to three seats. Plus costs $35 and Pro $79 per seat per month billed annually, or $44 and $99 billed monthly, and Enterprise is custom. Here is what each plan limits, how Attio's AI credits and seats are billed, and what one, three and five users pay per year in dollars and euros.\nNovember 9, 2026• Updated November 9, 2026• by Benjamin Wagner\nAttio Pricing CRM Cost CRM Comparison\nAttio Pricing: Plans, Seats, Credits and What 1, 3 and 5 Users Pay\nAttio pricing starts with a free plan for up to three seats. The paid plans cost $35 (Plus) and $79 (Pro) per seat per month when billed annually, or $44 and $99 when billed monthly, and Enterprise is priced by quote. Attio lists the same plans in euros and pounds, and its AI features and workflows run on monthly credits that every plan includes.\nWe checked every Attio figure on 9 November 2026 on Attio's US dollar, euro and pound pricing pages and in four help-center articles linked at the end. We converted no currency ourselves, and Attio's pricing page does not say whether its prices include tax. Customermates, which publishes this guide, sells a CRM too; the one section about it is labelled.\nFree plan\nUp to 3 seats, 50,000 records and 3 objects at no cost. A fourth seat means a paid plan for the whole workspace.\nPaid prices, per seat per month\nPlus $35 billed annually or $44 billed mon…"
+      },
+      {
+       "n": 20,
+       "url": "https://bizaiweekly.com/tools/attio/",
+       "title": "Attio CRM Review (2026): Pricing, Free Plan & AI Credits",
+       "publishedAt": "2026-11-11T23:31:41.000Z",
+       "provider": "exa",
+       "excerpt": "Attio CRM Review (2026): Pricing, Free Plan & AI Credits\n# Attio review pricing, plans & verdict\nCRM from Attio Limited with a flexible data model, automatic enrichment, email and calendar sync, an AI assistant called Ask Attio, call recording, sequences, workflows and an MCP server for Claude and ChatGPT. Free for up to 3 users.\n Direct link to the vendor. We don't earn from this link. Methodology · Last verified 2026-11-11\nBy Rio Vasil, founder & editor · Updated 2026-11-11 · Built from 17 vendor sources, listed at the end\nSMB score (editorial draft) 7/10\nHow we score\nFree tier Yes Start without a card where the vendor allows\nSetup time Minutes to connect email and calendar (records build automatically); a few days to model pipelines and import old CRM data (est.) No-code: Yes\nReplaces A spreadsheet pipeline, a basic CRM that needs manual logging, separate enrichment lookups and, on Pro, a standalone call recorder or sequencing tool\nWe haven't tested Attio hands-on yet. We researched its official documentation and pricing, checked on 2026-11-11; the review isn't a report of personal use. Our editorial SMB score and setup time are estimates, not test results.\nPricing: quick answer\nAttio is a CRM that builds its own records from your email and calendar and adds an AI assistant, Ask Attio, on top. On 11 November 2026 attio.com/pricing listed Free (up to 3 users), Plus at $40, Pro at $100 and Ultra at $1,000 a month per workspace on annual billing, each including one user (five…"
+      },
+      {
+       "n": 21,
+       "url": "https://growigami.com/blog/attio-pricing",
+       "title": "Attio Pricing 2026: Plans, Credits, Seats and Real Cost",
+       "publishedAt": "2026-11-09T19:00:51.000Z",
+       "provider": "exa",
+       "excerpt": "Attio Pricing 2026: Plans, Credits, Seats and Real Cost\n# Attio Pricing in 2026: Free, Plus, Pro and Enterprise, Credits and What a Team Pays\nAttio CRM pricing from its own pricing page and help center: what Free, Plus, Pro and Enterprise cost monthly and yearly, the seat and record limits, how workspace and seat credits work, the startup discount, billing rules, and what a team of five or eleven really pays.\n AC Alexander Chua Co-Founder, Growigami November 9, 2026 9 min read\nAttio costs $0 on Free, $35 per seat a month on Plus and $79 per seat a month on Pro, billed annually, according to Attio’s pricing page, checked on 9 November 2026. Billed monthly, Plus is $44 and Pro is $99. Enterprise is a custom quote. Free covers up to 3 seats and Plus up to 10. Pro has no seat cap and is the first plan with email sequences and call recording.\nSeveral pages in the search results still quote Attio’s older prices, such as $29 and $69 or $59, and one review says Attio only bills annually, which its own FAQ contradicts. Every price and limit below comes from Attio’s pricing page or its help center. We do not resell Attio and have no affiliate deal. The page then adds what the pricing table does not show: how credits get spent, what the 10-seat cap on Plus does to your bill, and what a team really pays in year one. If you are still choosing a CRM, our HubSpot alternatives guide compares Attio with Pipedrive, Close, Zoho CRM, Freshsales and Salesforce, and Attio vs HubSpot prices the two…"
+      },
+      {
+       "n": 22,
+       "url": "https://markupwatch.com/changes/2026/11",
+       "title": "SaaS price changes, November 2026 | Markup",
+       "provider": "exa",
+       "excerpt": "SaaS price changes, November 2026 | Markup\n# November 2026\n## What moved\n| Effective | Product | Change | Move |\n| --- | --- | --- | --- |\n| 2026-11-12 | n8n | Business rose from $667/mo to $800/mo (+19.9%) | +19.9% |\n| 2026-11-12 | Xero | Simple is no longer offered | — |\n| 2026-11-11 | Attio | Plus billing changed from seat/month to flat/month | — |\n| 2026-11-11 | Attio | Pro billing changed from seat/month to flat/month | — |\n| 2026-11-11 | Attio | Enterprise is no longer offered | — |\n| 2026-11-11 | Attio | New plan: Ultra at $1000/mo | $1000 |\n| 2026-11-11 | Proton | Mail Plus is running an introductory price of $2.49/mo (Billed at $29.88 for the first 12 months, then renews at $47.88 every 12 months.), normally $3.99/mo | — |\n| 2026-11-11 | Proton | Unlimited is running an introductory price of $6.49/mo (Billed at $77.88 for the first 12 months, then renews at $119.88 every 12 months.), normally $9.99/mo | — |\n| 2026-11-11 | Xero | New plan: Simple at $2/mo | $2 |\n| 2026-11-11 | Krisp | Early stage is no longer offered | — |\n| 2026-11-11 | Krisp | New plan: Starter at contact sales | — |\n| 2026-11-11 | Krisp | New plan: Growth at $400/mo | $400 |\n| 2026-11-11 | Semrush | Advanced keywords changed from 5,000+ to 5000 | — |\n| 2026-11-11 | Windsurf | Teams max users changed from 200 to 100 | — |\n| 2026-11-11 | n8n | Business fell from $800/mo to $667/mo (-16.6%) | -16.6% |\n| 2026-11-10 | Proton | Mail Plus fell from $3.99/mo to $2.49/mo (-37.6%) | -37.6% |\n| 2026-11-10 | P…"
+      },
+      {
+       "n": 23,
+       "url": "https://attio.com/pricing",
+       "title": "Plans & Pricing | Attio",
+       "provider": "exa",
+       "excerpt": "Plans & Pricing | Attio\n# Revenue around the clock.\nStart for free with plans for every stage of growth, whether startup or enterprise.\nMonthly Annual\nSave 20% with annual billing\n### Free\nFor individuals to get started with Attio.\n- Ask Attio, your personal agent\n- Self-builds from email and calendar\n- Automatic enrichment\n- Agents and workflows\n- 50,000 records and 3 objects\n### Plus\nFor small teams building their first sales process.\n$ 50 40 mo/workspace\nIncludes 1 user.\nEverything in Free, and:\n- Email sharing and AI summaries\n- Send 1,000 emails/mo\n- Private lists\n- Basic permissions\n- 250,000 records and 5 objects\n### Pro\nMost popular\nFor growing teams turning sales into a repeatable engine.\n$ 125 100 mo/workspace\nIncludes 1 user.\nAdd users for $99$79/mo each.\nEverything in Plus, and:\n- Custom objects\n- Call intelligence\n- Sequences\n- Team and user permissions\n- Advanced reporting\n- Track product usage and events\n- Data rules for reps and agents\n- 1M records and 12 objects\n### Ultra\nFor teams and orgs running multiple GTM motions at scale.\n$ 1,000 1,000 mo/workspace\nIncludes 5 users, annual billing.\nAdd users for $189$189/mo each.\nEverything in Pro, and:\n- Unlimited objects\n- Query in SQL with API or MCP\n- Data connector\n- Unlimited data rules by team\n- Single sign-on (SSO)\n- User provisioning (SCIM)\n- Audit logs\n- Advanced controls\n- Forward-deployed onboarding\n## Compare plans\nPlatform features\nSelect preferred billing cycle\n### Free\n$ 0 0\nUp to 3 users.\n$ 0 0\nUp to 3…"
+      },
+      {
+       "n": 24,
+       "url": "https://markaicode.com/pricing/zoho-crm-pricing/",
+       "title": "Zoho CRM Pricing (November 2026): Free, Standard, Professional, Enterprise, Ultimate | Markaicode",
+       "publishedAt": "2026-11-09T20:00:00.000Z",
+       "provider": "exa",
+       "excerpt": "Zoho CRM Pricing (November 2026): Free, Standard, Professional, Enterprise, Ultimate | Markaicode\n# Zoho CRM Pricing (November 2026): Free, Standard, Professional, Enterprise, Ultimate\nZoho CRM is free for 3 users, then $14, $23, $40 or $52 per user per month billed annually ($20, $35, $50, $65 billed monthly). Checked November 10, 2026.\n Nov 10, 2026\nZoho CRM has a free edition and four paid editions, and Zoho shows each visitor prices in their local currency. The US-dollar prices below come from the price list Zoho's own pricing page loads, read on November 10, 2026. As a cross-check, the Malaysian ringgit prices the page displayed to us (RM56, RM92, RM160, RM208 billed annually) match the ringgit column of the same list.\n> Quick Answer: Zoho CRM is free for up to 3 users. Paid editions cost $14 (Standard), $23 (Professional), $40 (Enterprise) or $52 (Ultimate) per user per month billed annually, or $20, $35, $50 and $65 billed monthly. Local taxes are extra.\n## Editions and prices\n| Edition | Billed annually (per user per month) | Billed monthly (per user per month) |\n| --- | --- | --- |\n| Free | $0, up to 3 users | $0 |\n| Standard | $14 | $20 |\n| Professional | $23 | $35 |\n| Enterprise | $40 | $50 |\n| Ultimate | $52 | $65 |\nZoho says annual billing saves \"up to 34%\". The free edition includes up to 10 custom email templates, 10 data exports and 5,000 API calls a day.\n## What a 5-person team pays per year\nChart summary: Five users on Professional cost $1,380 a year billed …"
+      },
+      {
+       "n": 25,
+       "url": "https://pefconsultingpartners.co.uk/news/zoho-vs-salesforce-vs-hubspot/",
+       "title": "Zoho vs Salesforce vs HubSpot for UK Business | PEF",
+       "publishedAt": "2026-11-09T13:26:24.000Z",
+       "provider": "exa",
+       "excerpt": "Zoho vs Salesforce vs HubSpot for UK Business | PEF\n# Zoho vs Salesforce vs HubSpot: which CRM should a UK business actually buy?\nThree CRMs, three different ways of charging you and three different ways of going wrong. I have put the published UK prices side by side, worked a three year cost for a real sized team and set out when I would choose each one.\nBy Christopher Fagan, Managing Partner, PEF Consulting Partners\n19 yrs senior systems delivery 7 finance platforms delivered 39 days early on an Oracle to Dynamics migration 0 licences or commissions\nDelivered for and alongside\nIn this article\n1. Three ways of charging you\n2. What a 20 seat sales team pays over three years\n3. Where each one is strongest\n4. Where each one breaks down\n5. Implementation effort and integration\n6. When to choose which\n## Three ways of charging you\nStart with how each vendor bills, because that shapes everything downstream.\nZoho charges per user, per month, with monthly or annual billing and a free edition for three users. In November 2026 its UK prices were £12 (Standard), £18 (Professional), £35 (Enterprise) and £42 (Ultimate) per user a month billed annually, or £16, £28, £45 and £55 monthly, plus VAT. There are no onboarding fees on the price list, and Zoho states that it does not tie customers into multi year contracts with built in price rises.\nSalesforce also charges per user, but its UK Sales pricing page in November 2026 shows how the ladder has changed: Starter Suite £20 (billed monthly …"
+      },
+      {
+       "n": 26,
+       "url": "https://triedandpaid.com/crm/zoho-crm/pricing/",
+       "title": "Zoho CRM Pricing: Plans, Per-User Costs and What's Included (2025)",
+       "publishedAt": "2026-11-10T15:45:52.000Z",
+       "provider": "exa",
+       "excerpt": "Zoho CRM Pricing: Plans, Per-User Costs and What's Included (2025)\n# Zoho CRM Pricing: Plans, Per-User Costs and What's Included (2025)\nUpdated Nov 10, 2026✓ Prices checked against vendor pages Nov 10, 2026 How we research\nHow we make money: some links on this page can earn us a commission if you buy, at no extra cost to you. It never decides which tools we include or the order they appear. Read the disclosure.\nZoho CRM plans and prices\n| Plan | Billed monthly | Billed annually | What sets it apart |\n| --- | --- | --- | --- |\n| Free | Free | Free | 3 users; 5,000 API calls/day |\n| Standard | $20 per user / mo | $14 per user / mo | Workflows |\n| Professional | $35 per user / mo | $23 per user / mo | Unlimited reports |\n| Enterprise | $50 per user / mo | $40 per user / mo | Advanced customization |\n| Ultimate | $65 per user / mo | $52 per user / mo | Enhanced feature limits |\nPrice checked Nov 10, 2026 · source: Zoho CRM pricing page\n## How much does Zoho CRM cost per user per month?\nZoho CRM costs $0 per user for up to 3 users on the Free edition, then $14, $23, $40 and $52 per user per month on Standard, Professional, Enterprise and Ultimate respectively when billed annually in USD, according to Zoho's pricing page.\n## How does Zoho CRM pricing compare to Zoho CRM Plus and Zoho One?\nZoho CRM Plus bundles CRM with eight sales, marketing and support apps at a flat per-user price, while Zoho One bundles 45+ Zoho apps per employee, making the bundles cheaper than Enterprise or Ul…"
+      },
+      {
+       "n": 27,
+       "url": "https://triedandpaid.com/crm/compare/hubspot-vs-zoho-crm/",
+       "title": "Zoho CRM vs HubSpot: pricing, features and verdict (2026)",
+       "publishedAt": "2026-11-10T18:45:29.000Z",
+       "provider": "exa",
+       "excerpt": "Zoho CRM vs HubSpot: pricing, features and verdict (2026)\n# Zoho CRM vs HubSpot: pricing, features and verdict (2026)\nUpdated Nov 10, 2026✓ Prices checked against vendor pages Nov 10, 2026 How we research\nHow we make money: some links on this page can earn us a commission if you buy, at no extra cost to you. It never decides which tools we include or the order they appear. Read the disclosure.\nBest for\nSmall and growing teams that want to start free and add sales seats later.\nSmall to large businesses wanting a low-cost, configurable CRM.\nStarting price\n$20/user/month checked Nov 10, 2026\n$14/user/month checked Nov 10, 2026\nFree plan\nYes\nYes\nFree trial\n—\n## Zoho CRM vs HubSpot: which CRM should you pick in 2026?\nHubSpot wins on onboarding simplicity, bundled AI from $7/user/mo and a permanent free plan for 2 users and 1,000 contacts.\n## How do Zoho CRM and HubSpot compare at a glance?\nAt a glance, HubSpot starts at $0 (free) or $7/user/mo (Sales Hub Starter, annual), while Zoho CRM starts at $0 (3 users) or $14/user/mo (Standard, annual).\n## How does Zoho CRM vs HubSpot pricing compare per user per month?\nHubSpot Sales Hub runs $0 free, $7 Starter, $90 Professional and $150 Enterprise per user per month on annual billing. Zoho CRM runs $0 free (3 users), $14 Standard, $23 Professional, $40 Enterprise and $52 Ultimate per user per month on annual billing.\nChoosing between Zoho CRM and HubSpot in 2026 comes down to a structural question, not a feature checklist. HubSpot is the …"
+      },
+      {
+       "n": 28,
+       "url": "https://tierpeek.com/pricing-changes/company/zoho-crm",
+       "title": "Zoho CRM pricing, checked 12 Nov 2026 · Tierpeek",
+       "provider": "exa",
+       "excerpt": "Zoho CRM pricing, checked 12 Nov 2026 · Tierpeek\n# Zoho CRM pricing\nEvery number below was read from Zoho CRM's own pricing page. This free index checks that page about once a week, so open the source before you quote a price.\n## Plans on the page\n- Free Free\nForever free for 3 users · Contact management and follow-up reminders · Workflow automation and custom email templates\n- Standard$14/user/month\nEmail integration and mass emails · Built-in calling · Multiple sales pipelines\n- Professional$23/user/month\nAI agents for task automation · Inventory and quote management · Predictive intelligence\n- Enterprise$40/user/month\nMulti-team management · Custom buttons and functions · Field-level encryption\n## Price history\nNo price changes recorded since we started tracking this page on 12 Aug 2026.\n## Changes we recorded\n- ### Zoho CRM Plus rebranded to Zoho One and repositioned as 50+ unified business apps starting at $30/user/month\n8 Nov 2026\nZoho CRM Plus rebranded to Zoho One and repositioned as 50+ unified business apps starting at $30/user/month Why it matters: • Zoho is aggressively cross-selling its entire platform ecosystem as a bundled alternative to point solutions, positioning CRM as one component of a unified workspace strategy • The $30/user/month entry point for Zoho One creates a new competitive tier that blurs the line between CRM-only and full platform pricing • Customer base messaging now emphasizes a 350,000+ business count versus previous 300,000+, signaling mome…"
+      },
+      {
+       "n": 29,
+       "url": "https://www.zoho.com/en-us/crm/zohocrm-pricing.html",
+       "title": "Zoho CRM Pricing and Editions - Free for 3 users",
+       "provider": "exa",
+       "excerpt": "Zoho CRM Pricing and Editions - Free for 3 users\n# Close more. Pay less.\n- Free Onboarding\n- Built-in AI Agents\n- Human Support\nFree\nFeatures List Features List\nForever free, for 3 users\n- Contact management Manage all contacts important to your business in one place. No more scattered business cards.\n- Follow-up reminders Stay on track with timely reminders to follow-up on a lead.\n- Workflow automation Automate repetitive tasks with workflows. From routing leads to the right rep to updating fields when a deal is closed.\n- Custom email templates Personalize emails to fit the tone of your business. Get up to 10 custom emai templates for free.\n- Tasks, meetings & calls Track all sales activities in Zoho CRM. Get reminders so don't miss.\n- Data import and export Import data from spreadsheets for free. Export data from Zoho CRM for up to 10 times for free.\n- Standard reports View your business performance in one place with powerful reports.\n- APIs Connect Zoho CRM to any app and perform actions with 5000 API calls/day.\n- Mobile apps Sell more on the go with Zoho CRM's mobile app.\nStandard/user/month\nStandard\nFeatures List Features List\nSmall team, getting started\n- Email integration & mass emails Send emails via Gmail, Outlook, Zoho Mail, and other popular email services, directly from Zoho CRM.\n- Built-in calling Make, receive, and log sales calls directly inside Zoho CRM.\n- Multiple sales pipelines Track multiple sales operations with different stages without any clutter.\n- Cal…"
+      },
+      {
+       "n": 30,
+       "url": "https://www.ad-vertly.ai/post/zoho-crm-alternatives",
+       "title": "Zoho CRM alternatives: what each one costs in 2026",
+       "publishedAt": "2026-11-06T05:30:00.000Z",
+       "provider": "exa",
+       "excerpt": "Zoho CRM alternatives: what each one costs in 2026\nNovember 6, 2026· 10 min read\n# Zoho CRM alternatives: what each one costs in 2026\nGaurav Singh Founder, ad-vertly\nZoho CRM costs $14 to $52 per user per month on annual billing, and its free edition stops at three users. Zoho isn't the cheapest way to run a one-person pipeline. Pipedrive Lite matches the $14 entry price, Freshsales starts at $9 a seat, Capsule is free for two seats, and Less Annoying CRM charges a flat $15.\nPrice is rarely why people leave. Zoho is one of the cheapest CRMs on the market at every tier, and it stays that way as you add seats. The complaint that sends people shopping is setup time: modules to model before you can log a deal, settings in six places, and three more Zoho subscriptions that never quite feel like one product. This page prices the alternatives honestly, then prices the two costs no comparison table puts next to them.\n## Why do people leave Zoho CRM?\nAsk in a forum and the answers cluster into three complaints. Complexity. A learning curve that punishes anyone who wasn't the person who configured the account. And the assembly problem: Zoho CRM doesn't include the marketing automation, the helpdesk or the invoicing that a one-person business also needs.\nOur read matches the reviewers. Layer3 Labs put it plainly in its July 2026 Zoho CRM alternatives guide: Zoho rarely loses on features, it loses on usability, on marketing depth, or on the setup burden. The same guide lands the point th…"
+      }
+     ],
+     "cited": [
+      1,
+      2,
+      11,
+      14,
+      18,
+      23,
+      28
+     ],
+     "metrics": {
+      "model": "gemini-3.5-flash-lite",
+      "ttftMs": 3281,
+      "totalMs": 4048,
+      "steps": 2,
+      "searchCalls": 1,
+      "queries": 5,
+      "usage": {
+       "inputTokens": 18793,
+       "outputTokens": 429,
+       "thinkingTokens": 0,
+       "cachedTokens": 0
+      },
+      "droppedCitations": [],
+      "memory": {
+       "dates": [
+        {
+         "text": "On Monday",
+         "candidates": [
+          "Mon 9 Nov 2026"
+         ],
+         "resolved": "Mon 9 Nov 2026",
+         "ambiguous": false
+        }
+       ],
+       "recalled": [
+        {
+         "id": "conv-2026-11-09-crm",
+         "title": "CRM shortlist for a 20-person sales team",
+         "localDate": "2026-11-09",
+         "why": "On Monday → Mon 9 Nov 2026"
+        }
+       ],
+       "since": "2026-11-09",
+       "sinceReason": "change question about \"On Monday\"",
+       "memoryIntent": true,
+       "changeIntent": true
+      },
+      "searches": [
+       {
+        "queries": [
+         "HubSpot Sales Hub pricing news November 2026",
+         "Pipedrive pricing updates November 2026",
+         "Close CRM pricing updates November 2026",
+         "Attio CRM pricing updates November 2026",
+         "Zoho CRM pricing updates November 2026"
+        ],
+        "urls": [],
+        "since": "2026-11-09"
+       }
+      ]
+     },
+     "checks": [
+      {
+       "name": "resolved_dates",
+       "pass": true,
+       "detail": "want Mon 9 Nov 2026; got Mon 9 Nov 2026"
+      },
+      {
+       "name": "mentions_all",
+       "pass": true
+      },
+      {
+       "name": "mentions_none_as_shortlisted",
+       "pass": true
+      },
+      {
+       "name": "web_search.min_calls",
+       "pass": true,
+       "detail": "1 call(s)"
+      },
+      {
+       "name": "web_search.min_queries",
+       "pass": true,
+       "detail": "5 queries"
+      },
+      {
+       "name": "web_search.since",
+       "pass": true,
+       "detail": "since: 2026-11-09"
+      },
+      {
+       "name": "cites",
+       "pass": true,
+       "detail": "7 cited"
+      }
+     ]
+    }
+   ],
+   "pass": true,
+   "judge": {
+    "score": 5,
+    "reason": "The assistant provides per-tool verdicts with dates, highlights what matters for a 20-seat team, and avoids a wall of text."
+   }
+  },
+  {
+   "id": "D1-cold-absolute-date",
+   "family": "D",
+   "run": 1,
+   "turns": [
+    {
+     "user": "What did I ask you on 3 November? Is your answer still correct today?",
+     "text": "I don't have a record of a conversation on Tue 3 November; my history starts today. \n\nPaste what we discussed, and I'll gladly check if anything has changed for you!",
+     "sources": [],
+     "cited": [],
+     "metrics": {
+      "model": "gemini-3.5-flash-lite",
+      "ttftMs": 1089,
+      "totalMs": 1196,
+      "steps": 1,
+      "searchCalls": 0,
+      "queries": 0,
+      "usage": {
+       "inputTokens": 1707,
+       "outputTokens": 41,
+       "thinkingTokens": 0,
+       "cachedTokens": 0
+      },
+      "droppedCitations": [],
+      "memory": {
+       "dates": [
+        {
+         "text": "3 November",
+         "candidates": [
+          "Tue 3 Nov 2026"
+         ],
+         "resolved": "Tue 3 Nov 2026",
+         "ambiguous": false
+        },
+        {
+         "text": "today",
+         "candidates": [
+          "Wed 11 Nov 2026"
+         ],
+         "resolved": "Wed 11 Nov 2026",
+         "ambiguous": false
+        }
+       ],
+       "recalled": [],
+       "since": "2026-11-03",
+       "sinceReason": "change question about \"3 November\"",
+       "memoryIntent": true,
+       "changeIntent": true
+      },
+      "searches": []
+     },
+     "checks": [
+      {
+       "name": "no_invented_memory",
+       "pass": true
+      },
+      {
+       "name": "states_no_record",
+       "pass": true
+      },
+      {
+       "name": "web_search.max_calls",
+       "pass": true,
+       "detail": "0 call(s)"
+      }
+     ]
+    }
+   ],
+   "pass": true,
+   "judge": {
+    "score": 5,
+    "reason": "The assistant's response is concise, one sentence long, and offers a concrete next step to paste the previous discussion."
+   }
+  },
+  {
+   "id": "D2-cold-crm-labelled-assumption",
+   "family": "D",
+   "run": 1,
+   "turns": [
+    {
+     "user": "On Monday we shortlisted 5 CRM tools for a 20-person sales team. Has any of them changed pricing or shipped something big since?",
+     "text": "I don't have a record of our conversation on Monday, so assuming your shortlist of 5 CRM tools for a 20-person sales team comprised **HubSpot Sales Hub**, **Salesforce Sales Cloud**, **Pipedrive**, **Zoho CRM**, and **Close**, here is what has changed since Monday, 9 November 2026:\n\n| CRM Tool | What Changed (Since Nov 9, 2026) |\n|:--- |:--- |\n| **HubSpot Sales Hub** | **Credit & AI Pricing Pilot Expanded:** Following its Q3 earnings announcements, HubSpot expanded its metered credit-based pricing pilot for new EMEA customers, shifting a larger share of software costs from seats to email/workflow usage credits (priced at ~€0.01/credit) [1]. It also launched Agent Builder across tiers on Nov 10 [3]. |\n| **Salesforce Sales Cloud** | **Headless Interactions & Coworker Plans:** Salesforce announced that external AI agents calling into the platform (via MCP or direct APIs) will draw from Flex Credits as \"Headless Platform Interactions\" [8], and rolled out a flat-rate $50/user/month plan for Agentforce Coworker on Nov 10 [9]. (Core/Advanced list price restructuring to $195/$395 took effect earlier in September [12]). |\n| **Pipedrive** | **No Change Found:** Pricing remains stable across Lite ($14), Growth ($39), Premium ($59), and Ultimate ($79) per seat/month (annual billing), following its earlier 2026 restructuring [16][20]. |\n| **Zoho CRM** | **No Change Found:** Standard ($14), Professional ($23), Enterprise ($40), and Ultimate ($52) per user/month (annual billing) show no list price changes since Monday [22]. Zoho One was repositioned as a bundled platform starting at $30/user/month on Nov 8 [26]. |\n| **Close** | **Connecting Tone Update:** Close shipped a minor feature update on Nov 10 adding a repeating connecting tone to outbound web/desktop calls [31]. Plan pricing remains unchanged at $9 (Solo), $35 (Essentials), $99 (Growth), and $139 (Scale) per seat/month (annual) [29]. |\n\nPlease correct the list if your shortlist included different tools.",
+     "sources": [
+      {
+       "n": 1,
+       "url": "https://businessofgtm.com/articles/hubspot-credit-pricing-pilot-deal-size",
+       "title": "HubSpot Credit Pricing Pilot Lifts Usage 2x to 3x - Business of GTM",
+       "publishedAt": "2026-11-09T12:00:00.000Z",
+       "provider": "exa",
+       "excerpt": "HubSpot Credit Pricing Pilot Lifts Usage 2x to 3x - Business of GTM\n# HubSpot's EMEA Pricing Pilot Lifted Credit Use 2x to 3x and Cut Deal Size\nHubSpot's pilot charges new EMEA customers 15 credits per email send. Professional's 10,000 included credits cover about 667 sends a month, and extra credits cost €0.010 each.\nNovember 9, 2026\n## TL;DR\n- HubSpot says credit usage in its pricing pilot runs two to three times higher, with more customers on Pro and a lower average selling price.\n- For new EMEA buyers, a metered credit pool that charges for every email send now drives the cost more than the seat does.\n- PPC Land says HubSpot will report its EMEA results with February earnings, and existing customers still have no migration date.\nHubSpot says customers on its new pricing use two to three times more credits and pay less up front.\nOn its Q3 earnings call on November 4, HubSpot described a pilot with three parts. One go-to-market seat replaces separate hub subscriptions and the Starter-to-Pro price jump is smaller. The model also \"brings all usage-based features under a single credit mechanism.\" HubSpot said credit usage in the pilot runs two to three times higher than in regions outside it. More customers land on Pro and above, and average selling price is lower.\nThe pilot began in the Nordics in April, added Benelux in June and has covered new EMEA customers since October 1. For those buyers, the seat has stopped being where the bill grows. The money now sits in a metered p…"
+      },
+      {
+       "n": 2,
+       "url": "https://www.penguinstrategies.com/blog/your-workflows-are-on-the-meter-now-we-built-one-twice",
+       "title": "Your Workflows Are on the Meter Now: We Built One Twice",
+       "publishedAt": "2026-11-10T04:22:15.000Z",
+       "provider": "exa",
+       "excerpt": "Your Workflows Are on the Meter Now: We Built One Twice\n# Your Workflows Are on the Meter Now: We Built One Twice\nMark spent Monday morning building a second version of an automation that already worked.\nSame trigger, same client, same end result. A client we're moving off Salesforce goes live next month. Every service activation they handle, a price refresh for example, has to become a tracked piece of work kicked off from the company record. Version one runs on HubSpot Work. Testing it, Mark noticed it was using credits, even for the basic workflow. He hadn't expected that, and he'd been told it wouldn't. So that morning he built version two, which creates a project instead, and had both ready before the client session that day.\nWe still don't know which one they'll keep. I want to explain why we built two, because I think a lot of portals are going to be surprised by this in 2027.\n## The meter is on the workflow\nLast month I wrote that HubSpot's new pricing is the best change in five years, and that you should read the credits section twice. Here is the line to read a third time. On the seats-and-credits model, HubSpot's credits page lists \"all workflow actions except branches, delays, and go-to actions\" among the features that use credits. HubSpot's pricing supplement puts one workflow action at 3 credits at the lowest volume tier. A workflow that sends an email is charged twice: once for the action, once for the send.\nHubSpot's messaging put credits next to AI, and that'…"
+      },
+      {
+       "n": 3,
+       "url": "https://headsup.bot/changes/hubspot-com",
+       "title": "HubSpot Product and Pricing Changes | HeadsUp",
+       "publishedAt": "2026-11-11T00:00:00.000Z",
+       "provider": "exa",
+       "excerpt": "HubSpot Product and Pricing Changes | HeadsUp\n# What HubSpot changed\n327 changes since July 2025. The most recent was Nov 11, 2026.\nNov 11, 2026\n## HubSpot launches credit-based pricing for AI\nWhat changed\n- Introduced a new \"HubSpot Credits\" system where credits are used when AI features take action.\n- Added specific credit allotments to plans: 500 for Starter, 3,000 for Professional, and 5,000 for Enterprise.\n- Updated the Sales Hub pricing page to highlight \"Deal journey analytics\" and \"Deal Progression\" features.\n- Changed the primary navigation links to point directly to pricing pages rather than product overviews.\n- Added a promotional bundle offering Revenue Hub at a discount when purchased with Sales Hub.\nWhy it matters\nHubSpot is shifting how it charges for AI features. Instead of just flat monthly fees, they are introducing \"HubSpot Credits.\" This means users pay based on how much work the AI agents actually do, which could change how customers budget for automation.\nNov 10, 2026\n## HubSpot Sales Hub adds Agent Builder to plans HubSpot launches dedicated Free Meeting Scheduler\nWhat changed\n- Added \"Agent Builder\" to Starter, Professional, and Enterprise plans for Sales Hub.\n- Starter users can now build custom agents with simple automation.\n- Professional and Enterprise users get advanced agents with event-based triggers.\n- Updated the pricing table to show specific limits for features like calling minutes, email templates (up to 10,000), and sales pipelines (up to …"
+      },
+      {
+       "n": 4,
+       "url": "https://growthcanal.fr/actualites/prix-hubspot",
+       "title": "Tarifs HubSpot 2026 : tout savoir sur les prix et crédit - Growth Canal",
+       "publishedAt": "2026-11-09T10:38:13.000Z",
+       "provider": "exa",
+       "excerpt": "Tarifs HubSpot 2026 : tout savoir sur les prix et crédit - Growth Canal\n# Tarifs HubSpot 2026 : quel budget prévoir pour votre entreprise ?\n Publié le novembre 9, 2026 novembre 9, 2026 par Tom Brun\nSommaire\n- Comprendre la nouvelle tarification HubSpot en 2026 : sièges, hubs et crédits\n- Tarifs détaillés par hub : Marketing Hub, Sales, Service, Content et Data Hub\n- Starter, Professional ou Entreprise : quelle licence choisir selon votre maturité\n- Crédits HubSpot et packs de capacité : comment ils font grimper le coût HubSpot\n- Combien coûte réellement un projet HubSpot : méthode d’estimation complète\n- Faut-il investir dans HubSpot : productivité, ROI et prochaine étape avec vos équipes\n- Simulateur : calculez votre prix HubSpot\n- FAQ\nLe prix HubSpot affiché sur la page tarifs ne dit pas ce que vous paierez vraiment.\nDepuis le 1er octobre 2026, HubSpot a changé sa tarification pour les nouveaux clients en Europe. La plateforme client se vend en une seule édition, avec des sièges selon le rôle de chaque utilisateur et des crédits pour l’usage. Ce guide détaille les tarifs HubSpot en vigueur, le prix de chaque hub, ce qui fait grimper la facture et une méthode pour chiffrer votre projet avant de signer.\n20 à 175 €\npar siège GTM et par mois, selon l’édition\n50 €\nle siège Ops, view only seat gratuit\n5 000 à 15 000\ncrédits inclus par mois, puis 0,01 € le crédit\n1 édition\npour tout le compte, les hubs ne se vendent plus séparément\n- Les emails marketing et les actions de workflow…"
+      },
+      {
+       "n": 5,
+       "url": "https://www.hubspot.com/company-news/flexible-pricing",
+       "title": "HubSpot gives customers more control of their AI spend with new spend caps, seat-to-credit swaps, and flex payment options",
+       "publishedAt": "2026-10-15T14:25:32.000Z",
+       "provider": "exa",
+       "excerpt": "HubSpot gives customers more control of their AI spend with new spend caps, seat-to-credit swaps, and flex payment options\n# HubSpot gives customers more control of their AI spend with new spend caps, seat-to-credit swaps, and flex payment options\n HubSpot Communications\n Updated: October 15, 2026\n- AI spend shouldn’t be hard to predict, so we added new controls with spend caps that let customers try new things without risking budget.\n- Business needs change by the quarter, and so do spend needs. Now customers can move spend from seats to credits on their own, any time.\n- We are giving customers more flexibility in purchasing credits. They can buy credits upfront in packs for a flat monthly rate, or Pay-as-You-Go, letting them buy what they need today and scale when ready.\nAI is forcing businesses to ask harder questions about how they spend. How much should we budget for when we don’t know what we’ll need? What do we do when our plans change?\nThe fear of runaway costs sits behind these questions. A seat comes at a fixed price, so it’s easy to plan for, but the credits AI uses are more variable. They depend on how much work AI does, which is hard to predict, especially while a business is still figuring out where to use AI. So businesses end up choosing between holding back to protect the budget or putting AI to work with a surprise bill waiting. It’s a friction point that can prevent teams from experimenting with AI to drive real outcomes.\nHubSpot wants every growing busines…"
+      },
+      {
+       "n": 6,
+       "url": "https://www.hubspot.com/flex-seats-and-credits-migration-faq",
+       "title": "Flexible Seats-and-Credits Pricing Migration FAQ",
+       "provider": "exa",
+       "excerpt": "Flexible Seats-and-Credits Pricing Migration FAQ\n# Migration FAQ\nThis page is provided for information purposes only and is not included as part of the HubSpot Customer Terms of Service. The information here is subject to change.\nThis FAQ is for customers transitioning to HubSpot's flexible seats-and-credits pricing only. If you have not received a direct notification that your account is included, this FAQ does not apply to your account.\n- About HubSpot's new flexible seats-and-credits pricing\n- What to expect at migration\n- What to expect after migration\n### Who is included in HubSpot's new flexible seats-and-credits pricing?\nIf you were selected and received email notification about your transition, then your account is, or will be, on the flexible seats-and-credits pricing model. Otherwise, you are not yet eligible for Hubspot’s flexible seats-and-credits pricing. We are constantly evaluating where and how to expand our new pricing model, and we will let you know if and when your account is eligible.\n### What is the flexible seats-and-credits pricing model and why is HubSpot making this change?\nHubSpot's flexible seats-and-credits pricing is HubSpot's updated pricing model, designed to reflect how work actually gets done today. The way work gets done is changing fast, and teams need to be able to change with it. That means broad access to leading AI agents and features that help you deliver real results. It also means pricing that is built to flex with you.\nWith HubSpot's…"
+      },
+      {
+       "n": 7,
+       "url": "https://www.hubspot.com/pricing/crm",
+       "title": "Free Tools | HubSpot",
+       "provider": "exa",
+       "excerpt": "Free Tools | HubSpot\nFree Tools\nGet access to all of HubSpot's free foundational tools\n$0/mo\nStarter\nEssential marketing, sales, service, content, and data management software\n$7/mo/seat\n$20/mo/seat\nBilling period\nPay Monthly\nCommit monthly\nPay Annually\nBest Value\n500 HubSpot Credits\nSee Details\nHubSpot Credits:\nFuel powerful features that scale work at your own pace\nHubSpot has powerful tools that scale work alongside your teams. You can take advantage of these tools with HubSpot Credits—a simple, flexible way to pay for what you use.\nSimple\n- Get started fast and test the latest AI tools with included credits.\n- See credit balance, track usage, and more— all in a single workspace.\n- Report on exactly which tools are delivering the most value.\nFlexible\n- Easily plan your spend with credit packs, or enable pay as you go.\n- Add more packs, adjust your spend cap, or pause features— staying in control without disruption.\nof conversations resolved automatically\n39%\n78%\nimprovement in making data-driven decisions\n80%\nAI Agents\ncustomer agent\nResolves inquiries with fast, accurate responses — and escalates when needed, so your team can focus on complex cases and building loyalty.\n70%+\nof conversations resolved automatically\n39%\nfaster ticket resolution vs. teams not using customer agent\nAI Agents\ndata agent\nScale your data operations with an AI-powered agent that researches, analyzes, and delivers instant answers about your customers.\n78%\nimprovement in making data-driven decisions…"
+      },
+      {
+       "n": 8,
+       "url": "https://upperedge.com/salesforce/salesforce-is-now-charging-customers-for-agentic-mcp-and-api-calls/",
+       "title": "Salesforce Headless Platform Interactions and Flex Credits",
+       "publishedAt": "2026-11-10T15:46:02.000Z",
+       "provider": "exa",
+       "excerpt": "Salesforce Headless Platform Interactions and Flex Credits\n# Salesforce is Now Charging Customers for Agentic MCP and API Calls\n- November 10, 2026\n- Adam Mansfield\n- Reading Time: 3 minutes\nSalesforce recently announced that any external AI agent that touches your Salesforce platform, including Claude and ChatGPT, will need to be registered on the Salesforce platform. Usage will be tracked and ultimately will cost you money each time there is a “successful” agentic MCP and API call made.\nThe catch: Salesforce has not yet provided the necessary details to figure out how much this change is actually going to cost customers. Here’s what we know, what Salesforce customers need to be thinking about, and what to push for before you sign anything and let your agents run wild.\n## What is Headless Platform Interaction, and Why Does it Hit your Flex Credits?\nEvery successful call made by an agent, whether through MCP or directly through an API, will be counted as a Headless Platform Interaction (HPI) and will draw down on your Flex Credits.\nYou likely already know Flex Credits from Agentforce and Data 360 (Data Cloud). Hopefully, you are also aware that Salesforce has recently changed their longstanding editions, where customers pick from three editions – Core, Advanced and Max – each having a set number of available Flex Credits for the per user price.\nWith this announcement, your outside agents for MCP and API calls are also effectively pulling from your pool of Flex Credits. When y…"
+      },
+      {
+       "n": 9,
+       "url": "https://www.weekcrm.com/news/2026-11-10-salesforce-adds-50-per-user-plan-for-agentforce-coworker",
+       "title": "Salesforce adds $50 per-user plan for Agentforce Coworker",
+       "publishedAt": "2026-11-10T10:23:00.000Z",
+       "provider": "exa",
+       "excerpt": "Salesforce adds $50 per-user plan for Agentforce Coworker\n# Salesforce adds $50 per-user plan for Agentforce Coworker\nBy WeekCRM editorial team · Published 2026-11-10 · Editorial policy & disclosures\nweekcrm news desk · 10 November 2026, 10:23 UTC · Source: biz.chosun.com\nSalesforce said on November 10 that Agentforce Coworker now has a flat rate of $50 per user per month, based on global pricing. The rate helps companies predict AI adoption costs. Salesforce also plans to expand Coworker to Microsoft Teams, Microsoft 365, Google Workspace and dedicated iOS, Mac and Windows apps.\nAbout Salesforce Sales Cloud. Salesforce Sales Cloud is a CRM covering contacts, deals, automation, forecasting and Agentforce AI agents. Editions run from a free suite to $550 per user per month, billed annually. Costs climb quickly, and add-ons such as Agentforce for Sales start at $125 per user per month.\nCoworker can be activated from the settings menu without a separate setup. It uses Salesforce data such as customer management and service histories, plus external data supported through Data 360. It follows company-defined data access permissions and sharing rules.\nSalesforce plans to launch the MS Teams integration, the dedicated apps and an MCP server for connecting external AI services this month. Scheduled Jobs and Daily Digest follow in December.\n## What it means\n- If you use Salesforce Sales Cloud. Teams, Google Workspace and Microsoft 365 users can reach Coworker inside the apps they alre…"
+      },
+      {
+       "n": 10,
+       "url": "https://pefconsultingpartners.co.uk/news/salesforce-pricing-uk/",
+       "title": "Salesforce Pricing UK 2026: List Prices and Renewal | PEF",
+       "publishedAt": "2026-11-09T13:26:26.000Z",
+       "provider": "exa",
+       "excerpt": "Salesforce Pricing UK 2026: List Prices and Renewal | PEF\n# Salesforce pricing UK: list prices, what they leave out and how to negotiate\nSalesforce’s UK list prices as published on salesforce.com in November 2026, product by product, what the per user figure leaves out, and the points I would press at renewal. Written by an independent adviser who sells no licences.\nBy Christopher Fagan, Managing Partner, PEF Consulting Partners\n19 yrs senior systems delivery 7 finance platforms delivered 39 days early on an Oracle to Dynamics migration 22m+ assets in the National Grid separation\nIn this article\n1. Sales Cloud and Service Cloud UK list prices, November 2026\n2. Marketing Cloud, Experience Cloud and the prices that are not per user\n3. What the per user price leaves out\n4. What a Salesforce estate costs: list price arithmetic, not folklore\n5. Negotiation points at renewal\n6. How to size licences without buying the org chart\n## Sales Cloud and Service Cloud UK list prices, November 2026\nI checked the UK pricing pages on salesforce.com on 9 November 2026. Salesforce quotes every figure per user per month and, for everything above Starter Suite, requires an annual contract paid in advance. The pages say nothing about VAT, so I treat every figure as before VAT.\n- Starter Suite: £20 per user per month, billed monthly or annually, transaction fees apply.\n- Pro Suite: £80 per user per month, billed annually, contract required.\n- Core: £156 per user per month, billed annually. This is t…"
+      },
+      {
+       "n": 11,
+       "url": "https://www.centralise.com/blog/crm-pricing-in-the-age-of-ai-salesforce-vs.-hubspot",
+       "title": "CRM Pricing in the Age of AI: Salesforce vs. HubSpot",
+       "publishedAt": "2026-11-10T11:03:20.000Z",
+       "provider": "exa",
+       "excerpt": "CRM Pricing in the Age of AI: Salesforce vs. HubSpot\n HubSpot· AI· Salesforce· Nov 10, 2026, 11:03:20 AM\n# CRM Pricing in the Age of AI: Salesforce vs. HubSpot\nExplore the contrasting pricing models of Salesforce and HubSpot for AI agents, highlighting their impact on budgeting and CRM usage.\nBy Marie Roberts\nSalesforce will soon charge every time a registered AI agent successfully calls into its platform, whether that call arrives through MCP or a direct API. It set out the model in a help article on 17 September 2026 and is targeting November for the billing and controls to go live.\nFor as long as most of us have bought CRM, the unit has been the seat. You pay for each person who logs in. That works when people are the ones doing the work inside the system, and it gets shaky when agents start doing it for them.\nHubSpot is heading in a different direction. It charges for its own agents when they deliver a defined result, keeps its MCP connection free, and is piloting a simpler seats-plus-credits model with new customers in Europe. Both are reasonable answers to the same problem, and both will be harder to budget for than a seat.\n## What MCP actually is\nMCP stands for Model Context Protocol. It's an open standard, introduced by Anthropic in late 2024, that gives AI tools one consistent way to connect to other software. Before it, every AI tool needed a custom integration for every system it wanted to read from. Now a software vendor publishes one MCP server, and any compatibl…"
+      },
+      {
+       "n": 12,
+       "url": "https://saaspricealerts.com/price-increases/salesforce-2026/",
+       "title": "Salesforce price increase 2026: Core $195, Advanced $395 | SaaS Price Watch",
+       "provider": "exa",
+       "excerpt": "Salesforce price increase 2026: Core $195, Advanced $395 | SaaS Price Watch\n# Salesforce price increase 2026: new editions cost more\nYes, for new editions. On September 3, 2026, Salesforce replaced Enterprise with Core at $195 per user per month and Unlimited with Advanced at $395. CIO reports the old prices as $175 and $350. Max replaced Agentforce 1 at the same $550. Salesforce says existing customer pricing on legacy editions stays the same. Our read of the Sales pricing page on October 23, 2026 shows $195, $395 and $550.\nAlerts cover the other tools you pay for. They do not cover Salesforce yet.\nEffective September 3, 2026. Announced September 3, 2026. Verified 2026-10-23. Status: confirmed by our read.\n## Old price vs new price\nUSD per user per month, billed annually. Old price is the edition it replaced.\n| Edition | Old price | New price | Change | Per year, old | Per year, new | Extra per year |\n| --- | --- | --- | --- | --- | --- | --- |\n| Core (replaces Enterprise) | $175 | $195 | +$20, +11% | $2,100 | $2,340 | +$240 |\n| Advanced (replaces Unlimited) | $350 | $395 | +$45, +13% | $4,200 | $4,740 | +$540 |\n| Max (replaces Agentforce 1) | $550 | $550 | No change | $6,600 | $6,600 | $0 |\nPer year is the monthly price times 12.\nThis page covers Sales Cloud list prices in USD per user per month, billed annually. The new editions bundle Slack, Tableau Next, the Premier Success Plan and Agentforce Flex Credits (500,000 on Core, 1 million on Advanced, 2.75 million on Max). St…"
+      },
+      {
+       "n": 13,
+       "url": "https://www.salesforceking.com/salesforce-core-advanced-max-editions-pricing-flex-credits",
+       "title": "Salesforce’s New Core, Advanced, and Max Editions: Pricing, Features, and Flex Credits Explained – Salesforce King",
+       "provider": "exa",
+       "excerpt": "Salesforce’s New Core, Advanced, and Max Editions: Pricing, Features, and Flex Credits Explained – Salesforce King\n# Salesforce’s New Core, Advanced, and Max Editions: Pricing, Features, and Flex Credits Explained\nSalesforce has introduced a major change to how businesses buy its CRM and Agentforce products. The company is rolling out three new editions called Core, Advanced, and Max, bringing CRM, Agentforce, Slack, analytics, security, and support into more consolidated packages.\nSalesforce announced the changes on September 3, 2026, introducing the new editions across Agentforce Sales, Agentforce Service, and Agentforce Industries. You can read the official Salesforce announcement for Salesforce’s complete overview of the new packaging.\nThe goal is to simplify a purchasing model that increasingly required customers to combine multiple licenses, add-ons, and consumption products.\nThe change also introduces significantly larger pools of Flex Credits, making consumption-based Agentforce usage an increasingly important part of Salesforce licensing.\n## Salesforce Core, Advanced, and Max Pricing\nFor Sales and Service, Salesforce lists the new pricing structure as follows:\n| Edition | Price | Included Flex Credits |\n| --- | --- | --- |\n| Core | $195/user/month | 500,000 per org |\n| Advanced | $395/user/month | 1 million per org |\n| Max | $550/user/month | 2.75 million per org |\nPrices are listed in U.S. dollars and billed annually. Salesforce notes that pricing, packaging, and av…"
+      },
+      {
+       "n": 14,
+       "url": "https://www.crmteardown.com/crm-price-increase-2026/",
+       "title": "CRM Price Increase 2026: What Changed, Read Twice - CRM Teardown",
+       "publishedAt": "2026-09-25T15:16:43.000Z",
+       "provider": "exa",
+       "excerpt": "CRM Price Increase 2026: What Changed, Read Twice - CRM Teardown\nCost Last Update: October 24, 2026\n# CRM Price Increase 2026: What Changed, Read Twice\n## Use AI to summarise this article\nChecked on 24 September 2026. Every figure below was read on that date from the vendor's own page and compared with the read of 24 August 2026 already published on this site.\nOur CRM price increase 2026 record, first edition, has one answer so far: none of the twelve CRM plan prices we track moved between our reads on 24 August and 24 September 2026. HubSpot Sales Hub Starter, Freshsales Growth, Close, monday CRM, EngageBay and Leadfeeder showed identical figures at every billing period both times. The one list-price change a vendor announced in that window came from Salesforce, which published new Core, Advanced and Max editions on 3 September 2026 and said existing customer pricing on legacy editions \"remains unchanged.\"\nTwo reads a month apart are the start of a record, not a year of one. This page calls itself a first edition for that reason, and it will keep saying so until the record is long enough to show a trend.\n## How is this record kept?\nBy reading the same twelve plan prices on the vendors' own public pricing pages on fixed dates, naming the billing period of every figure, and comparing each read with the one before. It is a record of published list prices, not of anyone's invoice, and every line can be repeated by a reader.\nThe protocol:\n- What is tracked. Twelve priced plan lin…"
+      },
+      {
+       "n": 15,
+       "url": "https://toollers.com/pricing/pipedrive-pricing/",
+       "title": "Pipedrive Pricing 2026: Plans, Seats and Real Costs",
+       "publishedAt": "2026-11-11T14:24:00.000Z",
+       "provider": "exa",
+       "excerpt": "Pipedrive Pricing 2026: Plans, Seats and Real Costs\n# Pipedrive Pricing 2026: Plans, Seats and Real Costs\nPipedrive prices start at $14 per seat per month on US annual billing. Compare Lite, Growth, Premium, Ultimate, add-ons, usage limits, and cancellation.\nPipedrive Pricing last verified: 11/6/2026\nPipedrive starts at $14 per seat per month on the US annual-billing reference for Lite, with $168 due per seat for a full year. The CRM offers a 14-day trial but no permanent free plan. Growth, Premium, and Ultimate have higher annual-equivalent seat prices. This guide uses USD reference prices checked on November 6, 2026; the checkout currency and final charges depend on location.\n### Quick verdict\nPipedrive starts at $14 per seat per month equivalent on US annual billing; Growth is the first tier with full email sync and automation.\n### Key takeaways\n- Four paid plans from Lite to Ultimate\n- 14-day trial and no permanent free tier\n- Annual commitments, add-ons and seats shape total cost\nPipedrive Tested\nVisual sales CRM for pipeline tracking, deal management and automated follow-ups.\nBest for: SMB B2B sales teams, agencies, account executives and sales managers who need visible pipelines and repeatable follow-up activity.\n4.4\nResearch-based\nFeatures and capabilities 4.5 Usability and implementation 4.6 Pricing and value transparency 4.1 Integrations, security and trust 4.4\nKey features\n- Lead scoring and enrichment (Premium+)\n- Custom fields and data import\n- Multiple custom sa…"
+      },
+      {
+       "n": 16,
+       "url": "https://triedandpaid.com/crm/pipedrive/pricing/",
+       "title": "Pipedrive Pricing: Plans, Add-ons and Real Monthly Cost | Tried and Paid",
+       "publishedAt": "2026-11-10T15:56:04.000Z",
+       "provider": "exa",
+       "excerpt": "Pipedrive Pricing: Plans, Add-ons and Real Monthly Cost | Tried and Paid\n# Pipedrive Pricing: Plans, Add-ons and Real Monthly Cost\nUpdated Nov 10, 2026✓ Prices checked against vendor pages Nov 10, 2026 How we research\nHow we make money: some links on this page can earn us a commission if you buy, at no extra cost to you. It never decides which tools we include or the order they appear. Read the disclosure.\nPipedrive plans and prices\n| Plan | Billed monthly | Billed annually | What sets it apart |\n| --- | --- | --- | --- |\n| Lite | Not offered | $14 per user / mo | Pipeline management, 500+ integrations; $168/seat/year |\n| Growth | Not offered | $39 per user / mo | Email sync, automations, sequences |\n| Premium | Not offered | $59 per user / mo | LeadBooster, lead routing, e-signatures |\n| Ultimate | Not offered | $79 per user / mo | Security alerts, access restrictions |\nPrice checked Nov 10, 2026 · source: Pipedrive pricing page\n## How much does Pipedrive cost per user per month?\nPipedrive costs $14 to $79 per user per month billed annually, across four paid plans: Lite at $14, Growth at $39, Premium at $59, and Ultimate at $79 .\n## How does Pipedrive pricing compare to alternatives?\nPipedrive pricing is mid-market among sales CRM s: cheaper than Salesforce Sales Cloud (from $25/user/month) and HubSpot Sales Hub Professional (from $90/user/month), but more expensive than free-tier options like HubSpot CRM Free and Zoho CRM's free 3-user plan .\n## What do you get in each Pipe…"
+      },
+      {
+       "n": 17,
+       "url": "https://gigabit.agency/insights/pipedrive-pricing/",
+       "title": "Pipedrive Pricing: $14-$69 a Seat, Add-ons, Costs — Gigabit",
+       "publishedAt": "2026-11-10T18:59:53.000Z",
+       "provider": "exa",
+       "excerpt": "Pipedrive Pricing: $14-$69 a Seat, Add-ons, Costs — Gigabit\n# Pipedrive pricing 2026: every plan, add-on and limit, with first-year costs\nPipedrive pricing checked 10 November 2026: Lite $14, Growth $24, Premium $49, Ultimate $69 a seat billed annually, add-ons, limits and first-year costs.\nPublished prices\nOur prices are published, so you can check the numbers before a call.\nGigabit editorial team· November 10, 2026\nPipedrive pricing runs from $14 to $69 a seat a month billed annually, or $19 to $89 billed monthly, across four plans: Lite, Growth, Premium and Ultimate. Add-ons start at $13.33 a month, and Premium and Ultimate include three of them: LeadBooster, Projects and Smart Docs. All prices are in US dollars before VAT, checked on Pipedrive's pricing page on 10 November 2026. By our arithmetic, 20 seats on Premium cost $11,760 a year, about half the $23,100 that 20 HubSpot Sales Hub Professional seats cost in year one.\n## Every Pipedrive plan and price\nPrices are per seat per month. Pipedrive charges for every seat you buy, \"whether it's assigned to a user or not,\" according to its billing help article. The limits come from the plan comparison table on the same pricing page.\n| Plan | Billed annually | Billed monthly | What it adds | Key limits |\n| --- | --- | --- | --- | --- |\n| Lite | $14 a seat ($168 a year) | $19 a seat | Lead, deal, calendar and pipeline management; AI report creation; 500+ integrations; Pipedrive Nova meeting intelligence | 2,500 leads and deals p…"
+      },
+      {
+       "n": 18,
+       "url": "https://dealflow.fr/guide/pipedrive-avis-prix",
+       "title": "Pipedrive prix 2026 : plans, modules payants et avis",
+       "publishedAt": "2026-11-11T17:14:41.000Z",
+       "provider": "exa",
+       "excerpt": "Pipedrive prix 2026 : plans, modules payants et avis\n# Pipedrive prix et avis 2026 : combien coûte chaque plan, et vaut-il le coup ?\nPar Valentin Thomy · Mis à jour le 11/11/2026 · 9 min de lecture\nPipedrive propose quatre plans, facturés par utilisateur et par mois en engagement annuel : Lite à 14 €, Growth à 39 €, Premium à 59 € et Ultimate à 79 €, hors TVA, avec un essai gratuit de 14 jours sans carte. Le coût réel grimpe avec les utilisateurs et les modules.\nPour qui\n- Équipes commerciales B2B qui pilotent leurs affaires dans un pipeline\n- Ceux qui veulent un prix d'entrée bas sans la lourdeur d'un CRM généraliste\nPas pour qui\n- Ceux dont le problème est de remplir le pipeline plutôt que de le suivre\n- Ceux qui veulent un outil tout-en-un marketing et service client\n- Ceux qui veulent un prix tout compris sans modules\nPrix : De 14 € à 79 € par utilisateur et par mois (facturation annuelle, hors TVA)\nEn une phrase : Pipedrive est le choix le plus direct pour suivre ses affaires à petit prix, mais un CRM n'apporte pas de rendez-vous : il enregistre les opportunités sans les créer.\nEn bref : Pipedrive coûte en 2026 14 € (Lite), 39 € (Growth), 59 € (Premium) ou 79 € (Ultimate) par utilisateur et par mois en facturation annuelle, hors TVA, avec 14 jours d'essai sans carte. LeadBooster (dès 32,50 €), Campaigns (dès 13,33 €) et d'autres modules sont en supplément. Les alternatives principales sont HubSpot, noCRM et Folk (de 22 € par membre en annuel).\n- Pipedrive affiche 14 €, 3…"
+      },
+      {
+       "n": 19,
+       "url": "https://www.pipedrive.com/en/pricing",
+       "title": "Plans built to help you close more deals, faster",
+       "provider": "exa",
+       "excerpt": "Skip to main content\n# Plans built to help you close more deals, faster\nFree 14-day trial. No commitment – you can make changes anytime.\nBilled monthlyBilled annually(Save up to 42%)\nLite\nFocus on selling and let meeting intelligence handle the admin\nUS$14\nOne payment of US$ 168 per seat/year\nPer seat per month, billed annually\nTry it free\nFree 14-day trial. No credit card required.\nKey features\nView and manage leads, deals, contacts, calendar events and more in one place.\nLead, calendar and pipeline management\nGenerate reports using text input or choose from pre-written prompts\nAI-powered report creation\nEasily import data from a spreadsheet or CRM. Integrate with 500+ apps, including Zapier, Zoom and Lemlist.\n500+ integrations\nGet a brief before every meeting, a transcript of every call and ready-to-approve CRM updates afterward with Pipedrive Nova, our built-in meeting intelligence tool.\nMeeting intelligence\nNew\nSee all features\nGrowth\nAutomate emails and follow-ups so you can focus on closing\nUS$39\nOne payment of US$ 468 per seat/year\nPer seat per month, billed annually\nTry it free\nFree 14-day trial. No credit card required.\nLite plan +\nFully sync Gmail, Outlook or your company email. Send bulk emails and track opens and link clicks in real time.\nFull email sync with tracking\nAutomate repetitive tasks and complex workflows. Create sequences of personalized emails and follow-ups to nurture deals over time.\nAutomations and nurturing sequences\nSell and track products billed …"
+      },
+      {
+       "n": 20,
+       "url": "https://support.pipedrive.com/en/article/new-pipedrive-plans",
+       "title": "Knowledge Base",
+       "provider": "exa",
+       "excerpt": "# Knowledge Base\nAll categoriesMarketplace appsBlogKnowledge BaseAcademy\nKnowledge Base results: 0\nNo results found.\nKnowledge Base/ Billing/ Billing information/What’s new in Pipedri...\n###### Topics\n## What’s new in Pipedrive plans?\nYS\nYssel Salas\nLast updated: September 3, 2026\nIn 2025 we introduced a new pricing and packaging structure across all Pipedrive plans.\nThese changes reflect how the product has evolved, bringing key features and usage limits closer to how teams use Pipedrive today.\nNote: Only users with account setting permissions can modify the Pipedrive account subscription.\n---\n## Why did we make these changes?\nOur goal is to simplify plan offerings, improve platform performance and provide a more scalable experience for businesses of all sizes.\n---\n## What changed?\nYou’ll notice changes in both the plan names and their structure.\nThe new plans are:\n- Lite\n- Growth\n- Premium\n- Ultimate\nEach one is designed to reflect the tools, limits and scale appropriate for that stage of business growth.\nHere’s how existing plans transition:\n| Essential | Lite |\n| --- | --- |\n| Advanced | Growth |\n| Professional and Power | Premium |\n| Enterprise | Ultimate |\n---\n## From Essential to Lite\nIf you’re on the Essential plan, Lite gives you added tools and higher limits with no major changes to how you work in Pipedrive.\n### What’s new in Lite?\n- Deal card customization\nChoose what information shows in your pipeline view to highlight key fields, reduce clutter, and review deals…"
+      },
+      {
+       "n": 21,
+       "url": "https://costbench.com/software/crm/pipedrive/price-history/",
+       "title": "Pipedrive Price History: Dated Pricing Snapshots | CostBench",
+       "publishedAt": "2026-06-09T01:30:03.000Z",
+       "provider": "exa",
+       "excerpt": "# Pipedrive Price History\nEvery verified pricing change, tracked from dated snapshots of the official pricing page\nCostBench has captured 4 dated snapshots of Pipedrive's pricing page over the 5 months it has been tracked, and 5 differ from the snapshot before it — listed below with dates. Those differences include plan renames and lineup restructures as well as genuine repricing, so read them as observations rather than as a price-change count.\nPrice stable over 0.4 years (tracked window only — CostBench snapshots begin 2026Q1).\n## Track Pipedrive pricing\n## Pipedrive Price History\n Pricing changes CostBench has tracked for Pipedrive, verified across 4 snapshots going back to 2026Q1.\n1. Jul 2026\nPipedrive Premium decrease\nPremium tier decreased from $59 to $49/month\n -16.9%\n2. May 2026\nPipedrive price increase\nHighest tier increased from $39 to $79/month\n +102.56%\n3. May 2026\nPipedrive tier restructure\nChanged from 3 to 4 pricing tiers\n4. Apr 2026\nPipedrive price decrease\nHighest tier decreased from $79 to $39/month\n -50.63%\n5. Apr 2026\nPipedrive tier restructure\nChanged from 4 to 3 pricing tiers\nPrice stable over 0.4 years\n## Verification Record\nEach row is a dated snapshot CostBench extracted and validated from Pipedrive's official pricing page.\n| Verified | Price Range | Tiers | Source |\n| --- | --- | --- | --- |\n| Jul 15, 2026 | $14–$79 user/month | 4 | official pricing page (live) |\n| May 27, 2026 | $14–$79 user/month | 4 | official pricing page (live) |\n| Apr 1, 2026 |…"
+      },
+      {
+       "n": 22,
+       "url": "https://markaicode.com/pricing/zoho-crm-pricing/",
+       "title": "Zoho CRM Pricing (November 2026): Free, Standard, Professional, Enterprise, Ultimate | Markaicode",
+       "publishedAt": "2026-11-09T20:00:00.000Z",
+       "provider": "exa",
+       "excerpt": "Zoho CRM Pricing (November 2026): Free, Standard, Professional, Enterprise, Ultimate | Markaicode\n# Zoho CRM Pricing (November 2026): Free, Standard, Professional, Enterprise, Ultimate\nZoho CRM is free for 3 users, then $14, $23, $40 or $52 per user per month billed annually ($20, $35, $50, $65 billed monthly). Checked November 10, 2026.\n Nov 10, 2026\nZoho CRM has a free edition and four paid editions, and Zoho shows each visitor prices in their local currency. The US-dollar prices below come from the price list Zoho's own pricing page loads, read on November 10, 2026. As a cross-check, the Malaysian ringgit prices the page displayed to us (RM56, RM92, RM160, RM208 billed annually) match the ringgit column of the same list.\n> Quick Answer: Zoho CRM is free for up to 3 users. Paid editions cost $14 (Standard), $23 (Professional), $40 (Enterprise) or $52 (Ultimate) per user per month billed annually, or $20, $35, $50 and $65 billed monthly. Local taxes are extra.\n## Editions and prices\n| Edition | Billed annually (per user per month) | Billed monthly (per user per month) |\n| --- | --- | --- |\n| Free | $0, up to 3 users | $0 |\n| Standard | $14 | $20 |\n| Professional | $23 | $35 |\n| Enterprise | $40 | $50 |\n| Ultimate | $52 | $65 |\nZoho says annual billing saves \"up to 34%\". The free edition includes up to 10 custom email templates, 10 data exports and 5,000 API calls a day.\n## What a 5-person team pays per year\nChart summary: Five users on Professional cost $1,380 a year billed …"
+      },
+      {
+       "n": 23,
+       "url": "https://ecommerceparadise.com/zoho-crm-pricing/",
+       "title": "Zoho CRM Pricing 2026: Free to Ultimate, Per-User Cost",
+       "publishedAt": "2026-11-10T06:06:45.000Z",
+       "provider": "exa",
+       "excerpt": "Zoho CRM Pricing 2026: Free to Ultimate, Per-User Cost\n# Zoho CRM Pricing 2026: Free to Ultimate, Per-User Cost\nBy Trevor Fenner\nAs of November 2026, Zoho CRM has a free edition for 3 users and four paid editions: Standard at $14, Professional at $23, Enterprise at $40 and Ultimate at $52 per user per month when billed yearly. Billed month to month, the same editions list at $20, $35, $50 and $65. There is a 15-day free trial with no credit card required. I run Ecommerce Paradise, and CRM pricing is one of the questions store owners ask me most once quotes, calls and follow-ups start piling up.\nDisclosure: some links below are affiliate links, which means I may earn a commission at no extra cost to you.\nThis guide covers every edition, what each one adds, how the yearly and monthly prices compare, the user limit on the free edition, how Zoho’s AI features are split across plans, the add-ons and support costs, and how prices differ by region. Where Zoho’s pages do not show a figure, I say so. If you want to look at the live plans while you read, you can open Zoho CRM here.\n## Zoho CRM Pricing at a Glance (November 2026)\n| Edition | Billed yearly (per user per month) | Billed monthly (per user per month) | What the pricing page lists |\n| --- | --- | --- | --- |\n| Free | $0 | $0 | Leads, deals, workflows, reports and a mobile app, free for 3 users |\n| Standard | $14 | $20 | Workflows and assignment rules, AI agents, cadences, reports and dashboards, sales forecasting, self servi…"
+      },
+      {
+       "n": 24,
+       "url": "https://triedandpaid.com/crm/zoho-crm/pricing/",
+       "title": "Zoho CRM Pricing: Plans, Per-User Costs and What's Included (2025)",
+       "publishedAt": "2026-11-10T15:45:52.000Z",
+       "provider": "exa",
+       "excerpt": "Zoho CRM Pricing: Plans, Per-User Costs and What's Included (2025)\n# Zoho CRM Pricing: Plans, Per-User Costs and What's Included (2025)\nUpdated Nov 10, 2026✓ Prices checked against vendor pages Nov 10, 2026 How we research\nHow we make money: some links on this page can earn us a commission if you buy, at no extra cost to you. It never decides which tools we include or the order they appear. Read the disclosure.\nZoho CRM plans and prices\n| Plan | Billed monthly | Billed annually | What sets it apart |\n| --- | --- | --- | --- |\n| Free | Free | Free | 3 users; 5,000 API calls/day |\n| Standard | $20 per user / mo | $14 per user / mo | Workflows |\n| Professional | $35 per user / mo | $23 per user / mo | Unlimited reports |\n| Enterprise | $50 per user / mo | $40 per user / mo | Advanced customization |\n| Ultimate | $65 per user / mo | $52 per user / mo | Enhanced feature limits |\nPrice checked Nov 10, 2026 · source: Zoho CRM pricing page\n## How much does Zoho CRM cost per user per month?\nZoho CRM costs $0 per user for up to 3 users on the Free edition, then $14, $23, $40 and $52 per user per month on Standard, Professional, Enterprise and Ultimate respectively when billed annually in USD, according to Zoho's pricing page.\n## How does Zoho CRM pricing compare to Zoho CRM Plus and Zoho One?\nZoho CRM Plus bundles CRM with eight sales, marketing and support apps at a flat per-user price, while Zoho One bundles 45+ Zoho apps per employee, making the bundles cheaper than Enterprise or Ul…"
+      },
+      {
+       "n": 25,
+       "url": "https://pefconsultingpartners.co.uk/news/zoho-vs-salesforce-vs-hubspot/",
+       "title": "Zoho vs Salesforce vs HubSpot for UK Business | PEF",
+       "publishedAt": "2026-11-09T13:26:24.000Z",
+       "provider": "exa",
+       "excerpt": "Zoho vs Salesforce vs HubSpot for UK Business | PEF\n# Zoho vs Salesforce vs HubSpot: which CRM should a UK business actually buy?\nThree CRMs, three different ways of charging you and three different ways of going wrong. I have put the published UK prices side by side, worked a three year cost for a real sized team and set out when I would choose each one.\nBy Christopher Fagan, Managing Partner, PEF Consulting Partners\n19 yrs senior systems delivery 7 finance platforms delivered 39 days early on an Oracle to Dynamics migration 0 licences or commissions\nDelivered for and alongside\nIn this article\n1. Three ways of charging you\n2. What a 20 seat sales team pays over three years\n3. Where each one is strongest\n4. Where each one breaks down\n5. Implementation effort and integration\n6. When to choose which\n## Three ways of charging you\nStart with how each vendor bills, because that shapes everything downstream.\nZoho charges per user, per month, with monthly or annual billing and a free edition for three users. In November 2026 its UK prices were £12 (Standard), £18 (Professional), £35 (Enterprise) and £42 (Ultimate) per user a month billed annually, or £16, £28, £45 and £55 monthly, plus VAT. There are no onboarding fees on the price list, and Zoho states that it does not tie customers into multi year contracts with built in price rises.\nSalesforce also charges per user, but its UK Sales pricing page in November 2026 shows how the ladder has changed: Starter Suite £20 (billed monthly …"
+      },
+      {
+       "n": 26,
+       "url": "https://tierpeek.com/pricing-changes/company/zoho-crm",
+       "title": "Zoho CRM pricing, checked 12 Nov 2026 · Tierpeek",
+       "provider": "exa",
+       "excerpt": "Zoho CRM pricing, checked 12 Nov 2026 · Tierpeek\n# Zoho CRM pricing\nEvery number below was read from Zoho CRM's own pricing page. This free index checks that page about once a week, so open the source before you quote a price.\n## Plans on the page\n- Free Free\nForever free for 3 users · Contact management and follow-up reminders · Workflow automation and custom email templates\n- Standard$14/user/month\nEmail integration and mass emails · Built-in calling · Multiple sales pipelines\n- Professional$23/user/month\nAI agents for task automation · Inventory and quote management · Predictive intelligence\n- Enterprise$40/user/month\nMulti-team management · Custom buttons and functions · Field-level encryption\n## Price history\nNo price changes recorded since we started tracking this page on 12 Aug 2026.\n## Changes we recorded\n- ### Zoho CRM Plus rebranded to Zoho One and repositioned as 50+ unified business apps starting at $30/user/month\n8 Nov 2026\nZoho CRM Plus rebranded to Zoho One and repositioned as 50+ unified business apps starting at $30/user/month Why it matters: • Zoho is aggressively cross-selling its entire platform ecosystem as a bundled alternative to point solutions, positioning CRM as one component of a unified workspace strategy • The $30/user/month entry point for Zoho One creates a new competitive tier that blurs the line between CRM-only and full platform pricing • Customer base messaging now emphasizes a 350,000+ business count versus previous 300,000+, signaling mome…"
+      },
+      {
+       "n": 27,
+       "url": "https://www.zoho.com/en-us/crm/zohocrm-pricing.html",
+       "title": "Zoho CRM Pricing and Editions - Free for 3 users",
+       "provider": "exa",
+       "excerpt": "Zoho CRM Pricing and Editions - Free for 3 users\n# Close more. Pay less.\n- Free Onboarding\n- Built-in AI Agents\n- Human Support\nFree\nFeatures List Features List\nForever free, for 3 users\n- Contact management Manage all contacts important to your business in one place. No more scattered business cards.\n- Follow-up reminders Stay on track with timely reminders to follow-up on a lead.\n- Workflow automation Automate repetitive tasks with workflows. From routing leads to the right rep to updating fields when a deal is closed.\n- Custom email templates Personalize emails to fit the tone of your business. Get up to 10 custom emai templates for free.\n- Tasks, meetings & calls Track all sales activities in Zoho CRM. Get reminders so don't miss.\n- Data import and export Import data from spreadsheets for free. Export data from Zoho CRM for up to 10 times for free.\n- Standard reports View your business performance in one place with powerful reports.\n- APIs Connect Zoho CRM to any app and perform actions with 5000 API calls/day.\n- Mobile apps Sell more on the go with Zoho CRM's mobile app.\nStandard/user/month\nStandard\nFeatures List Features List\nSmall team, getting started\n- Email integration & mass emails Send emails via Gmail, Outlook, Zoho Mail, and other popular email services, directly from Zoho CRM.\n- Built-in calling Make, receive, and log sales calls directly inside Zoho CRM.\n- Multiple sales pipelines Track multiple sales operations with different stages without any clutter.\n- Cal…"
+      },
+      {
+       "n": 28,
+       "url": "https://costbench.com/software/crm/zoho-crm/price-history/",
+       "title": "Zoho CRM Price History: Dated Pricing Snapshots | CostBench",
+       "publishedAt": "2026-07-14T17:28:33.000Z",
+       "provider": "exa",
+       "excerpt": "# Zoho CRM Price History\nEvery verified pricing change, tracked from dated snapshots of the official pricing page\nCostBench has captured 4 dated snapshots of Zoho CRM's pricing page over the 5 months it has been tracked, and 2 differ from the snapshot before it — listed below with dates. Those differences include plan renames and lineup restructures as well as genuine repricing, so read them as observations rather than as a price-change count.\nPrice stable over 0.4 years (tracked window only — CostBench snapshots begin 2026Q1).\n## Track Zoho CRM pricing\n## Zoho CRM Price History\n Pricing changes CostBench has tracked for Zoho CRM, verified across 4 snapshots going back to 2026Q1.\n1. Jul 2026\nZoho CRM price decrease\nHighest tier decreased from $52 to $40/month\n -23.08%\n2. Jul 2026\nZoho CRM tier restructure\nChanged from 6 to 4 pricing tiers\nPrice stable over 0.4 years\n## Verification Record\nEach row is a dated snapshot CostBench extracted and validated from Zoho CRM's official pricing page.\n| Verified | Price Range | Tiers | Source |\n| --- | --- | --- | --- |\n| Jul 14, 2026 | $0–$40 user/month | 4 | official pricing page (live) |\n| Jul 8, 2026 | $0–$52 user/month | 6 | official pricing page (live) |\n| Apr 1, 2026 | $0–$52 user/month | 6 | official pricing page (live) |\n| Mar 4, 2026 | $0–$52 user/month | 6 | official pricing page (live) |\n### 01 Has Zoho CRM raised prices?\nCostBench has captured 4 dated snapshots of Zoho CRM's pricing page over the 5 months it has been tracked,…"
+      },
+      {
+       "n": 29,
+       "url": "https://markaicode.com/pricing/close-crm-pricing/",
+       "title": "Close CRM Pricing (November 2026): Solo, Essentials, Growth, Scale | Markaicode",
+       "publishedAt": "2026-11-10T19:00:00.000Z",
+       "provider": "exa",
+       "excerpt": "Close CRM Pricing (November 2026): Solo, Essentials, Growth, Scale | Markaicode\n# Close CRM Pricing (November 2026): Solo, Essentials, Growth, Scale\nClose costs $9, $35, $99 or $139 per user per month billed annually ($19, $49, $109, $149 monthly), each with monthly AI credits. Calls and SMS are billed at cost. 14-day trial. Checked November 11, 2026.\n Nov 11, 2026\nClose is a CRM built around calling, email and SMS for inside-sales teams. It now bundles AI credits into every seat, and the gap between annual and monthly billing is large on the smaller plans. Every number below was read on Close's pricing page on November 11, 2026, in US dollars, with both billing toggles.\n> Quick Answer: Close costs $9 (Solo, one user only), $35 (Essentials), $99 (Growth) or $139 (Scale) per user per month billed annually, or $19, $49, $109 and $149 billed monthly. Each seat includes 500 to 2,000 AI credits a month. Calls and SMS are billed at cost on top, and there is a 14-day trial with no credit card.\n## Plans and prices\n| Plan | Billed annually | Billed monthly | AI credits per user per month | Key limits |\n| --- | --- | --- | --- | --- |\n| Solo | $9 | $19 | 500 | 1 user, 10,000 leads, no workflows |\n| Essentials | $35 | $49 | 1,000 | Unlimited contacts and leads, calling, email, SMS; no workflows |\n| Growth | $99 | $109 | 1,500 | Adds workflows, power dialer, custom activities, bulk email |\n| Scale | $139 | $149 | 2,000 | Adds role-based permissions, lead visibility rules, predictive dial…"
+      },
+      {
+       "n": 30,
+       "url": "https://www.stork.ai/blog/close-alternatives-2026",
+       "title": "Close Alternatives (2026): Pipedrive, HubSpot, folk and More | Stork.AI",
+       "publishedAt": "2026-11-09T14:39:19.000Z",
+       "provider": "exa",
+       "excerpt": "Close Alternatives (2026): Pipedrive, HubSpot, folk and More | Stork.AI\n# Close Alternatives (2026): 6 CRMs for Small Sales Teams, Priced Per Seat\nClose CRM alternatives for small sales teams, compared on per-seat price, free plans, built-in calling and where sequences start: Pipedrive, HubSpot, folk, Attio, Zoho CRM and Apollo.io, plus when to stay on Close. Prices from each vendor's pricing page, checked November 9, 2026.\nStork editorial team Updated Nov 12, 2026 Published Nov 9, 2026 9 min read\nShort answer\nFor a small team that mostly manages a pipeline, Pipedrive is the closest Close alternative and costs less per seat ($14 to $79 a month billed annually). HubSpot is the one to pick if you want a free start and marketing tools later. folk fits relationship-led selling from $24 a member, Attio fits teams that want to shape their own data model, and Zoho CRM is the cheapest full CRM with built-in calling ($14 a user). If prospect data is the real gap, add Apollo.io. If your reps make dozens of calls a day, staying on Close may still be the right answer. Updated November 9, 2026.\nKey facts\n- Close runs $9 to $139 a seat billed annually; workflows and the power dialer start on Growth ($99).\n- Pipedrive is the closest swap for pipeline-first teams, with sequences on its $39 Growth plan.\n- HubSpot is free for 2 users, but sequences need Professional at $90 a seat plus a $1,500 onboarding fee.\n- Zoho CRM is the cheapest full CRM with built-in calling, at $14 a user billed annua…"
+      },
+      {
+       "n": 31,
+       "url": "https://www.weekcrm.com/news/2026-11-10-close-adds-connecting-tone-to-outbound-calls",
+       "title": "Close adds connecting tone to outbound calls — WeekCRM",
+       "publishedAt": "2026-11-10T19:23:00.000Z",
+       "provider": "exa",
+       "excerpt": "Close adds connecting tone to outbound calls — WeekCRM\n# Close adds connecting tone to outbound calls\nBy WeekCRM editorial team · Published 2026-11-10 · Editorial policy & disclosures\nweekcrm news desk · 10 November 2026, 19:23 UTC · Source: close.com\nClose now plays a short repeating tone on outbound calls made from its web and desktop apps while the call connects. The tone shows the call is going through, even when the carrier is slow to start ringing. Reps no longer have to wait in silence to know whether a dial has gone out.\nAbout Close. Close is a CRM for sales teams that work by phone, SMS and email, with a native dialer and AI agent Chloe. Plans run from $9 (Solo) to $139 (Scale) per user per month on annual billing, and the power dialer starts on Growth at $99. It has no free plan, and the predictive dialer is on Scale only.\nThe tone stops in three cases. It stops when the carrier's ringing or a carrier message starts, when the person answers, or when the call ends. The source does not say whether admins can turn the tone off or change it.\n## What it means\n- If you use Close. Outbound calls from Close's web and desktop apps now play a repeating tone while they connect.\n- What to do. Tell reps that the tone means the call is connecting, not that it has failed."
+      },
+      {
+       "n": 32,
+       "url": "https://searchlegion.com/compare/close-vs-jobber",
+       "title": "Close vs Jobber (2026): Pricing and Fit | Search Legion",
+       "publishedAt": "2026-11-10T23:15:57.000Z",
+       "provider": "exa",
+       "excerpt": "Close vs Jobber (2026): Pricing and Fit | Search Legion\n# Close vs Jobber\nClose is a sales CRM; Jobber runs service work. Compare prices carefully: their starting plans cover different needs.\nEdited by Jared Mousseau· Updated Nov 10, 2026\n7.0/10\nfrom $9/mo · wins 1 of 8\nVS\n## Jobber\n6.1/10\nfrom $29/mo · wins 1 of 8\nIt's a split decision.\nChoose Close for a sales team that needs a CRM with built-in calling, email, SMS, pipelines and AI. Choose Jobber for a service business managing quotes, scheduling, invoices and payments. Close is cheaper at its listed entry price—$9 per user monthly with annual billing versus Jobber’s $29 per month billed annually—but those prices buy different tools. Neither offers a listed free plan, and Jobber’s bill rises with team size and plan.\n## 01 Side by side\n| | Close | Jobber |\n| --- | --- | --- |\n| Starting price | $9/user/month annually; $19 monthly | $29/month billed annually; $49 monthly |\n| Free plan | No free plan listed | No free plan listed |\n| Best for | Sales teams managing leads and deals | Service businesses managing jobs and payments |\n| Core strength | Calling, email, SMS, pipeline and sales AI | Quotes, scheduling, invoicing and payments |\n| Learning curve | Learning-curve details not published | Learning-curve details not published |\n| Integrations/data | Email-account caps vary; Solo caps leads at 10,000 | Connects 100+ tools |\n| Team/seat costs | Priced per user; plan rates vary | Seat bundles; extra users cost $29/month |\n| Su…"
+      },
+      {
+       "n": 33,
+       "url": "https://pricingsaas.com/companies/close/diffs/2026W24",
+       "title": "Close launches paid Chloe AI tiers with 30-day money-back guarantee — Jun 8, 2026 · PricingSaaS Pulse",
+       "provider": "exa",
+       "excerpt": "Close launches paid Chloe AI tiers with 30-day money-back guarantee — Jun 8, 2026 · PricingSaaS Pulse\nPackaging change · Trial change · Package change · Jun 1 → Jun 8, 2026\n# Close launches paid Chloe AI tiers with 30-day money-back guarantee\nVerified Jun 8, 2026· Sales & Customer Relationship Management (CRM)· Direction: neutral\nThe change 30-day money-back guarantee — added.\nBefore · Jun 1 No 30-day money-back guarantee After · Jun 8 30-day money-back guarantee\n2 changes· 2 captures· Jun 1, 2026 → Jun 8, 2026\n## What happened\nBetween the Jun 1, 2026 and Jun 8, 2026 captures of Close's pricing page, Pulse recorded 2 changes: 30-day money-back guarantee introduced: customers can get a full refund, no questions asked, after purchase; Chloe AI exited FREE BETA; pricing restructured around tiered AI credit allocations per plan (Solo 500, Essentials 1,000, Growth 1,500, Scale 2,000 credits/user/month). All plans now include Chloe access with paid credit usage. Pulse files it as a packaging change (trial change, package change) with a neutral direction. Pulse's latest capture (Nov 2, 2026) lists Solo at $9, Essentials at $35, Growth at $99, Scale at $139 and Additional Organizations at $50.\nIt lands 55 days after Close's previous change, \"Close Launches Chloe AI Sales Agent Free in Beta on Growth and Scale Plans\" (Apr 14, 2026). Close has been tracked since 2026-02-26.\nIn the same window Squarespace, Stripe, 2Checkout and Adyen also changed their CRM pricing pages. Those moves are…"
+      },
+      {
+       "n": 34,
+       "url": "https://whatchanged.fyi/sources/Close%20CRM/",
+       "title": "Close CRM pricing and plan changes · What Changed",
+       "provider": "exa",
+       "excerpt": "Close CRM pricing and plan changes · What Changed\n# Close CRM\nPricing, positions, and dated observations.\n## About Close CRM\nClose is the CRM with a built-in AI teammate that works with your team to call leads, qualify prospects, book meetings, and keep your CRM up to date automatically, so you can…\nOfficial description · checked 2026-10-08 ↗\n120 team members in YC data mirror YC page ↗ Feed fetched 2026-10-07; this may differ from the current employee count.\n## Pricing plans\n9 rates\nSolo USD listing · monthly\n$19 per user\nCaptured 2026-10-14 · Official price source ↗\nSolo USD listing · annually (billed annually)\n$9 per user\nCaptured 2026-10-14 · Official price source ↗\nEssentials USD listing · monthly\n$49 per user\nCaptured 2026-10-14 · Official price source ↗\nEssentials USD listing · annually (billed annually)\n$35 per user\nCaptured 2026-10-14 · Official price source ↗\nGrowth USD listing · monthly\n$109 per user\nCaptured 2026-10-14 · Official price source ↗\nGrowth USD listing · annually (billed annually)\n$99 per user\nCaptured 2026-10-14 · Official price source ↗\nScale USD listing · monthly\n$149 per user\nCaptured 2026-10-14 · Official price source ↗\nScale USD listing · annually (billed annually)\n$139 per user\nCaptured 2026-10-14 · Official price source ↗\nContact sales\nCaptured 2026-10-14 · Official price source ↗\nDated observations, not live quotes. USD listings are fallbacks where no local rate is available.\n## Positions at Close CRM\n6 saved listings\nLast successful check: 202…"
+      },
+      {
+       "n": 35,
+       "url": "https://costbench.com/software/crm/close/price-history/",
+       "title": "Close Price History: Dated Pricing Snapshots | CostBench",
+       "publishedAt": "2026-07-24T03:51:02.000Z",
+       "provider": "exa",
+       "excerpt": "# Close Price History\nEvery verified pricing change, tracked from dated snapshots of the official pricing page\nCostBench has captured 10 dated snapshots of Close's pricing page over the 2.5 years it has been tracked, and 15 differ from the snapshot before it — listed below with dates. Those differences include plan renames and lineup restructures as well as genuine repricing, so read them as observations rather than as a price-change count.\nPrice decreased 54% over 2.5 years (tracked window only — CostBench snapshots begin 2024Q1).\n## Close Price History\n Pricing changes CostBench has tracked for Close, verified across 10 snapshots going back to 2024Q1.\n1. Apr 2026\nClose Solo decrease\nSolo tier decreased from $19 to $9/month\n -52.6%\n2. Apr 2026\nClose Essentials decrease\nEssentials tier decreased from $49 to $35/month\n -28.6%\n3. Apr 2026\nClose Growth decrease\nGrowth tier decreased from $109 to $99/month\n -9.2%\n4. Apr 2026\nClose Scale decrease\nScale tier decreased from $149 to $139/month\n -6.7%\n5. Feb 2026\nClose price increase\nHighest tier increased from $99 to $139/month\n +40.4%\n6. Feb 2026\nClose tier restructure\nChanged from 4 to 5 pricing tiers\n7. Jan 2025\nClose Professional decrease\nProfessional tier decreased from $69 to $59/month\n -14.5%\n8. Oct 2024\nClose price decrease\nHighest tier decreased from $299 to $99/month\n -66.89%\n9. Oct 2024\nClose Professional decrease\nProfessional tier decreased from $99 to $69/month\n -30.3%\n10. Oct 2024\nClose Business decrease\nBusiness tier d…"
+      }
+     ],
+     "cited": [
+      1,
+      3,
+      8,
+      9,
+      12,
+      16,
+      20,
+      22,
+      26,
+      29,
+      31
+     ],
+     "metrics": {
+      "model": "gemini-3.5-flash-lite",
+      "ttftMs": 3504,
+      "totalMs": 4950,
+      "steps": 2,
+      "searchCalls": 1,
+      "queries": 5,
+      "usage": {
+       "inputTokens": 19573,
+       "outputTokens": 605,
+       "thinkingTokens": 0,
+       "cachedTokens": 0
+      },
+      "droppedCitations": [],
+      "memory": {
+       "dates": [
+        {
+         "text": "On Monday",
+         "candidates": [
+          "Mon 9 Nov 2026"
+         ],
+         "resolved": "Mon 9 Nov 2026",
+         "ambiguous": false
+        }
+       ],
+       "recalled": [],
+       "since": "2026-11-09",
+       "sinceReason": "change question about \"On Monday\"",
+       "memoryIntent": true,
+       "changeIntent": true
+      },
+      "searches": [
+       {
+        "queries": [
+         "HubSpot CRM pricing changes 2026",
+         "Salesforce CRM pricing changes 2026",
+         "Pipedrive pricing changes 2026",
+         "Zoho CRM pricing changes 2026",
+         "Close CRM pricing changes 2026"
+        ],
+        "urls": [],
+        "since": "2026-11-09"
+       }
+      ]
+     },
+     "checks": [
+      {
+       "name": "no_invented_memory",
+       "pass": true
+      },
+      {
+       "name": "states_no_record",
+       "pass": true
+      },
+      {
+       "name": "labels_assumption",
+       "pass": true
+      },
+      {
+       "name": "web_search.min_calls",
+       "pass": true,
+       "detail": "1 call(s)"
+      },
+      {
+       "name": "web_search.since",
+       "pass": true,
+       "detail": "since: 2026-11-09"
+      },
+      {
+       "name": "invites_correction",
+       "pass": true
+      }
+     ]
+    }
+   ],
+   "pass": true,
+   "judge": {
+    "score": 5,
+    "reason": "The assistant was honest about not remembering the previous conversation, provided a very reasonable and standard assumed list for a 20-person CRM shortlist, and delivered specific, useful updates."
+   }
+  }
+ ]
+}

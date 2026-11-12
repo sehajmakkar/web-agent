@@ -259,6 +259,23 @@ function renderMemory(
     }
   }
 
+  // Ambiguity policy, decided in code (Phase 5 eval B2): when a date stays ambiguous and conversations on several
+  // candidate days were recalled, the answer must name both. Without this the checklist (built only from the day that
+  // had recorded claims) steered the model into silently picking one.
+  const unresolved = ctx.trace.dates.filter((d) => d.ambiguous && !d.resolved);
+  const recalledDays = [...new Set(ctx.recalled.map((r) => r.conv.localDate))].sort();
+  if (unresolved.length && recalledDays.length > 1) {
+    const per = recalledDays
+      .map((d) => `${formatDay(d)} (${ctx.recalled.filter((r) => r.conv.localDate === d).map((r) => `"${r.conv.title}"`).join(", ")})`)
+      .join(" and ");
+    lines.push(
+      "",
+      `ambiguity_policy: "${unresolved[0]!.text}" could mean ${unresolved[0]!.candidates.join(" or ")}, and both days have matching conversations: ${per}. ` +
+        "Open with ONE short sentence naming both dates and what each was about, then cover each date in its own short section. " +
+        "Never silently pick one. If covering both would be long, ask which one instead.",
+    );
+  }
+
   if (noRecord && store && coverage.count > 0) {
     lines.push("", "recalled: NOTHING matches what the user is referring to. Say so plainly before anything else; do not guess what was said.");
   }

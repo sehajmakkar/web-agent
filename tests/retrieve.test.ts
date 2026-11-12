@@ -38,6 +38,13 @@ describe("planMemory: assignment examples on seeded history", () => {
     expect(p.since).toBe("2026-11-03"); // earliest candidate: never miss a change
     const ids = p.trace.recalled.map((r) => r.id);
     expect(ids).toEqual(expect.arrayContaining(["conv-2026-11-03-postgres", "conv-2026-11-10-postgres"]));
+    // Phase 5 eval B2: the code tells the model to name both days, not silently pick the one with recorded claims.
+    expect(p.memoryBlock).toMatch(/ambiguity_policy: "Last Tuesday" could mean Tue 10 Nov 2026 or Tue 3 Nov 2026/);
+    expect(p.memoryBlock).toContain("Never silently pick one");
+  });
+
+  it("no ambiguity policy when topic resolved the date", () => {
+    expect(plan(seeded(), "Last Tuesday I asked you about Postgres hosting. Has any pricing changed since then?").memoryBlock).not.toContain("ambiguity_policy");
   });
 
   it("C1: 'On Monday we shortlisted 5 CRM tools…' recalls the recorded shortlist (Attio in, Salesforce out)", () => {

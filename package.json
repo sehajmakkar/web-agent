@@ -15,7 +15,8 @@
     "test": "vitest run",
     "seed:demo": "tsx scripts/seed-demo.ts",
     "demo": "tsx scripts/demo.ts",
-    "diagrams": "node docs/diagrams/build.mjs"
+    "diagrams": "node docs/diagrams/build.mjs",
+    "eval": "tsx evals/run.ts"
   },
   "dependencies": {
     "@google/genai": "^2.32.0",
