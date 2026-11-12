@@ -14,7 +14,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "seed:demo": "tsx scripts/seed-demo.ts",
-    "demo": "tsx scripts/demo.ts"
+    "demo": "tsx scripts/demo.ts",
+    "diagrams": "node docs/diagrams/build.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.32.0",
@@ -26,12 +27,14 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@radix-ui/react-hover-card": "^1.2.1",
     "@types/better-sqlite3": "^9.6.0",
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.3.0",
     "concurrently": "^9.2.5",
+    "lucide-react": "^1.72.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-markdown": "^10.1.0",

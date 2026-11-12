@@ -102,7 +102,14 @@ Planned items:
 - Prompt-injection and provider-failure scenarios.
 - **Exit:** a scorecard in `evals/RESULTS.md` with before and after numbers for each change.
 
-## Phase 6 · Polish + write-up (~2h)
+## Phase 6 · Polish + write-up (~2h). ✅ **Done 2026-11-12** (done before Phase 5, at the user's request; Phase 5 testing is on hold)
+**Built:**
+- UI (ADR-029): citation hover cards (Radix), verdict badges, scrollable tables with sticky headers, recall chips, the "How I answered" trace, progress steps, retry, copy, chat filter, Esc to stop, favicon. Checked in light, dark and mobile via headless Chrome screenshots.
+- Answer shape: exact table headers (the model had copied the format hint into the header row).
+- Diagrams (ADR-030): four phase diagrams + an evolution file, generated from one spec, also rendered via the Excalidraw connector.
+- `DESIGN.md` (one page) and a reviewer-facing README.
+
+Planned items:
 - UI: markdown and tables, source hover cards, error states, "stop" button.
 - README: setup, keys, `seed:demo`, `AGENT_NOW`, a "try these prompts" list for the reviewers.
 - **DESIGN.md** (one page, written last from the real system): how it works, why, what was rejected, next week.

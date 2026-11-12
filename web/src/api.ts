@@ -8,6 +8,14 @@ export interface Source {
   provider: string;
 }
 
+export interface TraceDate {
+  text: string;
+  candidates: string[];
+  resolved: string | null;
+  ambiguous: boolean;
+  how?: string;
+}
+
 export interface Metrics {
   model: string;
   ttftMs: number | null;
@@ -15,11 +23,20 @@ export interface Metrics {
   steps: number;
   searchCalls: number;
   queries: number;
+  /** What memory planning decided (dates, recall, window). Present from Phase 3 on. */
+  memory?: {
+    dates: TraceDate[];
+    recalled: { id: string; title: string; localDate: string; why: string }[];
+    since?: string;
+    sinceReason?: string;
+  };
+  searches?: { queries: string[]; urls: string[]; since?: string; prefetch?: boolean }[];
 }
 
 export interface Conversation {
   id: string;
   title: string;
+  topics: string[];
   tz: string;
   startedAt: string;
   localDate: string;

@@ -322,10 +322,14 @@ function renderMemory(
     if (items.length) {
       // The table shape follows what was actually recorded: a "Then" column only exists if we recorded values.
       // (Phase 3: forcing "Then" on a shortlist made the model fill it from today's pages.)
+      // Header names and allowed values are given separately: Phase 6 screenshots showed the model copying a
+      // combined hint ("Verdict (Changed / No change found / …)") verbatim into the table header.
       const shape = claimItems
-        ? "a table with columns Item | Then (recorded) | Now (with [n]) | Verdict (Changed / No change found / Couldn't verify)"
-        : `a table with columns Item | What's new since ${[...days][0]} (dated, with [n]) | Verdict (Pricing change / Major launch / Nothing notable found / Couldn't verify). ` +
-          "No 'then' column: no prices were recorded. Minor feature tweaks are 'Nothing notable'.";
+        ? 'a table with exactly these headers: "Item", "Then", "Now", "Verdict". Cite [n] in the Now cell. ' +
+          "Each Verdict cell starts with one of: Changed, No change found, Couldn't verify (optionally followed by a short reason)"
+        : `a table with exactly these headers: "Item", "Since ${[...days][0]}", "Verdict". The middle cell says what's new, dated, with [n]. ` +
+          "Each Verdict cell starts with one of: Pricing change, Major launch, Nothing notable found, Couldn't verify. " +
+          "There is no 'then' column because no prices were recorded. Minor feature tweaks count as 'Nothing notable found'.";
       lines.push(
         "",
         `verification_checklist: answer EVERY item.${claimItems ? " Recorded values are the 'then' side: copy them exactly, never restate them from today's pages." : ""}`,

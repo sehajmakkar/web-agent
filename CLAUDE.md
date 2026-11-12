@@ -12,6 +12,7 @@ Read `docs/THINKING.md` first for the why.
 - `npm run seed:demo`: (re)loads backdated fixture history into `data/demo.db` (`-- --set ambiguous_tuesday` for the other set).
 - `npm run demo`: reseed + run on ports 5180/8790 with the clock anchored at 2026-11-11 10:00 London. Never touches `data/agent.db`.
 - Ports: dev 5173 (UI) / 8787 (API); override with `WEB_PORT` / `PORT`. Vite uses `strictPort`.
+- `npm run diagrams`: regenerate `docs/diagrams/*.excalidraw` from the spec in `docs/diagrams/build.mjs`. Edit the spec, never the JSON.
 
 ## Env
 See `.env.example`. `LLM_PROVIDER` (`gemini` now, `anthropic` preferred later), `GEMINI_API_KEY`, `EXA_API_KEY` (primary search),
@@ -70,4 +71,6 @@ spikes/       Phase 0 probes + findings (not part of the app)
 - `docs/CHALLENGES.md`: hard problems and their status
 - `docs/PLAN.md`: phased build plan
 - `docs/EVALS.md`: scenario families and metrics
-- `DESIGN.md`: the one-page deliverable, written last from the real system
+- `DESIGN.md`: the one-page deliverable for reviewers. Keep it in sync with what's actually built (numbers come from PLAN.md logs).
+- `docs/diagrams/`: per-phase architecture diagrams (ADR-030)
+- UI: `web/src/`: App (state + SSE), Message (answer rendering), Markdown (citations, verdict badges, tables), TurnTrace ("How I answered"), Sidebar

@@ -161,5 +161,14 @@ Format: **Decision**, **Considered**, **Why**, **Revisit if**. New decisions get
 - Notes = what the **user** decided or stated (shortlist / decision / preference), never the assistant's suggestions.
 - Runs fire-and-forget. The next turn waits at most 1.5s for in-flight jobs (C6). `EXTRACT_ENABLED=false` turns it off (free-tier quota).
 
+### ADR-029 · UI: hand-written CSS + two focused libraries, and the architecture made visible
+- **Decision:** keep the token-based CSS (light/dark, phone width). Add **Radix HoverCard** (accessible citation previews: keyboard focus, collision-aware positioning) and **lucide-react** (icons).
+- **Considered:** shadcn/ui + Tailwind (a build-system change to restyle what already works), Mantine/Chakra (a whole design system for ~6 components), a markdown table library (GFM + CSS already does sticky headers, zebra rows and horizontal scroll).
+- **Product decisions:** a **"How I answered"** trace on every answer (dates resolved by code, memory recalled, search window, pages re-read, searches chosen by the model, timings), recall chips that open the past conversation, verdict badges that colour only the leading keyword so explanations and citations stay readable, step-by-step progress while working, retry, and Esc to stop.
+- **Verified** with headless Chrome screenshots (desktop, dark, 390px mobile). Those caught words breaking mid-word in mobile tables, the model copying my format hint into table headers (fixed in the answer shape, ADR-025), and two-digit citation numbers wrapping.
+
+### ADR-030 · Architecture diagrams generated from one spec
+- `docs/diagrams/build.mjs` holds the layout once and emits one `.excalidraw` per phase (green = new, amber = changed in that phase) plus `architecture-evolution.excalidraw` (all four side by side). A diagram change is a code change, the phases can't drift apart, and the generator checks for overlapping boxes and labels that don't fit.
+
 ### ADR-016 · Single user, no auth
 - **Why:** this is the assignment scope. The `user_id` seam stays in the schema.

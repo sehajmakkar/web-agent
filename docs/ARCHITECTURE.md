@@ -1,5 +1,7 @@
 # Architecture
 
+> Visual version, one diagram per phase: [`docs/diagrams/`](diagrams). The one-page summary is [`DESIGN.md`](../DESIGN.md).
+
 ## Shape
 
 ```

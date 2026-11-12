@@ -105,7 +105,14 @@ Each memory flow failed live at least once, and the fix was the same every time:
 
 The model still does what it's good at: reading pages, judging relevance, writing the answer. Everything with one correct answer (dates, windows, what we recorded, what the policy is) is code, unit-tested, and shown in the turn trace. That's also why a *small* model (Flash-Lite) handles these flows. Where it still falls short (C23) is cleanly separated from architecture problems.
 
-## 10. The iteration path
+## 10. Make the architecture visible in the product
+
+The "How I answered" panel under each answer shows what the **code** decided (dates, recalled conversation, search
+window, pages re-read) apart from what the **model** chose (its searches), with timings. In a demo you can point at it:
+the design argument is right there in the UI, not only in the docs. The diagrams in `docs/diagrams/` tell the same
+story phase by phase.
+
+## 11. The iteration path
 
 I built it in thin vertical slices, each one usable on its own (PLAN.md):
 skeleton chat + search → persistence + clock → temporal memory → evidence ledger + re-verification
